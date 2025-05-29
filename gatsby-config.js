@@ -1,75 +1,61 @@
 module.exports = {
   siteMetadata: {
     // Site URL for when it goes live
-    siteUrl: `https://monumental-chimera-b1ace3.netlify.app/`,
+    siteUrl: `https:contracthero.dev/`,
     // Your Name
-    name: 'Ryan Fitzgerald',
+    name: 'Álvaro Lillo Igualada',
     // Main Site Title
-    title: `Ryan Fitzgerald | Full-Stack Developer`,
+    title: `Contract Hero | Smart Contract development and audit`,
     // Description that goes under your name in main bio
-    description: `Lorem ipsum dolor sit amet consectetur adipisicing elit, ipsum.`,
+    description: `Your smart contracts are at risk. They need the right hero.`,
     // Optional: Twitter account handle
-    author: `@rfitzio`,
+    author: `@alilloig`,
     // Optional: Github account URL
-    github: `https://github.com/RyanFitzgerald`,
+    github: `https://github.com/alilloig`,
     // Optional: LinkedIn account URL
-    linkedin: `https://github.com/RyanFitzgerald/devfolio`,
+    linkedin: `https://www.linkedin.com/in/alvaro-lillo-igualada/`,
     // Content of the About Me section
-    about: `Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus perferendis porro cumque ea error ab voluptatem. Temporibus adipisci exercitationem similique itaque quibusdam laudantium, qui molestiae quas, aut amet animi id.`,
+    about: `Smart Contract Engineer | Specialized in Move and Cadence`,
     // Optional: List your projects, they must have `name` and `description`. `link` is optional.
     projects: [
       {
-        name: 'Devfolio',
+        name: 'Trade Wars',
         description:
-          'A zero-config and blazing fast personal site + blog built with GatsbyJs and TailwindCSS',
-        link: 'https://github.com/RyanFitzgerald/devfolio',
+          'Trade Wars is the fully on-chain, massively multiplayer, interplanetary trading game set in a post-apocalyptic future — produce, trade, and expand your reach among the stars.',
+        link: 'https://tradewars.space',
       },
       {
-        name: 'ExtensionKit',
+        name: 'Band Oracle Cadence Smart Contracts',
         description:
-          'Kit to jump-start your Chrome extension projects with a variety of battle-tested starter templates',
-        link: 'https://extensionkit.io/?ref=devfolio',
+          'Contracts supporting Band protocol Oracle Network on Flow blockchain.',
+        link: 'https://github.com/onflow/band-oracle-contracts',
       },
       {
-        name: 'Another Cool Project',
+        name: 'Celer Cadence Smart Contracts',
         description:
-          'Lorem ipsum dolor sit amet consectetur adipisicing elit ducimus perferendis',
-        link: 'https://github.com/RyanFitzgerald/devfolio',
+          'Contracts supporting Celer Network (cBridge) on Flow blockchain.',
+        link: 'https://github.com/alilloig/celer-contracts',
       },
     ],
     // Optional: List your experience, they must have `name` and `description`. `link` is optional.
     experience: [
       {
-        name: 'Acme Corp',
-        description: 'Full-Stack Developer, February 2020 - Present',
-        link: 'https://github.com/RyanFitzgerald/devfolio',
+        name: 'Freelance',
+        description: 'Smart Contract Engineer, July 2023 - Present',
+        link: 'https://github.com/alilloig',
       },
       {
-        name: 'Globex Corp',
-        description: 'Full-Stack Developer, December 2017 - February 2020',
-        link: 'https://github.com/RyanFitzgerald/devfolio',
-      },
-      {
-        name: 'Hooli',
-        description: 'Full-Stack Developer, May 2015 - December 2017',
-        link: 'https://github.com/RyanFitzgerald/devfolio',
+        name: 'Dapper Labs',
+        description: 'Smart Contract Engineer,  May 2022 - February 2023',
+        link: 'https://github.com/alilloig',
       },
     ],
     // Optional: List your skills, they must have `name` and `description`.
     skills: [
       {
-        name: 'Languages & Frameworks',
+        name: 'Smart Contract Development',
         description:
-          'JavaScript (ES6+), Golang, Node.js, Express.js, React, Ruby on Rails, PHP',
-      },
-      {
-        name: 'Databases',
-        description: 'MongoDB, PostreSQL, MySQL',
-      },
-      {
-        name: 'Other',
-        description:
-          'Docker, Amazon Web Services (AWS), CI / CD, Microservices, API design, Agile / Scrum',
+          'Move, Cadence',
       },
     ],
   },
