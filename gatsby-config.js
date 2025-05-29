@@ -3,7 +3,7 @@ module.exports = {
     // Site URL for when it goes live
     siteUrl: `https://contracthero.dev/`,
     // Your Name
-    name: 'Álvaro Lillo Igualada',
+    name: 'Álvaro Lillo Igualada | Contract Hero',
     // Main Site Title
     title: `Contract Hero | Smart Contract development and audit`,
     // Description that goes under your name in main bio
@@ -15,7 +15,7 @@ module.exports = {
     // Optional: LinkedIn account URL
     linkedin: `https://www.linkedin.com/in/alvaro-lillo-igualada/`,
     // Content of the About Me section
-    about: `Smart Contract Engineer | Specialized in Move and Cadence`,
+    about: `Smart Contract Engineer | [Move](https://sui.io/move) and [Cadence](https://cadence-lang.org/)`,
     // Optional: List your projects, they must have `name` and `description`. `link` is optional.
     projects: [
       {
