@@ -1,7 +1,7 @@
 module.exports = {
   siteMetadata: {
     // Site URL for when it goes live
-    siteUrl: `https:contracthero.dev/`,
+    siteUrl: `https://contracthero.dev/`,
     // Your Name
     name: 'Álvaro Lillo Igualada',
     // Main Site Title
