@@ -47,7 +47,7 @@ module.exports = {
       {
         name: 'Dapper Labs',
         description: 'Smart Contract Engineer,  May 2022 - February 2023',
-        link: 'https://github.com/alilloig',
+        link: 'https://www.dapperlabs.com/',
       },
     ],
     // Optional: List your skills, they must have `name` and `description`.
