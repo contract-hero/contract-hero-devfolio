@@ -15,11 +15,11 @@ import { StaticImage } from 'gatsby-plugin-image';
 const Image = () => {
   return (
     <StaticImage
-      src="../../images/gatsby-astronaut.png"
+      src="../../images/icon.png"
       width={300}
       quality={95}
       formats={["auto", "webp"]}
-      alt="A Gatsby astronaut"
+      alt="Contract Hero Icon"
       placeholder="dominantColor"
     />
   );

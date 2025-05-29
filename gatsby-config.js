@@ -15,7 +15,7 @@ module.exports = {
     // Optional: LinkedIn account URL
     linkedin: `https://www.linkedin.com/in/alvaro-lillo-igualada/`,
     // Content of the About Me section
-    about: `Smart Contract Engineer | [Move](https://sui.io/move) and [Cadence](https://cadence-lang.org/)`,
+    about: `Smart Contract Engineer | Move and Cadence`,
     // Optional: List your projects, they must have `name` and `description`. `link` is optional.
     projects: [
       {
