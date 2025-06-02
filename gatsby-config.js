@@ -3,9 +3,9 @@ module.exports = {
     // Site URL for when it goes live
     siteUrl: `https://contracthero.dev/`,
     // Your Name
-    name: 'Álvaro Lillo Igualada | Contract Hero',
+    name: 'Álvaro Lillo Igualada | Smart Contract Engineering and Security Audits',
     // Main Site Title
-    title: `Contract Hero | Smart Contract development and audit`,
+    title: `Contract Hero | Smart Contracts Development and Audits`,
     // Description that goes under your name in main bio
     description: `Your smart contracts are at risk. They need the right hero.`,
     // Optional: Twitter account handle
