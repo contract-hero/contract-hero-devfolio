@@ -68,5 +68,6 @@ yarn-error.log
 # Yarn Integrity file
 .yarn-integrity
 
-# Resume
-resume.pdf
+# Resume (ignore root copy, allow static copy for Gatsby)
+/resume.pdf
+!static/resume.pdf
