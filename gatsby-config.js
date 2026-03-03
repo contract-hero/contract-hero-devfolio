@@ -76,7 +76,7 @@ module.exports = {
       {
         name: 'Smart Contract Development',
         description:
-          'Move (Sui), Cadence (Flow), Solidity',
+          'Move (Sui), Cadence (Flow)',
       },
       {
         name: 'Sui Ecosystem',
@@ -86,7 +86,7 @@ module.exports = {
       {
         name: 'Languages & Tools',
         description:
-          'TypeScript, Rust, Python, Git, Node.js',
+          'TypeScript, Git, Node.js',
       },
       {
         name: 'Developer Education',
