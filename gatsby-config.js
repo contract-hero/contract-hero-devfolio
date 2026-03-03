@@ -15,7 +15,7 @@ module.exports = {
     // Optional: LinkedIn account URL
     linkedin: `https://www.linkedin.com/in/alilloig/`,
     // Content of the About Me section
-    about: `Solutions Engineer at the Sui Foundation, focused on growing the Move developer ecosystem through hands-on bootcamps across Europe, educational content creation, and DeFi infrastructure support. Previously a smart contract engineer building on Flow (Cadence) and Sui (Move), with experience spanning oracle integrations, cross-chain bridges, and fully on-chain games.`,
+    about: `Solutions Engineer at the Sui Foundation, focused on growing the Move developer ecosystem through hands-on bootcamps across Europe, educational content creation, and DeFi infrastructure support. Previously a smart contract engineer building on Flow (Cadence) and Sui (Move), with experience spanning oracle integrations, cross-chain bridges, and fully on-chain games. Before blockchain, spent four years as a lead teacher at technical colleges in Spain, teaching software development, networking, and systems administration — and before that, worked as a full-stack developer at the Spanish Stock Exchange.`,
     // Optional: List your projects, they must have `name` and `description`. `link` is optional.
     projects: [
       {
@@ -59,6 +59,16 @@ module.exports = {
         name: 'Dapper Labs',
         description: 'Smart Contract Engineer, May 2022 - February 2023',
         link: 'https://www.dapperlabs.com/',
+      },
+      {
+        name: 'Department of Education, Spain',
+        description: 'Technical College Lead Teacher, 2017 - 2021. Taught software development, networking, and systems administration to vocational education students across Madrid and Valencia.',
+        link: '',
+      },
+      {
+        name: 'Bolsas y Mercados Españoles (Spanish Stock Exchange)',
+        description: 'Full-Stack Developer, 2014 - 2017. Technical support for a B2B electronic trading platform, optimizing FIX-based transaction processing.',
+        link: '',
       },
     ],
     // Optional: List your skills, they must have `name` and `description`.
