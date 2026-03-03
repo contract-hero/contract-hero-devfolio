@@ -3,50 +3,61 @@ module.exports = {
     // Site URL for when it goes live
     siteUrl: `https://contracthero.dev/`,
     // Your Name
-    name: 'Álvaro Lillo Igualada | Smart Contract Engineering and Security Audits',
+    name: 'Álvaro Lillo Igualada | Solutions Engineer at Sui Foundation',
     // Main Site Title
-    title: `Contract Hero | Smart Contracts Development and Audits`,
+    title: `Contract Hero | Solutions Engineer at Sui Foundation`,
     // Description that goes under your name in main bio
-    description: `Your smart contracts are at risk. They need the right hero.`,
+    description: `Growing the Move developer ecosystem through education, technical content, and DeFi infrastructure support.`,
     // Optional: Twitter account handle
-    author: `@alilloig`,
+    author: `TheContractHero`,
     // Optional: Github account URL
     github: `https://github.com/alilloig`,
     // Optional: LinkedIn account URL
-    linkedin: `https://www.linkedin.com/in/alvaro-lillo-igualada/`,
+    linkedin: `https://www.linkedin.com/in/alilloig/`,
     // Content of the About Me section
-    about: `Smart Contract Engineer | Move and Cadence`,
+    about: `Solutions Engineer at the Sui Foundation, focused on growing the Move developer ecosystem through hands-on bootcamps across Europe, educational content creation, and DeFi infrastructure support. Previously a smart contract engineer building on Flow (Cadence) and Sui (Move), with experience spanning oracle integrations, cross-chain bridges, and fully on-chain games.`,
     // Optional: List your projects, they must have `name` and `description`. `link` is optional.
     projects: [
       {
+        name: 'Sui Move Bootcamps',
+        description:
+          'Leading in-person developer bootcamps across Europe for the Sui Foundation — training 70+ builders in Bucharest and Paris to build production-ready dApps on Sui.',
+        link: 'https://x.com/TheContractHero',
+      },
+      {
         name: 'Trade Wars',
         description:
-          'Trade Wars is the fully on-chain, massively multiplayer, interplanetary trading game set in a post-apocalyptic future — produce, trade, and expand your reach among the stars.',
+          'A fully on-chain, massively multiplayer, interplanetary trading game built on Sui — produce, trade, and expand your reach among the stars.',
         link: 'https://tradewars.space',
       },
       {
         name: 'Band Oracle Cadence Smart Contracts',
         description:
-          'Contracts supporting Band protocol Oracle Network on Flow blockchain.',
+          'Ported Band Protocol oracle contracts from Solidity to Cadence on Flow blockchain.',
         link: 'https://github.com/onflow/band-oracle-contracts',
       },
       {
         name: 'Celer Cadence Smart Contracts',
         description:
-          'Contracts supporting Celer Network (cBridge) on Flow blockchain.',
+          'Upgraded Celer Network cBridge contracts to Cadence 1.0 on Flow. Audited by Oak Security.',
         link: 'https://github.com/alilloig/celer-contracts',
       },
     ],
     // Optional: List your experience, they must have `name` and `description`. `link` is optional.
     experience: [
       {
+        name: 'Sui Foundation',
+        description: 'Solutions Engineer, October 2025 - Present',
+        link: 'https://sui.io',
+      },
+      {
         name: 'Freelance',
-        description: 'Smart Contract Engineer, July 2023 - Present',
+        description: 'Smart Contract Engineer, September 2023 - September 2025',
         link: 'https://github.com/alilloig',
       },
       {
         name: 'Dapper Labs',
-        description: 'Smart Contract Engineer,  May 2022 - February 2023',
+        description: 'Smart Contract Engineer, May 2022 - February 2023',
         link: 'https://www.dapperlabs.com/',
       },
     ],
@@ -55,7 +66,22 @@ module.exports = {
       {
         name: 'Smart Contract Development',
         description:
-          'Move, Cadence',
+          'Move (Sui), Cadence (Flow), Solidity',
+      },
+      {
+        name: 'Sui Ecosystem',
+        description:
+          'Sui SDK, Sui CLI, DeepBook, On-chain Primitives',
+      },
+      {
+        name: 'Languages & Tools',
+        description:
+          'TypeScript, Rust, Python, Git, Node.js',
+      },
+      {
+        name: 'Developer Education',
+        description:
+          'Bootcamp Instruction, Technical Writing, Learning Materials',
       },
     ],
   },
