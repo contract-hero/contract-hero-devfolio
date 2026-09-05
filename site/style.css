@@ -56,6 +56,7 @@ a:focus-visible {
   outline-offset: 3px;
   border-radius: 2px;
 }
+.board a:focus-visible { outline-color: var(--chalk); }
 
 .wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); }
 
@@ -116,7 +117,7 @@ ul { padding-left: 1.2em; }
 .board .goto a { color: var(--chalk); font-size: 16px; }
 .board .goto a:hover { color: var(--chalk-pass); }
 
-/* The memorable element: one lesson section, as a session transcript. */
+/* Shared dark mono panels: the lesson transcript and the install snippets. */
 
 .session, .install {
   font-family: var(--mono);
@@ -124,6 +125,7 @@ ul { padding-left: 1.2em; }
   border-radius: var(--radius);
 }
 .session {
+  margin: 0;
   border: 1px solid var(--board-rule);
   background: var(--board-deep);
   font-size: 13px;
