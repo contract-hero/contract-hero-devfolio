@@ -1,6 +1,9 @@
 [build]
   publish = "site"
   command = "echo static site, nothing to build"
+  # Netlify's UI-installed Essential Gatsby plugin survives the Gatsby removal; tell it to stand down.
+  [build.environment]
+    NETLIFY_SKIP_GATSBY_BUILD_PLUGIN = "true"
 
 # The Gatsby-era blog is gone; keep old inbound links alive.
 [[redirects]]
