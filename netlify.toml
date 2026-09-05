@@ -1,6 +1,16 @@
 [build]
   publish = "site"
-  command = ""
+
+# The Gatsby-era blog is gone; keep old inbound links alive.
+[[redirects]]
+  from = "/blog/*"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/rss.xml"
+  to = "/"
+  status = 301
 
 [[headers]]
   for = "/*"
@@ -8,3 +18,8 @@
     X-Frame-Options = "DENY"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "same-origin"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000"

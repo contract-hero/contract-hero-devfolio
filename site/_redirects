@@ -1,3 +1,0 @@
-# The Gatsby-era blog is gone; keep old inbound links alive.
-/blog/*   /   301
-/rss.xml  /   301
