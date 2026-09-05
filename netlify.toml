@@ -1,0 +1,34 @@
+[build]
+  publish = "site"
+  command = "echo static site, nothing to build"
+  # Netlify's UI-installed Essential Gatsby plugin survives the Gatsby removal; tell it to stand down.
+  [build.environment]
+    NETLIFY_SKIP_GATSBY_BUILD_PLUGIN = "true"
+
+# The Gatsby-era blog is gone; keep old inbound links alive.
+[[redirects]]
+  from = "/blog"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/blog/*"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/rss.xml"
+  to = "/"
+  status = 301
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "same-origin"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=604800"

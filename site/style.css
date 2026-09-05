@@ -1,0 +1,274 @@
+/* contracthero.dev — one stylesheet, no build step. */
+
+:root {
+  --board: #1b2622;
+  --board-deep: #16201c;
+  --board-rule: #2f3d37;
+  --chalk: #edefe8;
+  --chalk-dim: #a9b3ab;
+  --chalk-pass: #8fd3a8;
+
+  --paper: #fafaf7;
+  --ink: #1f2421;
+  --graphite: #5b635e;
+  --rule: #d8dcd5;
+  --well: #f1f2ee;
+
+  --action: #1f4fd0;
+  --pass: #1e7a48;
+
+  --note-edge: #c9b458;
+  --note-bg: #fff9e0;
+  --note-ink: #5c4d05;
+
+  --hairline: 1px solid var(--rule);
+  --radius: 6px;
+
+  --display: "Fraunces", "Iowan Old Style", Georgia, serif;
+  --text: "Atkinson Hyperlegible", "Helvetica Neue", Arial, sans-serif;
+  --mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --measure: 66ch;
+  --wrap: 1080px;
+  --gutter: clamp(20px, 4vw, 48px);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+@media (prefers-reduced-motion: no-preference) {
+  html { scroll-behavior: smooth; }
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--text);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--action); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:hover { text-decoration-thickness: 2px; }
+a:focus-visible {
+  outline: 3px solid var(--action);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+.board a:focus-visible { outline-color: var(--chalk); }
+
+.wrap { max-width: var(--wrap); margin: 0 auto; padding: 0 var(--gutter); }
+
+h1, h2, h3 {
+  font-family: var(--display);
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.12;
+  margin: 0;
+}
+
+p { margin: 0 0 1em; max-width: var(--measure); }
+ul { padding-left: 1.2em; }
+
+.skip {
+  position: absolute; left: -9999px; top: 8px;
+  background: var(--ink); color: var(--chalk); padding: 8px 12px;
+}
+.skip:focus { left: 8px; z-index: 10; }
+
+/* Top bar */
+
+.top { border-bottom: var(--hairline); }
+.top .wrap {
+  display: flex; align-items: baseline; justify-content: space-between;
+  gap: 16px; padding-top: 18px; padding-bottom: 18px; flex-wrap: wrap;
+}
+.top .name { font-family: var(--display); font-size: 20px; color: var(--ink); text-decoration: none; }
+.top nav { display: flex; gap: 22px; flex-wrap: wrap; }
+.top nav a { color: var(--graphite); text-decoration: none; font-size: 15px; }
+.top nav a:hover { color: var(--ink); text-decoration: underline; }
+
+/* Hero: the blackboard */
+
+.board {
+  background: var(--board);
+  color: var(--chalk);
+  padding: clamp(56px, 8vw, 104px) 0 clamp(48px, 7vw, 88px);
+}
+.board .cols {
+  grid-template-columns: minmax(0, 11fr) minmax(0, 9fr);
+  gap: clamp(32px, 5vw, 72px);
+}
+.board h1 {
+  font-size: clamp(38px, 5.4vw, 64px);
+  font-variation-settings: "opsz" 144, "SOFT" 30;
+  max-width: 15ch;
+  margin-bottom: 28px;
+}
+.board .lede {
+  font-size: clamp(17px, 1.6vw, 20px);
+  color: var(--chalk-dim);
+  max-width: 48ch;
+  margin-bottom: 28px;
+}
+.board .lede strong { color: var(--chalk); font-weight: 400; }
+.board .goto { display: flex; gap: 28px; flex-wrap: wrap; }
+.board .goto a { color: var(--chalk); font-size: 16px; }
+.board .goto a:hover { color: var(--chalk-pass); }
+
+/* Shared dark mono panels: the lesson transcript and the install snippets. */
+
+.session, .install {
+  font-family: var(--mono);
+  color: var(--chalk);
+  border-radius: var(--radius);
+}
+.session {
+  margin: 0;
+  border: 1px solid var(--board-rule);
+  background: var(--board-deep);
+  font-size: 13px;
+  line-height: 1.55;
+  overflow: hidden;
+}
+.session .bar {
+  display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--board-rule);
+  color: var(--chalk-dim);
+  font-size: 12px;
+}
+.session pre {
+  margin: 0; padding: 16px 16px 18px;
+  white-space: pre; overflow-x: auto;
+}
+.session .who, .session .q, .install .c { color: var(--chalk-dim); }
+.session .pass, .install .v { color: var(--chalk-pass); }
+.session .q { font-style: italic; }
+.session .cap {
+  border-top: 1px solid var(--board-rule);
+  padding: 10px 14px 12px;
+  font-family: var(--text);
+  font-size: 13.5px;
+  color: var(--chalk-dim);
+}
+.session .cap a { color: var(--chalk); }
+
+/* Body sections */
+
+.block { padding: clamp(56px, 7vw, 96px) 0; }
+.block + .block { border-top: var(--hairline); }
+
+.block h2 {
+  font-size: clamp(30px, 3.6vw, 44px);
+  font-variation-settings: "opsz" 96;
+  margin-bottom: 8px;
+}
+.block .sub {
+  font-size: 19px;
+  color: var(--graphite);
+  margin-bottom: 36px;
+  max-width: 56ch;
+}
+.block h3 {
+  font-family: var(--text);
+  font-weight: 700;
+  font-size: 17px;
+  margin: 0 0 6px;
+}
+
+.cols {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+  gap: clamp(28px, 4vw, 56px);
+  align-items: start;
+}
+.cols > aside { position: sticky; top: 24px; }
+
+.install {
+  background: var(--board);
+  padding: 16px 18px;
+  font-size: 11.5px;
+  line-height: 1.8;
+  overflow-x: auto;
+  margin: 0 0 12px;
+}
+aside .after { font-size: 14.5px; color: var(--graphite); margin: 0; }
+
+.courses { list-style: none; padding: 0; margin: 0 0 8px; display: grid; gap: 14px; }
+.courses li { padding-left: 16px; border-left: 3px solid var(--rule); }
+.courses li.pass { border-left-color: var(--pass); }
+.courses li.wip { border-left-color: var(--action); }
+.courses .name { font-family: var(--mono); font-size: 14px; }
+.courses p { margin: 2px 0 0; font-size: 15.5px; color: var(--graphite); }
+.courses p a { white-space: nowrap; }
+
+.links { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 20px; font-size: 15.5px; }
+
+/* Teaching receipts */
+
+.receipts { display: grid; gap: 28px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-bottom: 36px; }
+.receipt .n {
+  font-family: var(--display); font-size: 44px; line-height: 1;
+  font-variation-settings: "opsz" 144;
+  margin-bottom: 6px;
+}
+.receipt p { font-size: 15.5px; color: var(--graphite); margin: 0; }
+
+.clip {
+  aspect-ratio: 16 / 9;
+  max-width: 720px;
+  background: var(--well);
+  border: var(--hairline);
+  border-radius: var(--radius);
+  display: grid; place-items: center;
+  margin-bottom: 8px;
+}
+.clip iframe { width: 100%; height: 100%; border: 0; border-radius: var(--radius); }
+.caption { font-size: 14.5px; color: var(--graphite); max-width: 60ch; }
+
+/* Placeholders. Visible on purpose so nothing ships half-filled by accident. */
+
+.todo {
+  border: 2px dashed var(--note-edge);
+  background: var(--note-bg);
+  color: var(--note-ink);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  font-size: 14.5px;
+  max-width: 60ch;
+  margin: 0 0 16px;
+}
+.todo::before { content: "Placeholder — "; font-weight: 700; }
+
+/* Timeline (a real sequence, so the rule is earned) */
+
+.timeline { list-style: none; padding: 0; margin: 0; max-width: 72ch; }
+.timeline li {
+  display: grid; grid-template-columns: 11em 1fr; gap: 16px;
+  padding: 16px 0; border-top: var(--hairline);
+}
+.timeline li:last-child { border-bottom: var(--hairline); }
+.timeline time { color: var(--graphite); font-size: 15px; padding-top: 2px; }
+.timeline .role { font-weight: 700; }
+.timeline .org { color: var(--graphite); }
+.timeline p { margin: 6px 0 0; font-size: 15.5px; }
+
+.edu { margin-top: 36px; }
+.edu p { margin-bottom: 6px; }
+
+/* Footer */
+
+footer { border-top: var(--hairline); padding: 32px 0 44px; color: var(--graphite); font-size: 15px; }
+footer .wrap { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+footer a { color: var(--graphite); }
+
+/* Small screens */
+
+@media (max-width: 820px) {
+  .cols, .board .cols { grid-template-columns: minmax(0, 1fr); }
+  .cols > aside { position: static; }
+  .timeline li { grid-template-columns: 1fr; gap: 2px; }
+  .board h1 { max-width: none; }
+}

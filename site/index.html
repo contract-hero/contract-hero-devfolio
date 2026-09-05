@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Álvaro Lillo Igualada — technical instructor, built a course runtime for Claude Code</title>
+  <meta name="description" content="Teacher turned smart-contract engineer. Four years leading technical-college classrooms in Spain, in-person Sui Move bootcamps for about 80 developers, and Agentic Community College: a course runtime that runs reference-seeded lessons inside Claude Code.">
+  <link rel="canonical" href="https://contracthero.dev/">
+  <link rel="icon" type="image/png" href="/assets/favicon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Álvaro Lillo Igualada — technical instructor">
+  <meta property="og:description" content="Teacher turned smart-contract engineer. Built Agentic Community College, a course runtime that runs lessons inside Claude Code.">
+  <meta property="og:url" content="https://contracthero.dev/">
+  <!-- TODO: social.jpg is the unmodified devfolio template graphic from 2020. Replace with a card that shows the session transcript. -->
+  <meta property="og:image" content="https://contracthero.dev/assets/social.jpg">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:creator" content="@TheContractHero">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Fraunces:opsz,wght,SOFT@9..144,400..500,0..100&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="top">
+  <div class="wrap">
+    <a class="name" href="/">Álvaro Lillo Igualada</a>
+    <nav aria-label="Profiles">
+      <a href="/resume.pdf">Résumé (PDF)</a>
+      <a href="https://github.com/alilloig">GitHub</a>
+      <a href="https://www.linkedin.com/in/alilloig/">LinkedIn</a>
+      <a href="https://x.com/TheContractHero">X</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+<section class="board" aria-labelledby="claim">
+  <div class="wrap cols">
+    <div>
+      <h1 id="claim">I teach engineers languages they don't know yet.</h1>
+      <p class="lede">
+        Four years as a lead teacher in Spain's technical colleges. Then smart contracts on Flow and Sui,
+        and bootcamps that put about 80 developers through Move in person. Then a question I could not
+        leave alone: <strong>can an agent hold a lesson to a teacher's pace?</strong>
+        Agentic Community College is the answer I built.
+      </p>
+      <div class="goto">
+        <a href="#runtime">The runtime</a>
+        <a href="#teaching">Teaching record</a>
+        <a href="#experience">Experience</a>
+      </div>
+    </div>
+
+    <figure class="session" aria-label="One section of an Agentic Community College lesson, as it runs in Claude Code">
+      <div class="bar"><span>acc-deepbook-course</span><span>section 2 of 5</span></div>
+<pre><span class="who">&gt;</span> /acc-deepbook-course:start
+
+<span class="who">engine</span>     probes  node <span class="pass">ok</span>  pnpm <span class="pass">ok</span>
+                   docker <span class="pass">ok</span>  sui <span class="pass">ok</span>
+           mode    learning
+
+<span class="who">conductor</span>  Deposit &amp; rest. Fund the
+           BalanceManager, then place a
+           bid that does not fill.
+
+           Key moment: price the bid at
+           50% of mid, snapped to TICK,
+           so it rests on the book
+           instead of crossing.
+
+           Write it in src/orders.ts,
+           then tell me.
+
+<span class="who">you</span>        done
+
+<span class="who">conductor</span>  verifySection → vitest
+           <span class="pass">3 passed</span>
+           <span class="q">Ready to verify section 2
+           and advance?</span></pre>
+      <figcaption class="cap">The conductor never runs two sections in one turn. The learner writes the code; the test gate decides. <a href="https://github.com/contract-hero/agentic-community-college/blob/main/agents/course-conductor.md">Read the conductor's rules</a>.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="block" id="runtime" aria-labelledby="h-runtime">
+  <div class="wrap cols">
+    <div>
+      <h2 id="h-runtime">Agentic Community College</h2>
+      <p class="sub">A course runtime for Claude Code, built by someone who used to run a classroom.</p>
+
+      <p>
+        ACC is a Claude Code plugin. It turns a session into a tutor that walks a learner through a
+        coding lesson one section at a time. Each lesson starts from a reference implementation, states
+        one key moment per section, and ends every section with a real test gate. The learner either
+        writes the code or watches the agent write it, and either way nothing advances until the tests pass.
+      </p>
+      <p>
+        The framework ships an MCP server, a conductor agent, and authoring skills. Courses are separate
+        plugins with only content in them: lesson manifests, section prompts, validation commands, and
+        declarative preflight probes that check the environment and can repair it. Write a course for any
+        language or stack; ACC does not care what it is teaching.
+      </p>
+      <p>
+        I built it because I taught for four years and wanted to know which parts of good teaching an
+        agent can hold: pacing, one idea at a time, checking before moving on. It is a personal project.
+        It has no user numbers to show, and I am not going to invent any. What it has is two complete
+        courses that run on it, and a third on the way.
+      </p>
+
+      <h3>Courses that run on it</h3>
+      <ul class="courses">
+        <li class="pass">
+          <span class="name">acc-deepbook-course</span>
+          <p>Four Sui DeepBook lessons: place and manage orders, swap over the order book, flash-loan arbitrage, a market-maker bot. Boots a local sandbox chain for the learner. <a href="https://contract-hero.github.io/acc-deepbook-course/">Overview</a> · <a href="https://github.com/contract-hero/acc-deepbook-course">Repo</a></p>
+        </li>
+        <li class="pass">
+          <span class="name">acc-evm-wal</span>
+          <p>Six Walrus-on-EVM lessons in Solidity and TypeScript, 75 tests across the course. Foundry and pnpm workspaces seeded per lesson. <a href="https://contract-hero.github.io/acc-evm-wal/">Overview</a> · <a href="https://github.com/contract-hero/acc-evm-wal">Repo</a></p>
+        </li>
+        <li class="wip">
+          <span class="name">acc-claude-agent-sdk</span>
+          <p>In progress, September 2026. A short course on the Claude Agent SDK in TypeScript: the query loop, custom tools, an MCP server, hooks and subagents. Proof that the runtime teaches beyond blockchains.</p>
+          <!-- TODO: add Overview and Repo links when the course is published. -->
+        </li>
+      </ul>
+
+      <div class="links">
+        <a href="https://contract-hero.github.io/agentic-community-college/">Two-minute overview</a>
+        <a href="https://github.com/contract-hero/agentic-community-college">Framework repo</a>
+        <a href="https://github.com/contract-hero/agentic-community-college/blob/main/CLAUDE.md">Architecture notes</a>
+      </div>
+    </div>
+
+    <aside aria-label="Install Agentic Community College">
+<pre class="install"><span class="c"># in a Claude Code session</span>
+/plugin marketplace add <span class="v">contract-hero/plugin-marketplace</span>
+/plugin install <span class="v">agentic-community-college@contract-hero</span>
+/plugin install <span class="v">acc-deepbook-course@contract-hero</span>
+/acc-deepbook-course:start</pre>
+      <p class="after">Four commands. The first lesson checks for Node, pnpm, Docker and the Sui CLI, and offers to fix what is missing.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="block" id="tool" aria-labelledby="h-tool">
+  <div class="wrap cols">
+    <div>
+      <h2 id="h-tool">sui-pilot</h2>
+      <p class="sub">A Sui Move plugin for Claude Code. You can be running it in under a minute.</p>
+      <p>
+        sui-pilot gives Claude Code a working knowledge of Sui Move: an LSP-backed MCP server for
+        diagnostics, hover, references and rename; bundled documentation for Sui, Walrus, Seal, the
+        TypeScript SDK and the Move Book; skills for code quality and security review; and formal
+        specifications checked with the Sui Prover.
+      </p>
+      <p>
+        It is the tool I wanted next to me while teaching Move to people who had never seen it. The
+        DeepBook course above requires it, which is the clearest sign of how the two projects fit together.
+      </p>
+      <div class="links">
+        <a href="https://contract-hero.github.io/sui-pilot/">Plugin site</a>
+        <a href="https://github.com/contract-hero/sui-pilot">Repo</a>
+        <a href="https://contract-hero.github.io/">All Contract Hero plugins</a>
+      </div>
+    </div>
+    <aside aria-label="Install sui-pilot">
+<pre class="install"><span class="c"># in a Claude Code session</span>
+/plugin marketplace add <span class="v">contract-hero/plugin-marketplace</span>
+/plugin install <span class="v">sui-pilot@contract-hero</span></pre>
+      <p class="after">Then open any Sui Move package and ask for a review.</p>
+    </aside>
+  </div>
+</section>
+
+<section class="block" id="teaching" aria-labelledby="h-teaching">
+  <div class="wrap">
+    <h2 id="h-teaching">Teaching, with receipts</h2>
+    <p class="sub">Live instruction for engineers, in rooms and on calls, since 2017.</p>
+
+    <div class="receipts">
+      <div class="receipt">
+        <div class="n">80</div>
+        <p>About eighty developers through two in-person Sui Move bootcamps: Bucharest, December 2025, hosted by COMETS; Paris, February 2026, with Vinci. Multi-day, hands-on, everyone shipped a dApp.</p>
+      </div>
+      <div class="receipt">
+        <div class="n">4 years</div>
+        <p>Lead teacher at technical colleges in Madrid and Valencia, 2017 to 2021. Software development, networking and systems administration for vocational students. Coordinated the teaching teams across subjects.</p>
+      </div>
+      <div class="receipt">
+        <div class="n">2 stacks</div>
+        <p>Taught Move on Sui and Cadence on Flow to developers arriving from Solidity and TypeScript. New language, new memory model, one week.</p>
+      </div>
+    </div>
+
+    <h3>Watch a few minutes</h3>
+    <div class="clip">
+      <!-- TODO: replace the placeholder with the embed. Use ?start=SECONDS to open on the best 90 seconds.
+           <iframe src="https://www.youtube-nocookie.com/embed/VIDEO_ID?start=0" title="ETHGlobal workshop" allow="picture-in-picture" allowfullscreen loading="lazy"></iframe> -->
+      <p class="todo">ETHGlobal workshop clip. Add the YouTube URL and a start time; pick a segment where the explanation is visibly good.</p>
+    </div>
+    <p class="caption">Workshop sessions recorded at ETHGlobal hackathons. Short by design; the point is how the concept lands, not the audience size.</p>
+
+    <!-- TODO: bootcamp photos or slides. -->
+    <p class="todo">Bootcamp photos or slides from Bucharest and Paris go here.</p>
+  </div>
+</section>
+
+<section class="block" id="program" aria-labelledby="h-program">
+  <div class="wrap">
+    <h2 id="h-program">Designing a builder program with no budget</h2>
+    <p class="sub">Builder Growth Champions, Sui Foundation, 2026. Design work only.</p>
+    <p>
+      The brief was to grow serious builders in the ecosystem without a grant budget. The design unbundles
+      what a grant actually buys, line item by line item, and maps each one to a non-cash asset the
+      ecosystem already holds: engineering time, distribution, introductions, infrastructure credits,
+      review. Champions earn access to those assets by shipping, and the playbook tells a regional lead
+      how to run the loop.
+    </p>
+    <p>
+      The program was cancelled in the August 2026 reorganisation before its first cohort. There are no
+      outcomes to report. What exists is the pitch document and the operating playbook, which I am sharing
+      as an example of how I design a learning program from constraints.
+    </p>
+    <!-- TODO: link the pitch document and the playbook (PDF or HTML in /assets). -->
+    <p class="todo">Pitch document and playbook links.</p>
+  </div>
+</section>
+
+<section class="block" id="experience" aria-labelledby="h-experience">
+  <div class="wrap">
+    <h2 id="h-experience">Experience</h2>
+    <p class="sub">The teaching came first. The engineering came second. The runtime needed both.</p>
+
+    <ol class="timeline">
+      <li>
+        <time datetime="2025">2025 – present</time>
+        <div>
+          <span class="role">Solutions Engineer</span> <span class="org">— Sui Foundation, remote</span>
+          <p>Lead in-person Sui Move bootcamps across Europe. Write learning materials for the Sui stack. Support exchanges and DeepBook-adjacent DeFi projects.</p>
+        </div>
+      </li>
+      <li>
+        <time datetime="2023">2023 – 2025</time>
+        <div>
+          <span class="role">Smart Contract Engineer</span> <span class="org">— freelance</span>
+          <p>Ported the Band Protocol oracle from Solidity to Cadence. Upgraded Celer cBridge to Cadence 1.0, audited by Oak Security. Built <a href="https://tradewars.space">Trade Wars</a>, a fully on-chain multiplayer trading game on Sui.</p>
+        </div>
+      </li>
+      <li>
+        <time datetime="2022">2022 – 2023</time>
+        <div>
+          <span class="role">Smart Contract Engineer</span> <span class="org">— Dapper Labs</span>
+          <p>Flow core contracts: the Fungible Token Switchboard, the Fungible Token Metadata standard, linked accounts for shared custody. Led Flow Improvement Proposal discussions.</p>
+        </div>
+      </li>
+      <li>
+        <time datetime="2017">2017 – 2021</time>
+        <div>
+          <span class="role">Technical College Lead Teacher</span> <span class="org">— Department of Education, Madrid and Valencia</span>
+          <p>Software development, networking and systems administration for vocational students. Coordinated teaching teams and syllabus alignment.</p>
+        </div>
+      </li>
+      <li>
+        <time datetime="2014">2014 – 2017</time>
+        <div>
+          <span class="role">Full-Stack Developer</span> <span class="org">— Bolsas y Mercados Españoles</span>
+          <p>B2B electronic trading platform for institutional brokers over FIX. Cut transaction processing time by 20%.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="edu">
+      <h3>Education</h3>
+      <p>Master's in Teacher Training, URJC Madrid, 2017. Thesis: programming education through video games.</p>
+      <p>Bachelor's in Telecommunication Engineering, Technical University of Madrid, 2013.</p>
+      <p>Spanish native, English fluent, Valencian intermediate, French basic.</p>
+    </div>
+
+    <div class="links">
+      <a href="/resume.pdf">Résumé as PDF</a>
+      <a href="https://www.linkedin.com/in/alilloig/">LinkedIn</a>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>Álvaro Lillo Igualada. Madrid.</span>
+    <!-- TODO: state relocation / time-zone availability if you want it on the page. -->
+    <span><a href="mailto:alilloig@gmail.com">alilloig@gmail.com</a> — <a href="https://github.com/alilloig">github.com/alilloig</a></span>
+  </div>
+</footer>
+
+</body>
+</html>
