@@ -73,11 +73,6 @@ a { color: inherit; }
 @media (orientation: portrait) {
   .tube { font-size: clamp(13px, calc(2.8 * var(--u)), 26px); }
 }
-/* phones in portrait: tighter padding and label column so the briefing fits */
-@media (orientation: portrait) and (max-width: 640px) {
-  .tube { padding: 3.2% 3.6%; }
-  .kv { --kv-col: 7.5ch; }
-}
 .text {
   will-change: transform;
   text-shadow: 0 0 5px var(--glow), 0 0 12px rgba(90,255,140,.18);
@@ -92,6 +87,12 @@ a { color: inherit; }
 .hi { color: var(--phosphor-hi); }
 .kv { display: grid; grid-template-columns: var(--kv-col, 8.5ch) 1fr; gap: 0 1ch; }
 .sp { margin-top: .9em; }
+/* phones in portrait: tighter padding, gaps and label column so the briefing fits */
+@media (orientation: portrait) and (max-width: 640px) {
+  .tube { padding: 2.4% 3.6%; }
+  .kv { --kv-col: 7.5ch; }
+  .sp { margin-top: .5em; }
+}
 
 .cursor {
   display: inline-block; width: .6em; height: 1em; vertical-align: -.12em; margin-left: 1px;
