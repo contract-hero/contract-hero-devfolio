@@ -14,7 +14,7 @@ body { margin: 0; font-family: var(--mono); -webkit-font-smoothing: antialiased;
 a { color: inherit; }
 
 /* ---------- scroll stage ---------- */
-.story { position: relative; z-index: 1; }
+.story { position: relative; }
 .scene {
   position: sticky; top: 0;
   height: 100vh; height: 100dvh;
@@ -22,23 +22,25 @@ a { color: inherit; }
 }
 
 /* The stage is the photo's own box, scaled to cover the viewport. Everything on the
-   screen is positioned in the photo's coordinates, so the mapping survives any crop. */
+   screen is positioned in the photo's coordinates, so the mapping survives any crop.
+   The orientation switch here must match the <source media> in index.html. */
 .stage {
   position: absolute; left: 50%; top: 50%;
   transform: translate(-50%, -50%);
-  width: max(100vw, calc(100vh * 16 / 9));
-  width: max(100vw, calc(100dvh * 16 / 9));
-  aspect-ratio: 16 / 9;
+  --ar: 16 / 9;
+  width: max(100vw, calc(100vh * var(--ar)));
+  width: max(100vw, calc(100dvh * var(--ar)));
+  aspect-ratio: var(--ar);
   container-type: inline-size;
+  --u: 1vw;                    /* screen text scales with the stage; 1cqw where supported */
   /* the black screen rectangle inside room-wide.jpg (measured) */
   --sx: 24.15%; --sy: 9.20%; --sw: 51.21%; --sh: 52.52%;
 }
+@supports (font-size: 1cqw) { .stage { --u: 1cqw; } }
 .stage img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 @media (orientation: portrait) {
   .stage {
-    width: max(100vw, calc(100vh * 9 / 16));
-    width: max(100vw, calc(100dvh * 9 / 16));
-    aspect-ratio: 9 / 16;
+    --ar: 9 / 16;
     /* the black screen rectangle inside room-tall.jpg (measured) */
     --sx: 10.77%; --sy: 27.00%; --sw: 78.44%; --sh: 29.75%;
   }
@@ -64,28 +66,32 @@ a { color: inherit; }
   position: absolute; inset: 0;
   padding: 4.2% 4.6%;
   overflow: hidden;
-  font-size: clamp(13px, 1.55vw, 30px);
+  font-size: clamp(13px, calc(1.5 * var(--u)), 30px);
   line-height: 1.2;
   animation: flicker 6s infinite steps(1);
 }
-@supports (font-size: 1cqw) {
-  .tube { font-size: clamp(13px, 1.5cqw, 30px); }
-  @media (orientation: portrait) { .tube { font-size: clamp(13px, 2.8cqw, 26px); } }
-  @media (orientation: portrait) and (max-width: 640px) { .tube { padding: 3.2% 3.6%; } .text .kv { grid-template-columns: 7.5ch 1fr; } }
+@media (orientation: portrait) {
+  .tube { font-size: clamp(13px, calc(2.8 * var(--u)), 26px); }
+}
+/* phones in portrait: tighter padding and label column so the briefing fits */
+@media (orientation: portrait) and (max-width: 640px) {
+  .tube { padding: 3.2% 3.6%; }
+  .kv { --kv-col: 7.5ch; }
 }
 .text {
   will-change: transform;
   text-shadow: 0 0 5px var(--glow), 0 0 12px rgba(90,255,140,.18);
 }
 .text p { margin: 0 0 .32em; }
-.text .cmd { color: var(--phosphor-dim); }
-.text .dim { color: var(--phosphor-dim); }
-.text .hi { color: var(--phosphor-hi); }
 .text a { text-decoration: underline; text-decoration-color: var(--phosphor-dim); text-underline-offset: .15em; }
 .text a:hover, .text a:focus-visible { background: var(--phosphor); color: #030503; text-shadow: none; outline: none; }
-.text .kv { display: grid; grid-template-columns: 8.5ch 1fr; gap: 0 1ch; margin-bottom: .12em; }
-.text .kv .k { color: var(--phosphor-dim); }
-.text .sp, html.no-js .sp { margin-top: .9em; }
+.text .kv { margin-bottom: .12em; }
+
+/* the story's own classes, shared by the screen and the no-JS page */
+.cmd, .dim, .k { color: var(--phosphor-dim); }
+.hi { color: var(--phosphor-hi); }
+.kv { display: grid; grid-template-columns: var(--kv-col, 8.5ch) 1fr; gap: 0 1ch; }
+.sp { margin-top: .9em; }
 
 .cursor {
   display: inline-block; width: .6em; height: 1em; vertical-align: -.12em; margin-left: 1px;
@@ -122,9 +128,7 @@ html.no-js .scene { display: none; }
 html.no-js .chapters { max-width: 72ch; margin: 0 auto; padding: 8vh 6vw; font-size: 22px; line-height: 1.3; }
 html.no-js .chapter { margin-bottom: 3em; }
 html.no-js .chapter p { margin: 0 0 .4em; }
-html.no-js .cmd, html.no-js .dim, html.no-js .k { color: var(--phosphor-dim); }
-html.no-js .hi { color: var(--phosphor-hi); }
-html.no-js .kv { display: grid; grid-template-columns: 9ch 1fr; gap: 0 1ch; }
+html.no-js .kv { --kv-col: 9ch; }
 
 /* skip link for keyboard users */
 .skip { position: absolute; left: -999px; top: 8px; z-index: 10; padding: 6px 10px; background: var(--phosphor); color: #000; }
@@ -141,7 +145,6 @@ html.no-js .kv { display: grid; grid-template-columns: 9ch 1fr; gap: 0 1ch; }
   64% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .tube { animation: none; }
-  .cursor { animation: none; }
+  .tube, .cursor { animation: none; }
   .hint { transition: none; }
 }

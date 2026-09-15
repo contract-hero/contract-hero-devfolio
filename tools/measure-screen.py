@@ -3,7 +3,7 @@ import struct, subprocess, sys, statistics, os
 src = sys.argv[1]; T = int(sys.argv[2]) if len(sys.argv) > 2 else 45
 bmp = '/tmp/_measure.bmp'
 subprocess.run(['sips', '-s', 'format', 'bmp', src, '--out', bmp], check=True, capture_output=True)
-d = open(bmp, 'rb').read()
+d = open(bmp, 'rb').read(); os.remove(bmp)
 off = struct.unpack_from('<I', d, 10)[0]; w = struct.unpack_from('<i', d, 18)[0]; h = struct.unpack_from('<i', d, 22)[0]
 bpp = struct.unpack_from('<H', d, 28)[0]; bottom_up = h > 0; h = abs(h); Bpp = bpp // 8
 stride = ((bpp * w + 31) // 32) * 4
@@ -17,8 +17,8 @@ cx, cy = w // 2, int(h * (float(sys.argv[3]) if len(sys.argv) > 3 else 0.5))
 # nudge to the nearest dark pixel if the centre is not on the screen
 if not dark(cx, cy):
     for r in range(1, 400):
-        found = [(cx+dx, cy+dy) for dx in range(-r, r+1, 4) for dy in range(-r, r+1, 4) if dark(cx+dx, cy+dy)]
-        if found: cx, cy = found[0]; break
+        hit = next(((cx+dx, cy+dy) for dx in range(-r, r+1, 4) for dy in range(-r, r+1, 4) if dark(cx+dx, cy+dy)), None)
+        if hit: cx, cy = hit; break
 def run(x, y, dx, dy):
     miss = 0
     while 0 <= x < w and 0 <= y < h:
