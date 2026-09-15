@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "dark-glow",
+        "value": "*",
+        "files": [
+          "site/index.html"
+        ],
+        "createdAt": "2026-09-15T23:28:38.184Z",
+        "reason": "user pitched a Matrix-style CRT and approved the phosphor look ('the new thing looks perfect'); the green text glow is the literal subject of the page, not decoration"
+      }
+    ]
+  }
+}

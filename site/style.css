@@ -23,7 +23,8 @@ a { color: inherit; }
 
 /* The stage is the photo's own box, scaled to cover the viewport. Everything on the
    screen is positioned in the photo's coordinates, so the mapping survives any crop.
-   The orientation switch here must match the <source media> in index.html. */
+   --ar must equal the photo's pixel aspect ratio (1920x1080 and 1080x1920 today).
+   The portrait switch below must match the <source media> in index.html. */
 .stage {
   position: absolute; left: 50%; top: 50%;
   transform: translate(-50%, -50%);
@@ -32,8 +33,8 @@ a { color: inherit; }
   width: max(100vw, calc(100dvh * var(--ar)));
   aspect-ratio: var(--ar);
   container-type: inline-size;
-  --u: 1vw;                    /* screen text scales with the stage; 1cqw where supported */
-  /* the black screen rectangle inside room-wide.jpg (measured) */
+  --u: 1vw;                    /* fallback: tracks the viewport, ~10% small; @supports below switches to 1cqw, which tracks the stage */
+  /* the black screen rectangle inside room-wide.jpg: the INSET line printed by tools/measure-screen.py */
   --sx: 24.15%; --sy: 9.20%; --sw: 51.21%; --sh: 52.52%;
 }
 @supports (font-size: 1cqw) { .stage { --u: 1cqw; } }
@@ -41,8 +42,8 @@ a { color: inherit; }
 @media (orientation: portrait) {
   .stage {
     --ar: 9 / 16;
-    /* the black screen rectangle inside room-tall.jpg (measured) */
-    --sx: 10.77%; --sy: 27.00%; --sw: 78.44%; --sh: 29.75%;
+    /* the black screen rectangle inside room-tall.jpg: measure-screen.py INSET line, centre_y_fraction 0.45 */
+    --sx: 10.78%; --sy: 27.00%; --sw: 78.44%; --sh: 29.75%;
   }
 }
 
@@ -114,7 +115,7 @@ a { color: inherit; }
   position: absolute; left: 0; right: 0; bottom: 3.5vh;
   display: flex; justify-content: center; gap: 3ch; flex-wrap: wrap;
   font-size: clamp(15px, 1.6vw, 19px); color: var(--phosphor-dim);
-  text-shadow: 0 0 6px rgba(90,255,140,.25);
+  text-shadow: 0 0 6px rgba(90,255,140,.25), 0 1px 3px rgba(0,0,0,.9);   /* legible on the lit keyboard in ultrawide crops */
 }
 .hud a { text-decoration: none; }
 .hud a:hover, .hud a:focus-visible { color: var(--phosphor); outline: none; }
@@ -132,7 +133,7 @@ html.no-js .chapter p { margin: 0 0 .4em; }
 html.no-js .kv { --kv-col: 9ch; }
 
 /* skip link for keyboard users */
-.skip { position: absolute; left: -999px; top: 8px; z-index: 10; padding: 6px 10px; background: var(--phosphor); color: #000; }
+.skip { position: fixed; left: -999px; top: 8px; z-index: 10; padding: 6px 10px; background: var(--phosphor); color: #000; }
 .skip:focus { left: 8px; }
 
 @keyframes blink { 50% { opacity: 0; } }
