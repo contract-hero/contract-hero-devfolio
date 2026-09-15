@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Álvaro Lillo Igualada — résumé</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+@page{size:A4;margin:10mm 12mm}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font:9.8pt/1.38 "Space Grotesk",system-ui,sans-serif;color:#111;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+a{color:inherit;text-decoration:none}
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;}
+.head>div:first-child{flex:1}
+.head>.contact{flex:none}
+.head-x{border-bottom:1.5px solid #111;padding-bottom:6px;margin-bottom:8px}
+h1{font-size:20pt;font-weight:700;letter-spacing:-.02em;margin:0;line-height:1}
+.role{font-size:10pt;color:#1e7a48;font-weight:500;margin:4px 0 0}
+.contact{font-family:"JetBrains Mono",monospace;font-size:7.6pt;text-align:right;line-height:1.5;color:#333}
+.summary{margin:0 0 6px;font-size:9.8pt;max-width:none}
+h2{font-family:"JetBrains Mono",monospace;font-size:7.4pt;font-weight:600;letter-spacing:.06em;color:#1e7a48;margin:7px 0 3px;padding-top:5px;border-top:1px solid #ddd}
+.job{margin:0 0 8px}
+.job .t{display:flex;justify-content:space-between;gap:12px;align-items:baseline}
+.job .t b{font-size:10pt}
+.job .t span{color:#555;font-size:8.6pt}
+.job .t .d{font-family:"JetBrains Mono",monospace;font-size:7.6pt;color:#555;white-space:nowrap}
+ul{margin:2px 0 0;padding-left:12px}
+li{margin:0 0 1.5px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
+.oss b{font-size:9.6pt}
+.oss .m{font-family:"JetBrains Mono",monospace;font-size:7.4pt;color:#555}
+.oss p{margin:1px 0 5px}
+.strip{font-size:8.6pt;color:#333}
+code{font-family:"JetBrains Mono",monospace;font-size:8.2pt}
+</style>
+</head>
+<body>
+<div class="head">
+  <div>
+    <h1>Álvaro Lillo Igualada</h1>
+    <p class="role">Solutions engineer · developer education · Move / Sui</p>
+  </div>
+  <div class="contact">Madrid, Spain · remote<br>alilloig@gmail.com · +34 620 405 285<br>contracthero.dev · github.com/alilloig · linkedin.com/in/alilloig</div>
+</div>
+
+<p class="summary">I make hard stacks teachable: from vocational classrooms to bootcamps, hackathons, docs, video and developer tooling. Four years as a lead teacher in technical colleges, then smart contracts on Flow and Sui, now the solutions role at the Sui Foundation where both matter at once: multi-day bootcamps and train-the-trainer for community instructors, hackathon workshops and judging, video tutorials, partner support, and the open-source tooling that came out of it (sui-pilot, the Flow token standards).</p>
+
+<h2>EXPERIENCE</h2>
+
+<div class="job"><div class="t"><div><b>Solutions Engineer</b> <span>— Sui Foundation, remote</span></div><div class="d">Oct 2025 – present</div></div>
+<ul>
+<li><b>Sui Builders Bootcamp:</b> five days of Move and Sui plus a one-day hackathon for pre-selected cohorts of 30–40 developers; delivered in Ankara, Bucharest and Paris, and online. At every bootcamp, trained the local community ambassadors to run the following editions on their own.</li>
+<li><b>Hackathons:</b> lead Sui's sponsorship at ETHGlobal New York and Lisbon 2026 (800+ hackers each), EncodeHub London and online hackathons of 100+ developers each (one for Eve Frontier builders): define workshop and prize tracks, deliver the workshop live, mentor teams all weekend, judge submissions.</li>
+<li>Review Move smart-contract implementations built for supported partners; on-call technical support for exchange and DEX partners (triage, troubleshooting, escalation).</li>
+<li>DeepBook developer experience: sandbox evaluation, reference snippets, and a hands-on course. Video tutorials for the Walrus Foundation. Built <b>sui-pilot</b>, an open-source Claude Code plugin for Sui/Move, on the plugin pattern Vercel published for Claude Code.</li>
+</ul></div>
+
+<div class="job"><div class="t"><div><b>Smart Contract Engineer</b> <span>— freelance, remote</span></div><div class="d">Sep 2023 – Sep 2025</div></div>
+<ul>
+<li>Ported the Band Protocol oracle from Solidity to Cadence on Flow: testnet, mainnet-ready, then Cadence 1.0 (onflow/band-oracle-contracts).</li>
+<li>Upgraded Celer cBridge and auxiliary contracts to Cadence 1.0; suite audited by Oak Security. Built Trade Wars, a fully on-chain multiplayer trading game on Sui.</li>
+</ul></div>
+
+<div class="job"><div class="t"><div><b>Smart Contract Engineer</b> <span>— Dapper Labs, remote</span></div><div class="d">May 2022 – Feb 2023</div></div>
+<ul>
+<li>Authored the <b>Fungible Token Switchboard</b> (one receiver capability for any token) and the <b>Fungible Tokens Metadata FLIP</b> with its <code>FungibleTokenMetadataViews</code> contract; both part of the Flow FT standard, deployed on mainnet (onflow/flow-ft, 138★).</li>
+<li>Linked-account (hybrid custody) contracts for walletless onboarding; six docs PRs to onflow/cadence; drafted the Cadence Style Guide FLIP. Flow Certified Developer.</li>
+</ul></div>
+
+<div class="job"><div class="t"><div><b>Technical College Lead Teacher</b> <span>— Department of Education, Madrid &amp; Valencia</span></div><div class="d">2017 – 2021</div></div>
+<ul>
+<li>Coordinated the teaching team of each school: aligned every subject to the official programme, kept each teacher on the agreed syllabus and pace, tracked student objectives. Four schools, 60–120 students a year: OOP and SQL fundamentals, networks, web programming, systems administration.</li>
+</ul></div>
+
+<div class="job"><div class="t"><div><b>Full-Stack Developer</b> <span>— Bolsas y Mercados Españoles (Spanish Stock Exchange), Madrid</span></div><div class="d">2014 – 2017</div></div>
+<ul>
+<li>B2B electronic trading platform for institutional brokers over FIX; cut transaction processing time by 20%.</li>
+</ul></div>
+
+<h2>EDUCATION &amp; SKILLS</h2>
+<div class="two">
+<div class="strip"><b>Master's in Teacher Training</b>, URJC Madrid, 2017 — thesis: programming education through video games.<br><b>Bachelor's in Telecommunication Engineering</b>, Technical University of Madrid, 2013.<br>Spanish native · English fluent · Valencian intermediate · French basic.</div>
+<div class="strip">Move (Sui) · Cadence (Flow) · Solidity · TypeScript · Rust · Sui SDK, DeepBook, Walrus, Seal · Claude Code plugins, MCP servers, Claude Agent SDK · Curriculum design · Bootcamp delivery · Train-the-trainer · Hackathon workshops and judging · Technical writing</div>
+</div>
+</body>
+</html>
