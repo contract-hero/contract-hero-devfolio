@@ -6,7 +6,9 @@
   --phosphor-dim: #4f9a63;
   --glow: rgba(90, 255, 140, .55);
   --mono: "VT323", "Courier New", ui-monospace, monospace;
+  --vh: 100vh;                  /* the viewport height the scene and the stage agree on */
 }
+@supports (height: 1dvh) { :root { --vh: 100dvh; } }
 
 *, *::before, *::after { box-sizing: border-box; }
 html { background: #000; color: var(--phosphor); }
@@ -17,83 +19,117 @@ a { color: inherit; }
 .story { position: relative; }
 .scene {
   position: sticky; top: 0;
-  height: 100vh; height: 100dvh;
+  height: var(--vh);
   overflow: hidden;
 }
 
-/* The stage is the photo's own box, scaled to cover the viewport. Everything on the
-   screen is positioned in the photo's coordinates, so the mapping survives any crop.
-   --ar must equal the photo's pixel aspect ratio (1920x1080 and 1080x1920 today).
-   The portrait switch below must match the <source media> in index.html. */
+/* One square photo for every viewport. The stage is the photo's own box; everything on the screen is
+   positioned in the photo's coordinates, so the mapping survives any crop.
+
+   Size: cover the viewport (--cover), but never let the screen grow past 90% of the viewport width or
+   72% of its height (--S). In portrait the photo zooms in past cover, up to 1.4x, until the screen
+   reaches 90% of the width: a phone shows the monitor and the keyboard, not the whole room. In
+   landscape at least 500px tall the whole computer must stay in view: the band from the wall above the
+   bezel (22% of the photo height) to the desk edge (80%) always fits the viewport height, so on wide
+   displays the photo is narrower than the viewport and its sides fade to black (--fade) instead of
+   cropping the keyboard. Where the photo is shorter than the viewport instead (aspect narrower than
+   1:2.27) the top and bottom fade the same way (--fade-y).
+   Position: the crop is anchored on the centre of the screen (--cx/--cy), which sits at 50% of the
+   width and 47% of the height of the viewport, then clamped so the photo edge never enters the viewport
+   and, in landscape, so that band stays visible.
+
+   --ar is the photo's pixel aspect ratio. --sx/--sy/--sw/--sh is the black screen rectangle inside
+   assets/room.jpg as fractions of the photo: the INSET line printed by tools/measure-screen.py. */
 .stage {
-  position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  --ar: 16 / 9;
-  width: max(100vw, calc(100vh * var(--ar)));
-  width: max(100vw, calc(100dvh * var(--ar)));
-  aspect-ratio: var(--ar);
-  container-type: inline-size;
-  --u: 1vw;                    /* fallback: tracks the viewport, ~10% small; @supports below switches to 1cqw, which tracks the stage */
-  /* the black screen rectangle inside room-wide.jpg: the INSET line printed by tools/measure-screen.py */
-  --sx: 24.15%; --sy: 9.20%; --sw: 51.21%; --sh: 52.52%;
+  position: absolute;
+  --ar: 1;
+  --sx: .3027; --sy: .3179; --sw: .3960; --sh: .2945;   /* INSET line for assets/room.jpg, 2048x2048 */
+  --cx: calc(var(--sx) + var(--sw) / 2);
+  --cy: calc(var(--sy) + var(--sh) / 2);
+  --cols: 46; --rows: 12; --adv: .4;                 /* the terminal grid; VT323 advances .4em per character */
+  --cover: max(100vw, calc(var(--vh) * var(--ar)));
+  --fit-w: calc(90vw / var(--sw));
+  --fit-h: calc(.72 * var(--vh) / var(--sh));
+  --band-top: .22; --band-bottom: .80;               /* the computer: wall above the bezel to the desk edge */
+  --keep-computer: 0;                                 /* 1 while the landscape rule below is in force; tools/check-viewports.mjs reads it */
+  --safe-h: var(--fit-h);                             /* landscape below tightens this to the band */
+  --want: var(--cover);
+  --S: min(var(--want), var(--fit-w), var(--safe-h));
+  --H: calc(var(--S) / var(--ar));
+  --fade: clamp(0px, calc((100vw - var(--S)) * .6), calc(var(--S) * .14));
+  --fade-y: clamp(0px, calc((var(--vh) - var(--H)) * .6), calc(var(--H) * .14));
+  --anchor-y: .47;
+  --top-want: calc(var(--anchor-y) * var(--vh) - var(--H) * var(--cy));
+  --top-min: min(0px, calc(var(--vh) - var(--H)));
+  --top-max: max(0px, calc(var(--vh) - var(--H)));
+  width: var(--S);
+  height: var(--H);
+  left: clamp(min(0px, calc(100vw - var(--S))), calc(50vw - var(--S) * var(--cx)), max(0px, calc(100vw - var(--S))));
+  top: clamp(var(--top-min), var(--top-want), var(--top-max));
 }
-@supports (font-size: 1cqw) { .stage { --u: 1cqw; } }
-.stage img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-@media (orientation: portrait) {
+@media (orientation: portrait) { .stage { --want: max(var(--cover), min(var(--fit-w), calc(1.4 * var(--cover)))); } }
+@media (orientation: landscape) and (min-height: 500px) {
   .stage {
-    --ar: 9 / 16;
-    /* the black screen rectangle inside room-tall.jpg: measure-screen.py INSET line, centre_y_fraction 0.45 */
-    --sx: 10.78%; --sy: 27.00%; --sw: 78.44%; --sh: 29.75%;
+    --keep-computer: 1;
+    --safe-h: calc(var(--vh) / (var(--band-bottom) - var(--band-top)));
+    --top-min: max(calc(var(--vh) - var(--H)), calc(-1 * var(--band-top) * var(--H)));
+    --top-max: min(0px, calc(var(--vh) - var(--band-bottom) * var(--H)));
   }
+}
+.stage img {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent),
+                      linear-gradient(to bottom, transparent, #000 var(--fade-y), #000 calc(100% - var(--fade-y)), transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent),
+              linear-gradient(to bottom, transparent, #000 var(--fade-y), #000 calc(100% - var(--fade-y)), transparent);
+  mask-composite: intersect;
 }
 
 /* ---------- the screen ---------- */
 .screen {
   position: absolute;
-  left: var(--sx); top: var(--sy); width: var(--sw); height: var(--sh);
+  left: calc(var(--sx) * 100%); top: calc(var(--sy) * 100%);
+  width: calc(var(--sw) * 100%); height: calc(var(--sh) * 100%);
   border-radius: 1.4% / 1.9%;
   overflow: hidden;
   background:
     radial-gradient(ellipse at 50% 42%, rgba(24, 70, 36, .45), rgba(4, 10, 6, .15) 72%);
-  box-shadow: inset 0 0 4cqw rgba(0, 0, 0, .75);
+  box-shadow: inset 0 0 calc(var(--S) * .02) rgba(0, 0, 0, .75);
 }
 .spill {
   position: absolute; pointer-events: none;
-  left: calc(var(--sx) - 6%); width: calc(var(--sw) + 12%);
-  top: calc(var(--sy) + var(--sh)); height: 14%;
+  left: calc((var(--sx) - .06) * 100%); width: calc((var(--sw) + .12) * 100%);
+  top: calc((var(--sy) + var(--sh)) * 100%); height: 14%;
   background: radial-gradient(ellipse at 50% 0%, rgba(90,255,140,.13), rgba(0,0,0,0) 70%);
 }
+/* The screen is a fixed terminal grid, --cols by --rows (46 by 12), on any device: the type is sized so
+   --cols characters of --adv em each use 90% of the screen width. 12 rows at line-height 1.15 use 67.5%
+   of the width, which is 90% of a 4:3 screen's height. Percentage padding is relative to the width on
+   every side, so 3% 4% leaves room for all 12. tools/check-viewports.mjs reads --cols and --rows and
+   fails a chapter that does not fit. */
 .tube {
   position: absolute; inset: 0;
-  padding: 4.2% 4.6%;
+  padding: 3% 4%;
   overflow: hidden;
-  font-size: clamp(13px, calc(1.5 * var(--u)), 30px);
-  line-height: 1.2;
+  font-size: calc(var(--S) * var(--sw) * .9 / (var(--cols) * var(--adv)));
+  line-height: 1.15;
   animation: flicker 6s infinite steps(1);
-}
-@media (orientation: portrait) {
-  .tube { font-size: clamp(13px, calc(2.8 * var(--u)), 26px); }
 }
 .text {
   will-change: transform;
   text-shadow: 0 0 5px var(--glow), 0 0 12px rgba(90,255,140,.18);
 }
-.text p { margin: 0 0 .32em; }
 .text a { text-decoration: underline; text-decoration-color: var(--phosphor-dim); text-underline-offset: .15em; }
 .text a:hover, .text a:focus-visible { background: var(--phosphor); color: #030503; text-shadow: none; outline: none; }
-.text .kv { margin-bottom: .12em; }
 
 /* the story's own classes, shared by the screen and the no-JS page */
 .cmd, .dim, .k { color: var(--phosphor-dim); }
 .hi { color: var(--phosphor-hi); }
-.kv { display: grid; grid-template-columns: var(--kv-col, 8.5ch) 1fr; gap: 0 1ch; }
-.sp { margin-top: .9em; }
-/* phones in portrait: tighter padding, gaps and label column so the briefing fits */
-@media (orientation: portrait) and (max-width: 640px) {
-  .tube { padding: 2.4% 3.6%; }
-  .kv { --kv-col: 7.5ch; }
-  .sp { margin-top: .5em; }
-}
+.kv { display: grid; grid-template-columns: 7ch 1fr; gap: 0 1ch; }
+:where(.text, html.no-js .chapter) :where(p, pre) { margin: 0; }   /* zero specificity, so .sp wins in both render modes */
+.sp { margin-top: .6em; }                      /* half a blank row */
+pre { font: inherit; white-space: pre; }
 
 .cursor {
   display: inline-block; width: .6em; height: 1em; vertical-align: -.12em; margin-left: 1px;
@@ -110,31 +146,17 @@ a { color: inherit; }
     radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 58%, rgba(0,0,0,.42) 100%);
 }
 
-/* ---------- hud ---------- */
-.hud {
-  position: absolute; left: 0; right: 0; bottom: 3.5vh;
-  display: flex; justify-content: center; gap: 3ch; flex-wrap: wrap;
-  font-size: clamp(15px, 1.6vw, 19px); color: var(--phosphor-dim);
-  text-shadow: 0 0 6px rgba(90,255,140,.25), 0 1px 3px rgba(0,0,0,.9);   /* legible on the lit keyboard in ultrawide crops */
-}
-.hud a { text-decoration: none; }
-.hud a:hover, .hud a:focus-visible { color: var(--phosphor); outline: none; }
-.hint { transition: opacity .6s; }
-.hint.gone { opacity: 0; }
+/* ---------- skip link for keyboard users (visible only on focus) ---------- */
+.skip { position: fixed; left: -999px; top: 8px; z-index: 10; padding: 6px 10px; background: var(--phosphor); color: #000; font-size: 18px; text-decoration: none; }
+.skip:focus { left: 8px; }
 
 /* ---------- the story text (source of truth for the screen) ---------- */
 html.js .chapters {
   position: absolute; top: 0; left: 0; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
 html.no-js .scene { display: none; }
-html.no-js .chapters { max-width: 72ch; margin: 0 auto; padding: 8vh 6vw; font-size: 22px; line-height: 1.3; }
+html.no-js .chapters { max-width: 60ch; margin: 0 auto; padding: 8vh 6vw 14vh; font-size: 24px; line-height: 1.25; }
 html.no-js .chapter { margin-bottom: 3em; }
-html.no-js .chapter p { margin: 0 0 .4em; }
-html.no-js .kv { --kv-col: 9ch; }
-
-/* skip link for keyboard users */
-.skip { position: fixed; left: -999px; top: 8px; z-index: 10; padding: 6px 10px; background: var(--phosphor); color: #000; }
-.skip:focus { left: 8px; }
 
 @keyframes blink { 50% { opacity: 0; } }
 @keyframes flicker {
@@ -148,5 +170,4 @@ html.no-js .kv { --kv-col: 9ch; }
 }
 @media (prefers-reduced-motion: reduce) {
   .tube, .cursor { animation: none; }
-  .hint { transition: none; }
 }

@@ -4,16 +4,15 @@
   const screen = document.querySelector('.screen');
   const tube = document.querySelector('.tube');
   const out = document.getElementById('screen-text');
-  const hint = document.getElementById('hint');
   const chaptersRoot = document.getElementById('chapters');
   const chapters = Array.from(chaptersRoot.querySelectorAll('.chapter'));
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const tubeStyle = getComputedStyle(tube);   // live view: one call keeps returning current values
 
-  const PX_PER_CHAR = 2;          // scroll pixels per typed character
-  const HOLD = 0.55;              // viewport heights to rest on a finished chapter
-  const LAST_HOLD = 0.35;         // the briefing rests less: the page ends there
-  const BOOT_MS = [22, 38];       // per-character delay while the boot chapter self-types
+  const PX_PER_CHAR = 3;          // scroll pixels per typed character; chapters are short, so a wheel notch types ~30 characters
+  const HOLD = 0.6;               // viewport heights to rest on a finished chapter
+  const LAST_HOLD = 0.35;         // the last chapter rests less: the page ends there
+  const BOOT_MS = [12, 22];       // per-character delay while the boot chapter self-types (~4 s for the whole chapter)
   const AWAKE_PX = 30;            // scroll distance after which the reader has started
 
   // In JS mode the screen is the accessible copy; the chapters stay in the DOM for crawlers and no-JS.
@@ -28,12 +27,15 @@
     return nodes;
   };
   // Section ids of the previous site, so old deep links still land somewhere sensible.
-  const ALIASES = { experience: 'y2006', teaching: 'y2017', tool: 'oss', runtime: 'oss', program: 'y2025', claim: 'boot' };
+  const ALIASES = { experience: 'engineer', teaching: 'classroom', tool: 'solutions', runtime: 'solutions', oss: 'solutions', program: 'solutions', claim: 'boot',
+                    y2006: 'engineer', y2014: 'exchange', y2017: 'classroom', y2022: 'contracts', y2023: 'contracts', y2025: 'solutions' };
   const chapterIndex = id => chapters.findIndex(c => c.id === (ALIASES[id] || id));
 
   // Collapse HTML indentation so it does not count as typed characters. Whitespace-only nodes are
-  // dropped. This mutates the chapters in place; the screen clones them afterwards.
+  // dropped. ASCII art inside <pre> keeps every space. This mutates the chapters in place; the screen
+  // clones them afterwards.
   chapters.forEach(ch => textNodes(ch).forEach(t => {
+    if (t.parentElement.closest('pre')) return;
     if (t.data.trim()) t.data = t.data.replace(/\s+/g, ' '); else t.remove();
   }));
   const lengths = chapters.map(ch => ch.textContent.length);
@@ -78,6 +80,7 @@
     return f;
   }
   let cur = -1, curN = -1;
+  let warnOverflow = () => {};   // armed once the web font is in (below): the fallback font wraps differently
   function paint(i, n) {
     const f = frame(i);
     if (i !== cur) out.replaceChildren(...f.nodes);
@@ -100,7 +103,7 @@
     let over = padT + (cursor.getBoundingClientRect().bottom - out.getBoundingClientRect().top) + padB - tube.clientHeight;
     over = over > 0 ? Math.ceil(over / lineH) * lineH : 0;   // scroll by whole lines
     out.style.transform = over ? `translateY(${-over}px)` : '';
-    if (over && n === segs[i].n) console.warn(`crt.js: chapter "${segs[i].ch.id}" overflows the tube by ${over}px at ${innerWidth}x${innerHeight}; its first lines are off screen`);
+    if (over && n === segs[i].n) warnOverflow(segs[i].ch.id, over);
   }
 
   // ?show=<chapter id> pins one chapter, fully typed: the text never changes, though the page still
@@ -127,8 +130,8 @@
   function repaint() { cur = -1; schedule(); }
 
   // ---- the boot chapter types itself -------------------------------------
-  const BOOT_DELAY_MS = 500;      // let the page settle before the first character
-  const SENTENCE_MS = 260;        // extra pause after a full stop
+  const BOOT_DELAY_MS = 350;      // let the page settle before the first character
+  const SENTENCE_MS = 180;        // extra pause after a full stop
   function finishBoot() { if (bootChars < bootSeg.n) { bootChars = bootSeg.n; schedule(); } }
   function boot() {
     if (reduced) return finishBoot();
@@ -142,12 +145,11 @@
     };
     setTimeout(tick, BOOT_DELAY_MS);
   }
-  function wake() { finishBoot(); hint.classList.add('gone'); }
 
   // ---- events ------------------------------------------------------------
   let typingTimer = 0;
   addEventListener('scroll', () => {
-    if (scrollY > AWAKE_PX) wake();
+    if (scrollY > AWAKE_PX) finishBoot();
     // Hold the cursor solid while scrolling; 180ms after the last scroll event it blinks again.
     screen.classList.add('typing');
     clearTimeout(typingTimer);
@@ -160,14 +162,15 @@
     // Ignore any height change smaller than a URL bar (120px) unless the width also moved.
     if (Math.abs(innerWidth - lastW) < 2 && Math.abs(innerHeight - viewportH) < 120) return;
     layout();
-    scrollTo(0, cur >= 0 ? segs[cur].start + curN * PX_PER_CHAR : 0);   // land on the same character
+    // Land on the same character. A self-typed or reduced-motion chapter has typeLen 0, so cap the offset there.
+    scrollTo(0, cur >= 0 ? segs[cur].start + Math.min(curN * PX_PER_CHAR, segs[cur].typeLen) : 0);
     repaint();
   });
 
   function jumpTo(id, smooth) {
     const i = chapterIndex(id);
     if (i < 0) return false;
-    wake();
+    finishBoot();
     // Land at the end of the chapter's typing run, so the jump shows it complete.
     scrollTo({ top: segs[i].start + segs[i].typeLen, behavior: smooth && !reduced ? 'smooth' : 'auto' });
     return true;
@@ -185,21 +188,27 @@
   if (showId !== null && pin < 0) {
     console.error(`crt.js: ?show=${showId} is not a chapter id. Valid: ${chapters.map(c => c.id).join(', ')}`);
     out.textContent = `unknown chapter: ${showId}`;
-    hint.classList.add('gone');
     return;
   }
   render();
-  if (document.fonts) document.fonts.ready.then(repaint);   // metrics change when the web font arrives
-  if (pin >= 0) { hint.classList.add('gone'); return; }
+  // Metrics change when the web font arrives: repaint, and only from then on judge overflow.
+  if (document.fonts) document.fonts.ready.then(() => {
+    warnOverflow = (id, px) => console.warn(`crt.js: chapter "${id}" overflows the tube by ${px}px at ${innerWidth}x${innerHeight}; its first lines are off screen`);
+    repaint();
+  });
+  if (pin >= 0) return;
   // The browser performs its own fragment scroll at load; ours must run after it.
   const arrive = () => requestAnimationFrame(() => {
     if (location.hash && jumpTo(location.hash.slice(1), false)) return;
-    if (scrollY > AWAKE_PX) wake(); else boot();
+    if (scrollY > AWAKE_PX) finishBoot(); else boot();
   });
   if (document.readyState === 'complete') arrive(); else addEventListener('load', arrive, { once: true });
   addEventListener('hashchange', () => jumpTo(location.hash.slice(1), true));
 } catch (err) {
-  // Anything wrong above means an empty screen; give the reader the plain page instead.
+  // Anything wrong above means an empty screen; give the reader the plain page instead, and make sure the
+  // chapters are focusable and announced again (they are made inert before the risky work starts).
+  const ch = document.getElementById('chapters');
+  if (ch) { ch.inert = false; ch.removeAttribute('aria-hidden'); }
   document.documentElement.className = 'no-js';
   throw err;
 } })();

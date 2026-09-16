@@ -22,6 +22,7 @@ What that looks like day to day:
 • Hackathons: I run Sui's presence at ETHGlobal (New York and Lisbon 2026), EncodeHub London and online hackathons of 100+ developers each, including one for Eve Frontier builders: I define the workshop and the prize tracks, teach the workshop, mentor teams through the weekend and judge.
 • Partner support: Move code review for the contracts we build with partners, and on-call technical support for exchanges and DEXs.
 • Video: tutorials for the Walrus Foundation, scripted, recorded and edited with a Claude-assisted workflow.
+• AI adoption: I spearheaded the adoption of AI tooling at the Sui Foundation, starting with my own solutions engineering team: Claude Code as the daily tool, plus the plugins and MCP servers that ground it in our stack.
 • Tooling: I built sui-pilot, a Claude Code plugin that grounds the agent in 800+ pages of current Sui/Move docs, a Move language server and the Sui Prover, so a developer new to Move gets correct code instead of confident guesses. It follows the plugin pattern Vercel published for Claude Code.
 
 On the side I built Agentic Community College, a course runtime that runs test-gated lessons inside Claude Code, because I wanted to know which parts of good teaching an agent can hold. Two courses run on it; a third, on the Claude Agent SDK, is in progress.
@@ -42,11 +43,12 @@ Developer education and technical support for the Sui ecosystem.
 • Review Move smart-contract implementations built for supported partners.
 • On-call technical support for exchange and DEX partners: triage, troubleshooting, escalation.
 • DeepBook developer experience: sandbox evaluation, reference snippets, a hands-on course.
+• Spearheaded AI adoption across the solutions engineering team: Claude Code as the daily tool, with the plugins, MCP servers and skills that ground it in the Sui stack.
 • Built and maintain sui-pilot, an open-source Claude Code plugin for Sui/Move development (800+ bundled docs, Move LSP and Sui Prover as MCP servers, review skills).
 • Content creation: video tutorials for the Walrus Foundation, scripted, recorded and edited with a Claude-assisted video-editing workflow.
 • Designed Builder Growth Champions, a zero-budget builder program (pitch and playbook); cancelled in the August 2026 reorganisation before its first cohort.
 
-Skills: Move · Sui · DeepBook · Walrus · Curriculum Design · Technical Training · Train-the-Trainer · Developer Relations · Video Tutorials · Claude Code
+Skills: Move · Sui · DeepBook · Walrus · Curriculum Design · Technical Training · Train-the-Trainer · Developer Relations · Video Tutorials · Claude Code · AI Adoption
 
 ### Freelance — Smart Contract Engineer
 Sep 2023 – Sep 2025 · Remote
