@@ -25,8 +25,8 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<!-- One control for the whole page: jumps to the briefing, and back to the start once you are there (crt.js flips it). First tab stop on purpose. -->
-<a class="jump" id="jump" href="#briefing">&gt; briefing</a>
+<!-- Keyboard users: the screen has no focusable element until the briefing is typed, so the first tab stop jumps there. Visible only on focus. -->
+<a class="skip" href="#briefing">Skip to the briefing</a>
 
 <main id="story" class="story">
 
@@ -62,11 +62,11 @@
       <p>Solutions engineer · developer education.</p>
       <p>I make hard stacks teachable.</p>
       <div class="kv"><span class="k">stack</span><span>Move · TS · Cadence · Solidity</span></div>
-      <div class="kv"><span class="k">ai</span><span>Claude Code · plugins · MCP · skills</span></div>
-      <div class="kv"><span class="k">teach</span><span>curricula · bootcamps · hackathons</span></div>
+      <div class="kv"><span class="k">ai</span><span><a href="https://contract-hero.github.io/plugin-marketplace/">Claude Code tooling</a>: plugins · MCPs</span></div>
+      <div class="kv"><span class="k">teach</span><span><a href="#classroom">tech colleges</a> · <a href="https://luma.com/8383yqqc">bootcamps</a> · <a href="https://www.youtube.com/watch?v=g0zjIF_lbdQ">hackathons</a></span></div>
       <div class="kv"><span class="k">domains</span><span>fintech · DeFi · web3 · AI · education</span></div>
       <div class="kv"><span class="k">langs</span><span>Spanish · English · French · Catalan</span></div>
-      <div class="kv"><span class="k">oss</span><span><a href="https://github.com/contract-hero/sui-pilot">sui-pilot</a> · <a href="https://github.com/onflow/flow-ft">flow-ft</a> · <a href="https://github.com/contract-hero/agentic-community-college">acc</a> · trade wars</span></div>
+      <div class="kv"><span class="k">oss</span><span><a href="https://contract-hero.github.io/sui-pilot/">sui-pilot</a> · <a href="https://github.com/onflow/flow-ft">flow-ft</a> · <a href="https://contract-hero.github.io/agentic-community-college/">acc</a> · <a href="https://github.com/alilloig/merkle-mountain-range-contracts">mmr</a></span></div>
       <div class="kv"><span class="k">links</span><span><a href="resume.pdf">resume</a> · <a href="https://github.com/alilloig">github</a> · <a href="https://www.linkedin.com/in/alilloig">linkedin</a> · <a href="https://x.com/TheContractHero">x</a> · <a href="mailto:alilloig@gmail.com">mail</a></span></div>
       <p class="dim">&gt; <a href="#engineer">keep scrolling for the story</a></p>
     </article>
@@ -115,11 +115,12 @@
       <p class="cmd">$ cat 5-solutions.log</p>
       <p class="hi">Both halves became one job.</p>
       <p>Solutions engineer at the Sui Foundation: bootcamps, hackathon workshops, training the local trainers, partner support. Spearheaded the team's AI adoption on Claude Code.</p>
-<pre class="sp">
+<pre>
   teaching  --+
               +--> solutions engineering
   contracts --+</pre>
       <p class="sp dim">earned: the niche profile, found</p>
+      <p class="dim">&gt; <a href="#briefing">back to the briefing</a></p>
     </article>
 
   </div>

@@ -132,16 +132,9 @@ pre { font: inherit; white-space: pre; }
     radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 58%, rgba(0,0,0,.42) 100%);
 }
 
-/* ---------- the corner control ---------- */
-.jump {
-  position: fixed; z-index: 10;
-  right: max(14px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom));
-  padding: 6px 10px;
-  font-size: clamp(17px, 1.4vw, 24px); line-height: 1;
-  color: var(--phosphor-dim); text-decoration: none;
-  text-shadow: 0 0 6px rgba(90,255,140,.25), 0 1px 3px rgba(0,0,0,.9);   /* legible on the lit desk */
-}
-.jump:hover, .jump:focus-visible { color: var(--phosphor); outline: none; text-decoration: underline; text-underline-offset: .2em; }
+/* ---------- skip link for keyboard users (visible only on focus) ---------- */
+.skip { position: fixed; left: -999px; top: 8px; z-index: 10; padding: 6px 10px; background: var(--phosphor); color: #000; font-size: 18px; text-decoration: none; }
+.skip:focus { left: 8px; }
 
 /* ---------- the story text (source of truth for the screen) ---------- */
 html.js .chapters {

@@ -4,7 +4,6 @@
   const screen = document.querySelector('.screen');
   const tube = document.querySelector('.tube');
   const out = document.getElementById('screen-text');
-  const jump = document.getElementById('jump');
   const chaptersRoot = document.getElementById('chapters');
   const chapters = Array.from(chaptersRoot.querySelectorAll('.chapter'));
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -80,18 +79,10 @@
     frames.set(i, f);
     return f;
   }
-  // The corner control points at the briefing from anywhere, and into the story while the briefing is on screen.
-  const briefingIdx = chapterIndex('briefing');
-  const storyId = chapters[briefingIdx + 1].id;
-  function setJump(i) {
-    const onBriefing = i === briefingIdx;
-    jump.textContent = onBriefing ? '> story' : '> briefing';
-    jump.setAttribute('href', onBriefing ? '#' + storyId : '#briefing');
-  }
   let cur = -1, curN = -1, fontsReady = !document.fonts;   // the fallback font wraps differently: only judge overflow once the web font is in
   function paint(i, n) {
     const f = frame(i);
-    if (i !== cur) { out.replaceChildren(...f.nodes); setJump(i); }
+    if (i !== cur) out.replaceChildren(...f.nodes);
     let budget = n, tail = null;
     for (const { node, full } of f.texts) {
       const keep = Math.min(budget, full.length);

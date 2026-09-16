@@ -1,5 +1,5 @@
 // Loads every chapter at a matrix of viewports and fails when the screen leaves the viewport, a chapter
-// overflows the 46x12 grid, the corner control touches the screen, or the type gets too small to read.
+// overflows the 46x12 grid, the keyboard is cropped on a landscape display, or the type gets too small to read.
 //
 //   pnpm -C tools install
 //   node tools/check-viewports.mjs                 # table + exit code
@@ -70,7 +70,6 @@ for (const [name, w, h, dpr, mobile] of VIEWPORTS) {
       const r = el => { const b = el.getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom, w: b.width, h: b.height }; };
       const screen = r(document.querySelector('.screen'));
       const stage = r(document.querySelector('.stage'));
-      const jump = r(document.getElementById('jump'));
       const tube = document.querySelector('.tube');
       const cs = getComputedStyle(tube);
       const text = document.getElementById('screen-text');
@@ -84,16 +83,13 @@ for (const [name, w, h, dpr, mobile] of VIEWPORTS) {
       // the computer (wall above the bezel to the desk edge) as fractions of the photo height; must be visible on landscape screens
       const bandTop = stage.t + .22 * stage.h, bandBottom = stage.t + .80 * stage.h;
       const bars = Math.max(0, Math.round((vw - stage.w) / 2));
-      return { vw, vh, screen, jump, font, lineH, used, avail, cols, bars, computerVisible: bandTop >= -0.5 && bandBottom <= vh + 0.5,
-               screenInside: inside(screen), jumpInside: inside(jump), jumpHitsScreen: overlap(jump, screen) };
+      return { vw, vh, screen, font, lineH, used, avail, cols, bars, computerVisible: bandTop >= -0.5 && bandBottom <= vh + 0.5, screenInside: inside(screen) };
     });
     if (first) { screen = m.screen; font = m.font; bars = m.bars; first = false; }
     if (m.used > worst.rows) worst = { rows: m.used, chapter: id };
     perChapter.push(`${id}=${m.used.toFixed(1)}`);
     const problems = [];
     if (!m.screenInside) problems.push('screen leaves the viewport');
-    if (!m.jumpInside) problems.push('corner control leaves the viewport');
-    if (m.jumpHitsScreen) problems.push('corner control overlaps the screen');
     if (w > h && h >= 500 && !m.computerVisible) problems.push('the keyboard or the top of the monitor is cropped');
     if (m.used > m.avail + 0.05) problems.push(`overflows: ${m.used.toFixed(1)} rows used, ${m.avail.toFixed(1)} available`);
     if (warnings.some(t => t.includes('overflows the tube'))) problems.push('crt.js warned about overflow');
@@ -106,8 +102,8 @@ for (const [name, w, h, dpr, mobile] of VIEWPORTS) {
   if (rows.length === 1 || name.startsWith('MacBook Air')) console.log(`rows per chapter at ${w}x${h}: ${perChapter.join(' ')}`);
   await ctx.close();
 }
-// Behaviour pass at one laptop size: the welcome types itself, the corner control leads to the briefing,
-// into the story from the briefing, and back to the briefing from the end of the story.
+// Behaviour pass at one laptop size: the welcome types itself, the skip link reaches the briefing, the
+// briefing's last line leads into the story, and the story's last line leads back to the briefing.
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await ctx.newPage();
@@ -118,27 +114,24 @@ for (const [name, w, h, dpr, mobile] of VIEWPORTS) {
     .catch(() => failures.push('behaviour: the welcome did not finish typing within 8 s'));
   const bootMs = Date.now() - t0;
   if (bootMs > 5500) failures.push(`behaviour: the welcome took ${bootMs} ms to type; budget is 5.5 s`);
-  const jumpText = () => page.evaluate(() => document.getElementById('jump').textContent);
   const screenHas = async needle => page.evaluate(n => document.getElementById('screen-text').textContent.includes(n), needle);
-  const expectJump = async (want, where) => { const got = await jumpText(); if (got !== want) failures.push(`behaviour: corner control reads "${got}" ${where}; expected "${want}"`); };
-  // Smooth scrolling from the end of the page takes over a second in Chrome: wait for the screen, not a fixed delay.
-  const clickAndExpect = async (needle, msg) => {
-    await page.click('#jump');
+  // Smooth scrolling takes over a second from far away: wait for the screen, not a fixed delay.
+  const clickAndExpect = async (selector, needle, msg) => {
+    await page.click(selector);
     await page.waitForFunction(n => document.getElementById('screen-text').textContent.includes(n), needle, { timeout: 4000 })
       .catch(() => failures.push(`behaviour: ${msg}`));
     await page.waitForTimeout(150);
   };
-  await expectJump('> briefing', 'on the welcome');
-  await clickAndExpect('whoami', '"> briefing" did not land on the briefing');
-  await expectJump('> story', 'on the briefing');
-  await clickAndExpect('1-engineer', '"> story" did not land on the first story chapter');
-  await expectJump('> briefing', 'on a story chapter');
+  await page.keyboard.press('Tab');
+  const focused = await page.evaluate(() => document.activeElement?.className);
+  if (focused !== 'skip') failures.push(`behaviour: first tab stop is "${focused}", expected the skip link`);
+  await clickAndExpect('.skip', 'whoami', 'the skip link did not land on the briefing');
+  await clickAndExpect('#screen-text a[href="#engineer"]', '1-engineer', 'the briefing\'s story link did not land on the first chapter');
   await page.evaluate(() => scrollTo(0, document.body.scrollHeight)); await page.waitForTimeout(300);
-  if (!await screenHas('5-solutions')) failures.push('behaviour: the end of the page does not show the last chapter');
-  await expectJump('> briefing', 'on the last chapter');
-  await clickAndExpect('whoami', '"> briefing" from the end did not land on the briefing');
+  if (!await screenHas('back to the briefing')) failures.push('behaviour: the end of the page does not show the last chapter with its return link');
+  await clickAndExpect('#screen-text a[href="#briefing"]', 'whoami', 'the story\'s return link did not land on the briefing');
   const pageH = await page.evaluate(() => document.body.scrollHeight);
-  console.log(`behaviour: welcome typed in ${bootMs} ms; page is ${pageH} px tall (${(pageH / 900).toFixed(1)} viewports); corner control routes welcome -> briefing -> story -> briefing`);
+  console.log(`behaviour: welcome typed in ${bootMs} ms; page is ${pageH} px tall (${(pageH / 900).toFixed(1)} viewports); skip -> briefing -> story -> briefing all work`);
   await ctx.close();
 }
 await browser.close();

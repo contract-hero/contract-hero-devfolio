@@ -33,7 +33,8 @@ Status confirmed 2026-09-07: still employed, same role, after the August 2026 re
   judge submissions. ETHGlobal New York (Jun 12–14, 2026; 800+ hackers; Sui prizes $9k, Walrus tracks),
   ETHGlobal Lisbon (Jul 24–26, 2026; 800+ hackers; Sui prizes $4k), EncodeHub London, and several online
   hackathons with 100+ developers each, including one for Eve Frontier builders.
-  TODO: workshop video URLs for NYC and Lisbon.
+  Workshop video (ETHGlobal, 2026): https://www.youtube.com/watch?v=g0zjIF_lbdQ ("EVM x Sui"). TODO: which city,
+  and the other one.
 - **Move review.** Review Move smart-contract implementations built by colleagues for supported partners.
 - **Partner support.** On-call technical support for exchange/DEX partners: triage inquiries and bugs,
   troubleshoot, escalate inside the team.
@@ -99,8 +100,16 @@ title and closes with one dim "earned:" line; the last one pays off the welcome 
 found"). No dates in the story: the résumé and LinkedIn carry the timeline. The parenting break is one clause
 without dates. The story sells how the engineering-educator profile was forged, not achievements; those stay
 on the résumé. The current role is worded as solutions engineer, web3 and AI; "forward deployed engineer" is
-not used. Briefing rows (2026-09-16): stack "Move · TS · Cadence · Solidity" (Rust stays on the résumé only),
-an AI row "Claude Code · plugins · MCP · skills", langs "Spanish · English · French · Catalan". Chapter facts come from this file. The screen is a CRT-sized 46×12 grid, one screen per chapter.
+not used. Briefing rows (2026-09-16): stack "Move · TS · Cadence · Solidity" (Rust stays on the résumé only);
+ai "Claude Code tooling: plugins · MCPs" linking https://contract-hero.github.io/plugin-marketplace/;
+teach "tech colleges · bootcamps · hackathons" linking the classroom chapter, the Paris bootcamp Luma page
+(https://luma.com/8383yqqc, "Sui Bootcamp: Paris 2026", hosted with DeVinci Blockchain) and the ETHGlobal
+workshop video (https://www.youtube.com/watch?v=g0zjIF_lbdQ, "EVM x Sui | Alvaro Lillo | ETHGlobal");
+domains "fintech · DeFi · web3 · AI · education"; langs "Spanish · English · French · Catalan";
+oss "sui-pilot · flow-ft · acc · mmr" linking the sui-pilot and ACC landing pages
+(https://contract-hero.github.io/sui-pilot/, https://contract-hero.github.io/agentic-community-college/),
+onflow/flow-ft and github.com/alilloig/merkle-mountain-range-contracts. No corner control: the story's last
+line links back to the briefing; a focus-only skip link serves keyboard users. Chapter facts come from this file. The screen is a CRT-sized 46×12 grid, one screen per chapter.
 
 ## Open source (headline first)
 
@@ -139,6 +148,6 @@ Train-the-trainer · Hackathon workshops and judging · Technical writing · Dev
 
 - Number of online bootcamp editions; number of ambassadors trained.
 - Walrus video tutorials: count, URLs, dates.
-- ETHGlobal NYC and Lisbon workshop video URLs (and a 90-second segment for the site).
+- The second ETHGlobal workshop video URL (one is recorded above) and a 90-second segment for the site.
 - Hero photo from an ETHGlobal event (landscape, ≥ 2000px).
 - Builder Growth Champions pitch + playbook files for the site.
