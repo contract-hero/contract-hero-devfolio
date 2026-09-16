@@ -82,9 +82,14 @@ Status confirmed 2026-09-07: still employed, same role, after the August 2026 re
 
 ## Site story (contracthero.dev)
 
-The landing page tells the journey in seven screens plus a briefing; each chapter closes with one dim
-"earned:" line naming what that stage added. Chapter facts come from this file. The site carries fewer
-facts than the résumé on purpose: it is read on a CRT-sized 46×12 grid, one screen per chapter.
+Screen order (decided 2026-09-16): a welcome screen first (Matrix-style joke, "Wake up, {hiring_manager}..."
+with the placeholder left unresolved on purpose), then the briefing with every link, then five story chapters
+named by stage: engineer, exchange, classroom, contracts, solutions. Each chapter opens with a catchphrase
+title and closes with one dim "earned:" line; the last one pays off the welcome joke ("the niche profile,
+found"). No dates in the story: the résumé and LinkedIn carry the timeline. The parenting break is one clause
+without dates. The story sells how the engineering-educator profile was forged, not achievements; those stay
+on the résumé. The current role is worded as solutions engineer, web3 and AI; "forward deployed engineer" is
+not used. Chapter facts come from this file. The screen is a CRT-sized 46×12 grid, one screen per chapter.
 
 ## Open source (headline first)
 

@@ -12,7 +12,7 @@
 
   const PX_PER_CHAR = 3;          // scroll pixels per typed character; chapters are short, so a wheel notch types ~30 characters
   const HOLD = 0.6;               // viewport heights to rest on a finished chapter
-  const LAST_HOLD = 0.35;         // the briefing rests less: the page ends there
+  const LAST_HOLD = 0.35;         // the last chapter rests less: the page ends there
   const BOOT_MS = [12, 22];       // per-character delay while the boot chapter self-types (~4 s for the whole chapter)
   const AWAKE_PX = 30;            // scroll distance after which the reader has started
 
@@ -28,7 +28,8 @@
     return nodes;
   };
   // Section ids of the previous site, so old deep links still land somewhere sensible.
-  const ALIASES = { experience: 'y2006', teaching: 'y2017', tool: 'y2025', runtime: 'y2025', oss: 'y2025', program: 'y2025', claim: 'boot' };
+  const ALIASES = { experience: 'engineer', teaching: 'classroom', tool: 'solutions', runtime: 'solutions', oss: 'solutions', program: 'solutions', claim: 'boot',
+                    y2006: 'engineer', y2014: 'exchange', y2017: 'classroom', y2022: 'contracts', y2023: 'contracts', y2025: 'solutions' };
   const chapterIndex = id => chapters.findIndex(c => c.id === (ALIASES[id] || id));
 
   // Collapse HTML indentation so it does not count as typed characters. Whitespace-only nodes are
@@ -79,12 +80,13 @@
     frames.set(i, f);
     return f;
   }
-  // The corner control points at the briefing, and back to the start once the briefing is on screen.
-  const last = chapters.length - 1;
+  // The corner control points at the briefing from anywhere, and into the story while the briefing is on screen.
+  const briefingIdx = chapterIndex('briefing');
+  const storyId = chapters[briefingIdx + 1].id;
   function setJump(i) {
-    const back = i === last;
-    jump.textContent = back ? '> rewind' : '> briefing';
-    jump.setAttribute('href', back ? '#boot' : '#briefing');
+    const onBriefing = i === briefingIdx;
+    jump.textContent = onBriefing ? '> story' : '> briefing';
+    jump.setAttribute('href', onBriefing ? '#' + storyId : '#briefing');
   }
   let cur = -1, curN = -1, fontsReady = !document.fonts;   // the fallback font wraps differently: only judge overflow once the web font is in
   function paint(i, n) {

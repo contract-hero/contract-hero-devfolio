@@ -42,87 +42,18 @@
     </div>
   </div>
 
-  <!-- The story. Each chapter must fit the screen grid: 46 columns by 12 rows, spacers count for half a row.
-       tools/check-viewports.mjs fails when a chapter overflows. ASCII art is plain ASCII only: VT323 has no box-drawing glyphs. -->
+  <!-- Screen order: welcome, briefing with the links, then five story chapters named by stage. No dates in the
+       story: the résumé carries the timeline. Each chapter must fit the screen grid, 46 columns by 12 rows,
+       spacers count for half a row; tools/check-viewports.mjs fails when a chapter overflows. ASCII art is plain
+       ASCII only: VT323 has no box-drawing glyphs. -->
   <div class="chapters" id="chapters">
 
     <article class="chapter" id="boot">
       <p class="dim">contracthero.dev · v3 · 2026</p>
       <p class="dim">loading profile: alvaro_lillo_igualada ... ok</p>
-      <p class="sp hi">Wake up.</p>
-      <p>A teacher who learned to write smart contracts, then went back to teaching them.</p>
-      <p class="sp dim">scroll to follow the white rabbit</p>
-      <p class="dim">&gt; or <a href="#briefing">skip to the briefing</a></p>
-    </article>
-
-    <article class="chapter" id="y2006">
-      <p class="cmd">$ cat 2006-2013.log</p>
-      <p class="hi">Telecommunication engineering, Madrid.</p>
-<pre class="sp">
-  MAD -----------------------------> HEL</pre>
-      <p>Erasmus year in Helsinki. First time explaining my ideas to a room that did not share my language.</p>
-      <p class="sp">Final thesis: home automation. Hired before it was finished.</p>
-      <p class="sp dim">earned: teaching across borders</p>
-    </article>
-
-    <article class="chapter" id="y2014">
-      <p class="cmd">$ cat 2014-2017.log</p>
-      <p class="hi">Bolsas y Mercados Españoles. Full stack.</p>
-      <p>The Spanish stock exchange.</p>
-<pre class="sp">
-  broker --FIX--> [ platform ] --> market</pre>
-      <p class="sp">Institutional trading, B2B. Support for people whose day depended on it. Transactions 20% faster.</p>
-      <p class="sp dim">earned: fintech, and calm on a bad day</p>
-    </article>
-
-    <article class="chapter" id="y2017">
-      <p class="cmd">$ cat 2017-2021.log</p>
-      <p class="hi">Detour one: the classroom.</p>
-      <p>Teaching master's, then four years as lead teacher in technical colleges.</p>
-<pre class="sp">
-  curriculum
-  |-- OOP · SQL · networks · web · sysadmin
-  |-- 4 schools · 60-120 students a year
-  '-- one syllabus, every teacher in sync</pre>
-      <p class="sp">Hard things, explained to every level, daily.</p>
-      <p class="dim">earned: "I make hard stacks teachable"</p>
-    </article>
-
-    <article class="chapter" id="y2022">
-      <p class="cmd">$ cat 2022-2023.log</p>
-      <p class="hi">Detour two: smart contracts.</p>
-      <p>Blockchain since college. Taught myself Cadence. Hired by Dapper Labs, on Flow.</p>
-<pre class="sp">
-  FLOW --+
-  USDC --+--> [ switchboard ] --> one vault
-  FUSD --+</pre>
-      <p class="sp">Authored the FT Switchboard and the FT Metadata standard. Open source, on mainnet.</p>
-      <p class="dim">earned: standards work, in the open</p>
-    </article>
-
-    <article class="chapter" id="y2023">
-      <p class="cmd">$ cat 2023-2025.log</p>
-      <p class="hi">Feb 2023: layoffs.</p>
-      <p>Seven months of parenting. Then freelance.</p>
-<pre class="sp">
-  Solidity --port--> Cadence    Band oracle
-  cBridge  --1.0---> audited    Celer
-  Trade Wars: an on-chain MMO on Sui</pre>
-      <p class="sp">Several clients, one engineer. Scoping, negotiating, shipping alone.</p>
-      <p class="dim">earned: owning the whole problem</p>
-    </article>
-
-    <article class="chapter" id="y2025">
-      <p class="cmd">$ cat 2025-now.log</p>
-      <p class="hi">Sui Foundation. Solutions engineer.</p>
-<pre>
-  teaching  --+
-              +--> developer education
-  contracts --+</pre>
-      <p class="sp">Bootcamps: five days of Move and a hackathon, then the local ambassadors run the next one. Ankara · Bucharest · Paris · online.</p>
-      <p>Hackathons: ETHGlobal NYC and Lisbon.</p>
-      <p>Tooling: sui-pilot, a Claude Code plugin.</p>
-      <p class="dim">earned: all paths, one job</p>
+      <p class="sp hi">Wake up, {hiring_manager}...</p>
+      <p>Ever felt like you're never gonna find that niche profile?</p>
+      <p class="sp dim">scroll down to find out</p>
     </article>
 
     <article class="chapter" id="briefing">
@@ -135,7 +66,59 @@
       <div class="kv"><span class="k">craft</span><span>curricula · bootcamps · hackathons</span></div>
       <div class="kv"><span class="k">langs</span><span>Spanish · English · Valencian · French</span></div>
       <div class="kv"><span class="k">oss</span><span><a href="https://github.com/contract-hero/sui-pilot">sui-pilot</a> · <a href="https://github.com/onflow/flow-ft">flow-ft</a> · <a href="https://github.com/contract-hero/agentic-community-college">acc</a> · trade wars</span></div>
-      <div class="kv"><span class="k">links</span><span><a href="resume.pdf">resume.pdf</a> · <a href="https://github.com/alilloig">github</a> · <a href="https://www.linkedin.com/in/alilloig">linkedin</a> · <a href="https://x.com/TheContractHero">x</a> · <a href="mailto:alilloig@gmail.com">mail</a></span></div>
+      <div class="kv"><span class="k">links</span><span><a href="resume.pdf">resume</a> · <a href="https://github.com/alilloig">github</a> · <a href="https://www.linkedin.com/in/alilloig">linkedin</a> · <a href="https://x.com/TheContractHero">x</a> · <a href="mailto:alilloig@gmail.com">mail</a></span></div>
+      <p class="dim">&gt; <a href="#engineer">keep scrolling for the story</a></p>
+    </article>
+
+    <article class="chapter" id="engineer">
+      <p class="cmd">$ cat 1-engineer.log</p>
+      <p class="hi">Systems first.</p>
+      <p>Telecommunication engineering in Madrid, an Erasmus year in Helsinki: the habit of taking a hard system apart until it makes sense, and of explaining it in a second language.</p>
+<pre class="sp">
+  MAD ---------------------------> HEL</pre>
+      <p class="sp dim">earned: learning hard systems fast</p>
+    </article>
+
+    <article class="chapter" id="exchange">
+      <p class="cmd">$ cat 2-exchange.log</p>
+      <p class="hi">Correctness has a price.</p>
+      <p>Full-stack engineer at the Spanish stock exchange. Institutional trading over FIX: production systems where a defect costs money and the people affected call you directly.</p>
+<pre class="sp">
+  broker --FIX--> [ platform ] --> market</pre>
+      <p class="sp dim">earned: engineering under real stakes</p>
+    </article>
+
+    <article class="chapter" id="classroom">
+      <p class="cmd">$ cat 3-classroom.log</p>
+      <p class="hi">Understanding is the deliverable.</p>
+      <p>A teaching master's, then lead teacher in technical colleges: hard concepts for every level of audience, daily, and a teaching team kept on one syllabus at one pace.</p>
+<pre class="sp">
+  curriculum
+  |-- explained at every level
+  '-- one syllabus, every teacher in sync</pre>
+      <p class="sp dim">earned: making hard things teachable</p>
+    </article>
+
+    <article class="chapter" id="contracts">
+      <p class="cmd">$ cat 4-contracts.log</p>
+      <p class="hi">Open standards, built in the open.</p>
+      <p>Self-taught in Cadence, then smart contract engineer at Dapper Labs: token standards for Flow, reviewed in public, live on mainnet. A layoff, seven months of parenting, then freelance: oracles, bridges, a game on Sui.</p>
+<pre class="sp">
+  FLOW --+
+  USDC --+--> [ switchboard ] --> one vault
+  FUSD --+</pre>
+      <p class="dim">earned: owning the whole problem</p>
+    </article>
+
+    <article class="chapter" id="solutions">
+      <p class="cmd">$ cat 5-solutions.log</p>
+      <p class="hi">Both halves became one job.</p>
+      <p>Solutions engineer at the Sui Foundation: bootcamps, hackathon workshops, training the local trainers, partner support, developer tooling for web3 and AI on Claude Code.</p>
+<pre class="sp">
+  teaching  --+
+              +--> solutions engineering
+  contracts --+</pre>
+      <p class="sp dim">earned: the niche profile, found</p>
     </article>
 
   </div>

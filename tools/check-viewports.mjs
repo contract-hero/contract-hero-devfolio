@@ -106,31 +106,39 @@ for (const [name, w, h, dpr, mobile] of VIEWPORTS) {
   if (rows.length === 1 || name.startsWith('MacBook Air')) console.log(`rows per chapter at ${w}x${h}: ${perChapter.join(' ')}`);
   await ctx.close();
 }
-// Behaviour pass at one laptop size: the boot chapter types itself, the corner control flips on the
-// briefing and rewinds to the start.
+// Behaviour pass at one laptop size: the welcome types itself, the corner control leads to the briefing,
+// into the story from the briefing, and back to the briefing from the end of the story.
 {
   const ctx = await browser.newContext({ viewport: { width: 1440, height: 900 } });
   const page = await ctx.newPage();
   await page.goto(SITE);
   await page.waitForFunction(() => document.fonts.check('16px VT323'));
   const t0 = Date.now();
-  await page.waitForFunction(() => document.getElementById('screen-text').textContent.includes('skip to the briefing'), null, { timeout: 8000 })
-    .catch(() => failures.push('behaviour: the boot chapter did not finish typing within 8 s'));
+  await page.waitForFunction(() => document.getElementById('screen-text').textContent.includes('scroll down to find out'), null, { timeout: 8000 })
+    .catch(() => failures.push('behaviour: the welcome did not finish typing within 8 s'));
   const bootMs = Date.now() - t0;
-  if (bootMs > 5500) failures.push(`behaviour: the boot chapter took ${bootMs} ms to type; budget is 5.5 s`);
+  if (bootMs > 5500) failures.push(`behaviour: the welcome took ${bootMs} ms to type; budget is 5.5 s`);
   const jumpText = () => page.evaluate(() => document.getElementById('jump').textContent);
-  if ((await jumpText()) !== '> briefing') failures.push(`behaviour: corner control reads "${await jumpText()}" at the start`);
-  await page.evaluate(() => scrollTo(0, document.body.scrollHeight));
-  await page.waitForTimeout(300);
-  const onBriefing = await page.evaluate(() => document.getElementById('screen-text').textContent.includes('whoami'));
-  if (!onBriefing) failures.push('behaviour: the end of the page does not show the briefing');
-  if ((await jumpText()) !== '> rewind') failures.push(`behaviour: corner control reads "${await jumpText()}" on the briefing`);
-  await page.click('#jump');
-  await page.waitForFunction(() => scrollY < 5, null, { timeout: 4000 }).catch(() => failures.push('behaviour: rewind did not return to the top'));
-  await page.waitForTimeout(200);
-  if ((await jumpText()) !== '> briefing') failures.push(`behaviour: corner control reads "${await jumpText()}" after rewind`);
+  const screenHas = async needle => page.evaluate(n => document.getElementById('screen-text').textContent.includes(n), needle);
+  const expectJump = async (want, where) => { const got = await jumpText(); if (got !== want) failures.push(`behaviour: corner control reads "${got}" ${where}; expected "${want}"`); };
+  // Smooth scrolling from the end of the page takes over a second in Chrome: wait for the screen, not a fixed delay.
+  const clickAndExpect = async (needle, msg) => {
+    await page.click('#jump');
+    await page.waitForFunction(n => document.getElementById('screen-text').textContent.includes(n), needle, { timeout: 4000 })
+      .catch(() => failures.push(`behaviour: ${msg}`));
+    await page.waitForTimeout(150);
+  };
+  await expectJump('> briefing', 'on the welcome');
+  await clickAndExpect('whoami', '"> briefing" did not land on the briefing');
+  await expectJump('> story', 'on the briefing');
+  await clickAndExpect('1-engineer', '"> story" did not land on the first story chapter');
+  await expectJump('> briefing', 'on a story chapter');
+  await page.evaluate(() => scrollTo(0, document.body.scrollHeight)); await page.waitForTimeout(300);
+  if (!await screenHas('5-solutions')) failures.push('behaviour: the end of the page does not show the last chapter');
+  await expectJump('> briefing', 'on the last chapter');
+  await clickAndExpect('whoami', '"> briefing" from the end did not land on the briefing');
   const pageH = await page.evaluate(() => document.body.scrollHeight);
-  console.log(`behaviour: boot typed in ${bootMs} ms; page is ${pageH} px tall (${(pageH / 900).toFixed(1)} viewports); corner control flips both ways`);
+  console.log(`behaviour: welcome typed in ${bootMs} ms; page is ${pageH} px tall (${(pageH / 900).toFixed(1)} viewports); corner control routes welcome -> briefing -> story -> briefing`);
   await ctx.close();
 }
 await browser.close();
