@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Open in Vlervtifacts</title>
+<style>
+  :root { color-scheme: light dark; }
+  body { margin: 0; min-height: 100vh; display: grid; place-items: center;
+         font: 16px/1.5 system-ui, -apple-system, sans-serif; padding: 24px; box-sizing: border-box; }
+  main { max-width: 34rem; text-align: center; }
+  h1 { font-size: 1.25rem; margin: 0 0 .5rem; }
+  p { margin: .5rem 0; opacity: .8; }
+  a.btn { display: inline-block; margin-top: 1rem; padding: .7rem 1.2rem; border-radius: 8px;
+          background: #2563eb; color: #fff; text-decoration: none; font-weight: 600; }
+  code { font-size: .85em; word-break: break-all; }
+  #bad { display: none; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Opening in Vlervtifacts…</h1>
+  <p id="ok">If nothing happens, tap the button. The Mac that shared this file must be running Vlervtifacts.</p>
+  <p id="bad">This link carries no file. Ask for a new one from the Mac that shared it.</p>
+  <a id="open" class="btn" href="#">Open in Vlervtifacts</a>
+</main>
+<script>
+  // The intent lives in the fragment, so this page never sees it on the
+  // server: only `open?path=…&from=…` after the `#`. Anything else is not a
+  // link we mint, and we refuse to forward it.
+  (function () {
+    var intent = location.hash.slice(1);
+    var button = document.getElementById("open");
+    if (!/^open\?path=[^#&]+&from=[0-9a-f]{64}(&line=\d+)?$/.test(intent)) {
+      document.getElementById("ok").style.display = "none";
+      document.getElementById("bad").style.display = "block";
+      button.style.display = "none";
+      return;
+    }
+    var url = "vlerv://" + intent;
+    button.href = url;
+    // Automatic hand-off first; browsers that require a gesture fall back to the button.
+    location.href = url;
+  })();
+</script>
+</body>
+</html>

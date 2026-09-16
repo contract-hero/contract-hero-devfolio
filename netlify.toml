@@ -28,6 +28,13 @@
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "same-origin"
 
+# The vlerv:// redirect page: never cached stale, never framed, and the
+# fragment it reads is never sent here, so nothing to log.
+[[headers]]
+  for = "/vlerv/l/*"
+  [headers.values]
+    Cache-Control = "no-cache"
+
 [[headers]]
   for = "/assets/*"
   [headers.values]
