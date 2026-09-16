@@ -12,7 +12,11 @@ Last reviewed: 2026-09-16.
   Not tailored per job. One framing for every application.
 - One-liner: I make hard stacks teachable: from vocational classrooms to bootcamps, hackathons, docs, video
   and developer tooling.
-- Languages: Spanish (native), English (fluent), Valencian (intermediate), French (basic)
+- Languages: Spanish (native), English (fluent), French (basic), Catalan (intermediate; the Valencian variety).
+  Site order: Spanish · English · French · Catalan. Written "Catalan" everywhere since 2026-09-16 (was "Valencian").
+- Domain expertise worth surfacing (2026-09-16): finance on both sides. Centralised markets (BME: institutional
+  trading over FIX, exchange systems) and DeFi (oracle port, bridge upgrade, DEX and exchange partner support,
+  DeepBook). Not a category of its own on the site; folded into a domains row or the story.
 
 ## Experience
 
@@ -35,6 +39,12 @@ Status confirmed 2026-09-07: still employed, same role, after the August 2026 re
   troubleshoot, escalate inside the team.
 - **DeepBook developer experience.** Evaluated the DeepBook sandbox (SEDEFI-176), wrote reference snippets,
   and authored a hands-on DeepBook course on ACC.
+- **AI adoption.** Spearheaded AI adoption at the Sui Foundation, and specifically within the solutions
+  engineering team: Claude Code as the daily tool, the plugins and MCP servers that ground it in the Sui stack
+  (sui-pilot), agentic workflows for video and docs. Claim allowed on the site, LinkedIn and the résumé
+  (decided 2026-09-16). TODO: concrete examples (what the team adopted, how many people, since when).
+  Claim NOT allowed: experience with the Claude Agent SDK or any agent SDK (none; the ACC course about the
+  SDK is authoring in progress, not production use). The site says "Claude Code · plugins · MCP · skills".
 - **AI tooling.** Built and maintain sui-pilot (see Open source). Architecture follows the pattern Vercel
   published for its Next.js Claude Code plugin: slim always-on preamble, bundled docs, hook-driven skill
   injection. Claim allowed: "built on the pattern Vercel published". Claim NOT allowed: "outperforms".
@@ -89,7 +99,8 @@ title and closes with one dim "earned:" line; the last one pays off the welcome 
 found"). No dates in the story: the résumé and LinkedIn carry the timeline. The parenting break is one clause
 without dates. The story sells how the engineering-educator profile was forged, not achievements; those stay
 on the résumé. The current role is worded as solutions engineer, web3 and AI; "forward deployed engineer" is
-not used. Chapter facts come from this file. The screen is a CRT-sized 46×12 grid, one screen per chapter.
+not used. Briefing rows (2026-09-16): stack "Move · TS · Cadence · Solidity" (Rust stays on the résumé only),
+an AI row "Claude Code · plugins · MCP · skills", langs "Spanish · English · French · Catalan". Chapter facts come from this file. The screen is a CRT-sized 46×12 grid, one screen per chapter.
 
 ## Open source (headline first)
 
@@ -121,7 +132,7 @@ appear only inside the experience bullets. The full list belongs to the site, wh
 ## Skills (for LinkedIn and the résumé strip)
 
 Move (Sui) · Cadence (Flow) · Solidity · TypeScript · Rust · Sui SDK / DeepBook / Walrus / Seal ·
-Claude Code plugins · MCP servers · Claude Agent SDK · Curriculum design · Bootcamp delivery ·
+Claude Code plugins · MCP servers · skills and hooks · AI adoption lead · Curriculum design · Bootcamp delivery ·
 Train-the-trainer · Hackathon workshops and judging · Technical writing · Developer support
 
 ## Open TODOs
