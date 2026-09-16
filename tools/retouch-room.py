@@ -8,7 +8,8 @@ How it was done, so it can be repeated for another object:
        --image-references reference.png --aspect_ratio 1:1 --resolution 1k --wait --json
 3. Run this script: it downsizes each edit to the crop size, aligns it to the original by brute-force
    offset search on the pixels OUTSIDE the object box, and pastes only the box back through a feathered
-   mask. Everything outside the box stays pixel-identical to the original photo.
+   mask. The blend bleeds about one feather radius past the box; the rest of the frame is unchanged apart
+   from the JPEG re-encode.
 Needs Pillow: python3 -m venv /tmp/venv && /tmp/venv/bin/pip install pillow && /tmp/venv/bin/python tools/retouch-room.py
 Inputs are expected in the working directory: room.jpg (original), left-edit.png, right-edit.png.
 """
@@ -34,6 +35,10 @@ def patch(edit_path, ox, oy, box, feather=12, search=6):
     score, dx, dy = best
     base_score = ImageStat.Stat(ImageChops.difference(edit, orig).convert('L'), mask=outside).mean[0]
     print(f'{edit_path}: outside-box mean diff {base_score:.2f} -> {score:.2f} at offset ({dx},{dy})')
+    # A best offset on the search boundary means the true offset is outside the window, and ImageChops.offset
+    # wraps pixels around the crop edge: refuse rather than composite a misaligned patch.
+    if score > base_score or abs(dx) == search or abs(dy) == search:
+        raise SystemExit(f'{edit_path}: alignment failed ({score:.2f} at {dx},{dy}); nothing written')
     edit = ImageChops.offset(edit, dx, dy)
     mask = Image.new('L', (512, 512), 0)
     ImageDraw.Draw(mask).rectangle(list(box), fill=255)

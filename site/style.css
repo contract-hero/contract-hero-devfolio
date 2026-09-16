@@ -29,9 +29,11 @@ a { color: inherit; }
    Size: cover the viewport (--cover), but never let the screen grow past 90% of the viewport width or
    72% of its height (--S). In portrait the photo zooms in past cover, up to 1.4x, until the screen
    reaches 90% of the width: a phone shows the monitor and the keyboard, not the whole room. In
-   landscape the whole computer must stay in view: the band from the wall above the bezel (22% of the
-   photo height) to the desk edge (80%) always fits the viewport height, so on wide displays the photo is
-   narrower than the viewport and its sides fade to black (--fade) instead of cropping the keyboard.
+   landscape at least 500px tall the whole computer must stay in view: the band from the wall above the
+   bezel (22% of the photo height) to the desk edge (80%) always fits the viewport height, so on wide
+   displays the photo is narrower than the viewport and its sides fade to black (--fade) instead of
+   cropping the keyboard. Where the photo is shorter than the viewport instead (aspect narrower than
+   1:2.27) the top and bottom fade the same way (--fade-y).
    Position: the crop is anchored on the centre of the screen (--cx/--cy), which sits at 50% of the
    width and 47% of the height of the viewport, then clamped so the photo edge never enters the viewport
    and, in landscape, so that band stays visible.
@@ -55,6 +57,7 @@ a { color: inherit; }
   --S: min(var(--want), var(--fit-w), var(--safe-h));
   --H: calc(var(--S) / var(--ar));
   --fade: clamp(0px, calc((100vw - var(--S)) * .6), calc(var(--S) * .14));
+  --fade-y: clamp(0px, calc((var(--vh) - var(--H)) * .6), calc(var(--H) * .14));
   --anchor-y: .47;
   --top-want: calc(var(--anchor-y) * var(--vh) - var(--H) * var(--cy));
   --top-min: min(0px, calc(var(--vh) - var(--H)));
@@ -75,8 +78,12 @@ a { color: inherit; }
 }
 .stage img {
   position: absolute; inset: 0; width: 100%; height: 100%; display: block;
-  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent);
-  mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent),
+                      linear-gradient(to bottom, transparent, #000 var(--fade-y), #000 calc(100% - var(--fade-y)), transparent);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent),
+              linear-gradient(to bottom, transparent, #000 var(--fade-y), #000 calc(100% - var(--fade-y)), transparent);
+  mask-composite: intersect;
 }
 
 /* ---------- the screen ---------- */
@@ -97,9 +104,9 @@ a { color: inherit; }
   background: radial-gradient(ellipse at 50% 0%, rgba(90,255,140,.13), rgba(0,0,0,0) 70%);
 }
 /* The screen is a fixed terminal grid, --cols by --rows (46 by 12), on any device: the type is sized so
-   --cols characters of --adv em each use 90% of the screen width. 12 rows at line-height 1.15 use 67.6%
+   --cols characters of --adv em each use 90% of the screen width. 12 rows at line-height 1.15 use 67.5%
    of the width, which is 90% of a 4:3 screen's height. Percentage padding is relative to the width on
-   every side, so 3% 4% leaves exactly that room. tools/check-viewports.mjs reads --cols and --rows and
+   every side, so 3% 4% leaves room for all 12. tools/check-viewports.mjs reads --cols and --rows and
    fails a chapter that does not fit. */
 .tube {
   position: absolute; inset: 0;

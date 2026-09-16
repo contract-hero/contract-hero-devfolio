@@ -45,7 +45,7 @@ Status confirmed 2026-09-07: still employed, same role, after the August 2026 re
   (sui-pilot), agentic workflows for video and docs. Claim allowed on the site, LinkedIn and the résumé
   (decided 2026-09-16). TODO: concrete examples (what the team adopted, how many people, since when).
   Claim NOT allowed: experience with the Claude Agent SDK or any agent SDK (none; the ACC course about the
-  SDK is authoring in progress, not production use). The site says "Claude Code · plugins · MCP · skills".
+  SDK is authoring in progress, not production use). The site says "Claude Code tooling: plugins · MCPs".
 - **AI tooling.** Built and maintain sui-pilot (see Open source). Architecture follows the pattern Vercel
   published for its Next.js Claude Code plugin: slim always-on preamble, bundled docs, hook-driven skill
   injection. Claim allowed: "built on the pattern Vercel published". Claim NOT allowed: "outperforms".
@@ -57,8 +57,8 @@ Status confirmed 2026-09-07: still employed, same role, after the August 2026 re
   submission counts (ETHGlobal only exposes winners). Event sizes from ethglobal.com are fine.
 
 ### Parenting break · Feb 2023 – Sep 2023
-- After the Dapper Labs layoffs, seven months at home with the first child. Stated on the site as one line with
-  the dates; LinkedIn shows it as the gap between the two roles.
+- After the Dapper Labs layoffs, seven months at home with the first child. Stated on the site as one dateless clause inside
+  the contracts chapter; LinkedIn shows it as the gap between the two roles.
 
 ### Freelance — Smart Contract Engineer · Sep 2023 – Sep 2025 · remote
 - Working alone for several clients: scoping, negotiating and shipping without a team behind. The site tells
@@ -106,6 +106,7 @@ teach "tech colleges · bootcamps · hackathons" linking the Paris bootcamp Luma
 (https://luma.com/8383yqqc, "Sui Bootcamp: Paris 2026", hosted with DeVinci Blockchain) and the ETHGlobal
 workshop video (https://www.youtube.com/watch?v=g0zjIF_lbdQ, "EVM x Sui | Alvaro Lillo | ETHGlobal");
 domains "fintech · DeFi · web3 · AI · education"; langs "Spanish · English · French · Catalan";
+links "resume · github · linkedin · x · mail" (resume.pdf, github.com/alilloig, linkedin.com/in/alilloig, x.com/TheContractHero, mail);
 oss "sui-pilot · flow-ft · acc · mmr" linking the sui-pilot and ACC landing pages
 (https://contract-hero.github.io/sui-pilot/, https://contract-hero.github.io/agentic-community-college/),
 onflow/flow-ft and github.com/alilloig/merkle-mountain-range-contracts. No corner control: the story's last

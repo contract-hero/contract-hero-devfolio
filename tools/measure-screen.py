@@ -7,7 +7,7 @@ scans outward from a start pixel until it leaves the dark region.
 Usage: measure-screen.py <image> [threshold=45] [centre_y_fraction=0.5]
   threshold          luminance (0-255) below which a pixel counts as screen. Raise it if the screen
                      is not pure black; above ~90 the scan escapes the bezel and reports the room.
-  centre_y_fraction  where to start the scan, as a fraction of image height (0.45 for the tall photo).
+  centre_y_fraction  where to start the scan, as a fraction of image height (0.47 for assets/room.jpg, whose screen centre sits above the middle).
 
 Two lines are printed: the raw rectangle, and the same rectangle inset ~1.2% of its width and ~1.6%
 of its height per side so the text stays off the curved glass edge. Paste the INSET line into

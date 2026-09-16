@@ -162,7 +162,8 @@
     // Ignore any height change smaller than a URL bar (120px) unless the width also moved.
     if (Math.abs(innerWidth - lastW) < 2 && Math.abs(innerHeight - viewportH) < 120) return;
     layout();
-    scrollTo(0, cur >= 0 ? segs[cur].start + curN * PX_PER_CHAR : 0);   // land on the same character
+    // Land on the same character. A self-typed or reduced-motion chapter has typeLen 0, so cap the offset there.
+    scrollTo(0, cur >= 0 ? segs[cur].start + Math.min(curN * PX_PER_CHAR, segs[cur].typeLen) : 0);
     repaint();
   });
 
@@ -204,7 +205,10 @@
   if (document.readyState === 'complete') arrive(); else addEventListener('load', arrive, { once: true });
   addEventListener('hashchange', () => jumpTo(location.hash.slice(1), true));
 } catch (err) {
-  // Anything wrong above means an empty screen; give the reader the plain page instead.
+  // Anything wrong above means an empty screen; give the reader the plain page instead, and make sure the
+  // chapters are focusable and announced again (they are made inert before the risky work starts).
+  const ch = document.getElementById('chapters');
+  if (ch) { ch.inert = false; ch.removeAttribute('aria-hidden'); }
   document.documentElement.className = 'no-js';
   throw err;
 } })();
