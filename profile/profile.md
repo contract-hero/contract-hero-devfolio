@@ -102,7 +102,7 @@ without dates. The story sells how the engineering-educator profile was forged, 
 on the résumé. The current role is worded as solutions engineer, web3 and AI; "forward deployed engineer" is
 not used. Briefing rows (2026-09-16): stack "Move · TS · Cadence · Solidity" (Rust stays on the résumé only);
 ai "Claude Code tooling: plugins · MCPs" linking https://contract-hero.github.io/plugin-marketplace/;
-teach "tech colleges · bootcamps · hackathons" linking the classroom chapter, the Paris bootcamp Luma page
+teach "tech colleges · bootcamps · hackathons" linking the Paris bootcamp Luma page
 (https://luma.com/8383yqqc, "Sui Bootcamp: Paris 2026", hosted with DeVinci Blockchain) and the ETHGlobal
 workshop video (https://www.youtube.com/watch?v=g0zjIF_lbdQ, "EVM x Sui | Alvaro Lillo | ETHGlobal");
 domains "fintech · DeFi · web3 · AI · education"; langs "Spanish · English · French · Catalan";
