@@ -58,7 +58,7 @@ for (const [name, w, h, dpr, mobile] of VIEWPORTS) {
   // Warm the web font in this context first: the overflow numbers mean nothing in the fallback font.
   await page.goto(SITE);
   await page.evaluate(() => document.fonts.load('16px VT323'));
-  let worst = { rows: 0, chapter: '' }, screen, font, first = true;
+  let worst = { rows: 0, chapter: '' }, screen, font, bars, first = true;
   const perChapter = [];
   for (const id of chapters) {
     warnings.length = 0;
@@ -69,6 +69,7 @@ for (const [name, w, h, dpr, mobile] of VIEWPORTS) {
     const m = await page.evaluate(() => {
       const r = el => { const b = el.getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom, w: b.width, h: b.height }; };
       const screen = r(document.querySelector('.screen'));
+      const stage = r(document.querySelector('.stage'));
       const jump = r(document.getElementById('jump'));
       const tube = document.querySelector('.tube');
       const cs = getComputedStyle(tube);
@@ -80,15 +81,20 @@ for (const [name, w, h, dpr, mobile] of VIEWPORTS) {
       const vw = innerWidth, vh = innerHeight;
       const inside = b => b.l >= -0.5 && b.t >= -0.5 && b.r <= vw + 0.5 && b.b <= vh + 0.5;
       const overlap = (a, b) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
-      return { vw, vh, screen, jump, font, lineH, used, avail, cols, screenInside: inside(screen), jumpInside: inside(jump), jumpHitsScreen: overlap(jump, screen) };
+      // the computer (wall above the bezel to the desk edge) as fractions of the photo height; must be visible on landscape screens
+      const bandTop = stage.t + .22 * stage.h, bandBottom = stage.t + .80 * stage.h;
+      const bars = Math.max(0, Math.round((vw - stage.w) / 2));
+      return { vw, vh, screen, jump, font, lineH, used, avail, cols, bars, computerVisible: bandTop >= -0.5 && bandBottom <= vh + 0.5,
+               screenInside: inside(screen), jumpInside: inside(jump), jumpHitsScreen: overlap(jump, screen) };
     });
-    if (first) { screen = m.screen; font = m.font; first = false; }
+    if (first) { screen = m.screen; font = m.font; bars = m.bars; first = false; }
     if (m.used > worst.rows) worst = { rows: m.used, chapter: id };
     perChapter.push(`${id}=${m.used.toFixed(1)}`);
     const problems = [];
     if (!m.screenInside) problems.push('screen leaves the viewport');
     if (!m.jumpInside) problems.push('corner control leaves the viewport');
     if (m.jumpHitsScreen) problems.push('corner control overlaps the screen');
+    if (w > h && h >= 500 && !m.computerVisible) problems.push('the keyboard or the top of the monitor is cropped');
     if (m.used > m.avail + 0.05) problems.push(`overflows: ${m.used.toFixed(1)} rows used, ${m.avail.toFixed(1)} available`);
     if (warnings.some(t => t.includes('overflows the tube'))) problems.push('crt.js warned about overflow');
     if (m.cols < 46) problems.push(`only ${m.cols} columns`);
@@ -96,7 +102,7 @@ for (const [name, w, h, dpr, mobile] of VIEWPORTS) {
     if (problems.length) failures.push(`${name} ${w}x${h} · ${id}: ${problems.join('; ')}`);
     if (sheetPath) shots.push({ viewport: `${name} ${w}x${h}`, chapter: id, jpeg: (await page.screenshot({ type: 'jpeg', quality: 62, scale: 'css' })).toString('base64') });
   }
-  rows.push([name, `${w}x${h}`, `${Math.round(screen.w)}x${Math.round(screen.h)}`, `${Math.round(100 * screen.w / w)}%`, `${font.toFixed(1)}px`, `${worst.rows.toFixed(1)}/${ROWS} (${worst.chapter})`]);
+  rows.push([name, `${w}x${h}`, `${Math.round(screen.w)}x${Math.round(screen.h)}`, `${Math.round(100 * screen.w / w)}%`, `${font.toFixed(1)}px`, bars ? `${bars}px` : '-', `${worst.rows.toFixed(1)}/${ROWS} (${worst.chapter})`]);
   if (rows.length === 1 || name.startsWith('MacBook Air')) console.log(`rows per chapter at ${w}x${h}: ${perChapter.join(' ')}`);
   await ctx.close();
 }
@@ -129,7 +135,7 @@ for (const [name, w, h, dpr, mobile] of VIEWPORTS) {
 }
 await browser.close();
 
-const head = ['viewport', 'size', 'screen px', 'screen/vw', 'font', 'rows used (worst chapter)'];
+const head = ['viewport', 'size', 'screen px', 'screen/vw', 'font', 'side bars', 'rows used (worst chapter)'];
 const widths = head.map((h, i) => Math.max(h.length, ...rows.map(r => r[i].length)));
 const line = r => r.map((c, i) => c.padEnd(widths[i])).join('  ');
 console.log(line(head)); console.log(widths.map(w => '-'.repeat(w)).join('  '));

@@ -26,9 +26,13 @@ a { color: inherit; }
 
    Size: cover the viewport (--cover), but never let the screen grow past 90% of the viewport width or
    72% of its height (--S). In portrait the photo zooms in past cover, up to 1.4x, until the screen
-   reaches 90% of the width: a phone shows the monitor and the keyboard, not the whole room.
+   reaches 90% of the width: a phone shows the monitor and the keyboard, not the whole room. In
+   landscape the whole computer must stay in view: the band from the wall above the bezel (22% of the
+   photo height) to the desk edge (80%) always fits the viewport height, so on wide displays the photo is
+   narrower than the viewport and its sides fade to black (--fade) instead of cropping the keyboard.
    Position: the crop is anchored on the centre of the screen (--cx/--cy), which sits at 50% of the
-   width and 47% of the height of the viewport, clamped so the photo edge never enters the viewport.
+   width and 47% of the height of the viewport, then clamped so the photo edge never enters the viewport
+   and, in landscape, so that band stays visible.
 
    --ar is the photo's pixel aspect ratio. --sx/--sy/--sw/--sh is the black screen rectangle inside
    assets/room.jpg as fractions of the photo: the INSET line printed by tools/measure-screen.py. */
@@ -42,17 +46,32 @@ a { color: inherit; }
   --cover: max(100vw, calc(var(--vh) * var(--ar)));
   --fit-w: calc(90vw / var(--sw));
   --fit-h: calc(.72 * var(--vh) / var(--sh));
+  --band-top: .22; --band-bottom: .80;               /* the computer: wall above the bezel to the desk edge */
+  --safe-h: var(--fit-h);                             /* landscape below sets the real limit */
   --want: var(--cover);
-  --S: min(var(--want), var(--fit-w), var(--fit-h));
+  --S: min(var(--want), var(--fit-w), var(--fit-h), var(--safe-h));
   --H: calc(var(--S) / var(--ar));
+  --fade: clamp(0px, calc((100vw - var(--S)) * .6), calc(var(--S) * .14));
   width: var(--S);
   height: var(--H);
   left: clamp(min(0px, calc(100vw - var(--S))), calc(50vw - var(--S) * var(--cx)), max(0px, calc(100vw - var(--S))));
   top:  clamp(min(0px, calc(var(--vh) - var(--H))), calc(.47 * var(--vh) - var(--H) * var(--cy)), max(0px, calc(var(--vh) - var(--H))));
 }
 @media (orientation: portrait) { .stage { --want: max(var(--cover), min(var(--fit-w), calc(1.4 * var(--cover)))); } }
+@media (orientation: landscape) and (min-height: 500px) {
+  .stage {
+    --safe-h: calc(var(--vh) / (var(--band-bottom) - var(--band-top)));
+    top: clamp(max(calc(var(--vh) - var(--H)), calc(-1 * var(--band-top) * var(--H))),
+               calc(.47 * var(--vh) - var(--H) * var(--cy)),
+               min(0px, calc(var(--vh) - var(--band-bottom) * var(--H))));
+  }
+}
 @supports (height: 1dvh) { .stage { --vh: 100dvh; } }
-.stage img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.stage img {
+  position: absolute; inset: 0; width: 100%; height: 100%; display: block;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent);
+  mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent);
+}
 
 /* ---------- the screen ---------- */
 .screen {
