@@ -79,7 +79,8 @@
     frames.set(i, f);
     return f;
   }
-  let cur = -1, curN = -1, fontsReady = !document.fonts;   // the fallback font wraps differently: only judge overflow once the web font is in
+  let cur = -1, curN = -1;
+  let warnOverflow = () => {};   // armed once the web font is in (below): the fallback font wraps differently
   function paint(i, n) {
     const f = frame(i);
     if (i !== cur) out.replaceChildren(...f.nodes);
@@ -102,7 +103,7 @@
     let over = padT + (cursor.getBoundingClientRect().bottom - out.getBoundingClientRect().top) + padB - tube.clientHeight;
     over = over > 0 ? Math.ceil(over / lineH) * lineH : 0;   // scroll by whole lines
     out.style.transform = over ? `translateY(${-over}px)` : '';
-    if (over && n === segs[i].n && fontsReady) console.warn(`crt.js: chapter "${segs[i].ch.id}" overflows the tube by ${over}px at ${innerWidth}x${innerHeight}; its first lines are off screen`);
+    if (over && n === segs[i].n) warnOverflow(segs[i].ch.id, over);
   }
 
   // ?show=<chapter id> pins one chapter, fully typed: the text never changes, though the page still
@@ -144,12 +145,11 @@
     };
     setTimeout(tick, BOOT_DELAY_MS);
   }
-  function wake() { finishBoot(); }
 
   // ---- events ------------------------------------------------------------
   let typingTimer = 0;
   addEventListener('scroll', () => {
-    if (scrollY > AWAKE_PX) wake();
+    if (scrollY > AWAKE_PX) finishBoot();
     // Hold the cursor solid while scrolling; 180ms after the last scroll event it blinks again.
     screen.classList.add('typing');
     clearTimeout(typingTimer);
@@ -169,7 +169,7 @@
   function jumpTo(id, smooth) {
     const i = chapterIndex(id);
     if (i < 0) return false;
-    wake();
+    finishBoot();
     // Land at the end of the chapter's typing run, so the jump shows it complete.
     scrollTo({ top: segs[i].start + segs[i].typeLen, behavior: smooth && !reduced ? 'smooth' : 'auto' });
     return true;
@@ -190,12 +190,16 @@
     return;
   }
   render();
-  if (document.fonts) document.fonts.ready.then(() => { fontsReady = true; repaint(); });   // metrics change when the web font arrives
+  // Metrics change when the web font arrives: repaint, and only from then on judge overflow.
+  if (document.fonts) document.fonts.ready.then(() => {
+    warnOverflow = (id, px) => console.warn(`crt.js: chapter "${id}" overflows the tube by ${px}px at ${innerWidth}x${innerHeight}; its first lines are off screen`);
+    repaint();
+  });
   if (pin >= 0) return;
   // The browser performs its own fragment scroll at load; ours must run after it.
   const arrive = () => requestAnimationFrame(() => {
     if (location.hash && jumpTo(location.hash.slice(1), false)) return;
-    if (scrollY > AWAKE_PX) wake(); else boot();
+    if (scrollY > AWAKE_PX) finishBoot(); else boot();
   });
   if (document.readyState === 'complete') arrive(); else addEventListener('load', arrive, { once: true });
   addEventListener('hashchange', () => jumpTo(location.hash.slice(1), true));

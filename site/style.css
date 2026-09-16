@@ -6,7 +6,9 @@
   --phosphor-dim: #4f9a63;
   --glow: rgba(90, 255, 140, .55);
   --mono: "VT323", "Courier New", ui-monospace, monospace;
+  --vh: 100vh;                  /* the viewport height the scene and the stage agree on */
 }
+@supports (height: 1dvh) { :root { --vh: 100dvh; } }
 
 *, *::before, *::after { box-sizing: border-box; }
 html { background: #000; color: var(--phosphor); }
@@ -17,7 +19,7 @@ a { color: inherit; }
 .story { position: relative; }
 .scene {
   position: sticky; top: 0;
-  height: 100vh; height: 100dvh;
+  height: var(--vh);
   overflow: hidden;
 }
 
@@ -42,31 +44,35 @@ a { color: inherit; }
   --sx: .3027; --sy: .3179; --sw: .3960; --sh: .2945;   /* INSET line for assets/room.jpg, 2048x2048 */
   --cx: calc(var(--sx) + var(--sw) / 2);
   --cy: calc(var(--sy) + var(--sh) / 2);
-  --vh: 100vh;
+  --cols: 46; --rows: 12; --adv: .4;                 /* the terminal grid; VT323 advances .4em per character */
   --cover: max(100vw, calc(var(--vh) * var(--ar)));
   --fit-w: calc(90vw / var(--sw));
   --fit-h: calc(.72 * var(--vh) / var(--sh));
   --band-top: .22; --band-bottom: .80;               /* the computer: wall above the bezel to the desk edge */
-  --safe-h: var(--fit-h);                             /* landscape below sets the real limit */
+  --keep-computer: 0;                                 /* 1 while the landscape rule below is in force; tools/check-viewports.mjs reads it */
+  --safe-h: var(--fit-h);                             /* landscape below tightens this to the band */
   --want: var(--cover);
-  --S: min(var(--want), var(--fit-w), var(--fit-h), var(--safe-h));
+  --S: min(var(--want), var(--fit-w), var(--safe-h));
   --H: calc(var(--S) / var(--ar));
   --fade: clamp(0px, calc((100vw - var(--S)) * .6), calc(var(--S) * .14));
+  --anchor-y: .47;
+  --top-want: calc(var(--anchor-y) * var(--vh) - var(--H) * var(--cy));
+  --top-min: min(0px, calc(var(--vh) - var(--H)));
+  --top-max: max(0px, calc(var(--vh) - var(--H)));
   width: var(--S);
   height: var(--H);
   left: clamp(min(0px, calc(100vw - var(--S))), calc(50vw - var(--S) * var(--cx)), max(0px, calc(100vw - var(--S))));
-  top:  clamp(min(0px, calc(var(--vh) - var(--H))), calc(.47 * var(--vh) - var(--H) * var(--cy)), max(0px, calc(var(--vh) - var(--H))));
+  top: clamp(var(--top-min), var(--top-want), var(--top-max));
 }
 @media (orientation: portrait) { .stage { --want: max(var(--cover), min(var(--fit-w), calc(1.4 * var(--cover)))); } }
 @media (orientation: landscape) and (min-height: 500px) {
   .stage {
+    --keep-computer: 1;
     --safe-h: calc(var(--vh) / (var(--band-bottom) - var(--band-top)));
-    top: clamp(max(calc(var(--vh) - var(--H)), calc(-1 * var(--band-top) * var(--H))),
-               calc(.47 * var(--vh) - var(--H) * var(--cy)),
-               min(0px, calc(var(--vh) - var(--band-bottom) * var(--H))));
+    --top-min: max(calc(var(--vh) - var(--H)), calc(-1 * var(--band-top) * var(--H)));
+    --top-max: min(0px, calc(var(--vh) - var(--band-bottom) * var(--H)));
   }
 }
-@supports (height: 1dvh) { .stage { --vh: 100dvh; } }
 .stage img {
   position: absolute; inset: 0; width: 100%; height: 100%; display: block;
   -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fade), #000 calc(100% - var(--fade)), transparent);
@@ -90,15 +96,16 @@ a { color: inherit; }
   top: calc((var(--sy) + var(--sh)) * 100%); height: 14%;
   background: radial-gradient(ellipse at 50% 0%, rgba(90,255,140,.13), rgba(0,0,0,0) 70%);
 }
-/* The screen is a fixed terminal grid: 46 columns by 12 rows, on any device. VT323 advances 0.4em per
-   character, so 46 columns at 4.9% of the screen width use 90% of it; 12 rows at line-height 1.15 use
-   67.6% of the width, which is 90% of a 4:3 screen's height. Percentage padding is relative to the width
-   on every side, so 3% 4% leaves exactly that room. */
+/* The screen is a fixed terminal grid, --cols by --rows (46 by 12), on any device: the type is sized so
+   --cols characters of --adv em each use 90% of the screen width. 12 rows at line-height 1.15 use 67.6%
+   of the width, which is 90% of a 4:3 screen's height. Percentage padding is relative to the width on
+   every side, so 3% 4% leaves exactly that room. tools/check-viewports.mjs reads --cols and --rows and
+   fails a chapter that does not fit. */
 .tube {
   position: absolute; inset: 0;
   padding: 3% 4%;
   overflow: hidden;
-  font-size: calc(var(--S) * var(--sw) * .049);
+  font-size: calc(var(--S) * var(--sw) * .9 / (var(--cols) * var(--adv)));
   line-height: 1.15;
   animation: flicker 6s infinite steps(1);
 }
@@ -106,7 +113,6 @@ a { color: inherit; }
   will-change: transform;
   text-shadow: 0 0 5px var(--glow), 0 0 12px rgba(90,255,140,.18);
 }
-.text p, .text pre { margin: 0; }
 .text a { text-decoration: underline; text-decoration-color: var(--phosphor-dim); text-underline-offset: .15em; }
 .text a:hover, .text a:focus-visible { background: var(--phosphor); color: #030503; text-shadow: none; outline: none; }
 
@@ -114,7 +120,8 @@ a { color: inherit; }
 .cmd, .dim, .k { color: var(--phosphor-dim); }
 .hi { color: var(--phosphor-hi); }
 .kv { display: grid; grid-template-columns: 7ch 1fr; gap: 0 1ch; }
-.sp { margin-top: .6em !important; }           /* half a blank row */
+:where(.text, html.no-js .chapter) :where(p, pre) { margin: 0; }   /* zero specificity, so .sp wins in both render modes */
+.sp { margin-top: .6em; }                      /* half a blank row */
 pre { font: inherit; white-space: pre; }
 
 .cursor {
@@ -143,7 +150,6 @@ html.js .chapters {
 html.no-js .scene { display: none; }
 html.no-js .chapters { max-width: 60ch; margin: 0 auto; padding: 8vh 6vw 14vh; font-size: 24px; line-height: 1.25; }
 html.no-js .chapter { margin-bottom: 3em; }
-html.no-js .chapter p, html.no-js .chapter pre { margin: 0; }
 
 @keyframes blink { 50% { opacity: 0; } }
 @keyframes flicker {

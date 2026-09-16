@@ -1,19 +1,19 @@
 // Loads every chapter at a matrix of viewports and fails when the screen leaves the viewport, a chapter
-// overflows the 46x12 grid, the keyboard is cropped on a landscape display, or the type gets too small to read.
+// overflows the terminal grid (--cols by --rows in style.css), the keyboard is cropped on a landscape
+// display, the page logs a warning or an error, or the type gets too small to read.
 //
 //   pnpm -C tools install
-//   node tools/check-viewports.mjs                 # table + exit code
+//   node tools/check-viewports.mjs                    # table + exit code
 //   node tools/check-viewports.mjs --sheet out.html   # also writes a single-file contact sheet of screenshots
 //   node tools/check-viewports.mjs --only briefing,boot --sheet out.html
 //
 // Uses the installed Google Chrome through playwright-core (no browser download). Real device metrics
 // through the context, so phone widths are honoured (headless --window-size clamps at 500px).
-import { chromium } from 'playwright-core';
 import { writeFileSync } from 'node:fs';
+import { SITE, launch, chapterIds, openChapter } from './page.mjs';
 
-const SITE = new URL('../site/index.html', import.meta.url).href;
 const MIN_FONT_PX = 15;       // below this VT323 stops being comfortable on a phone
-const ROWS = 12;
+const CONCURRENCY = 4;        // viewport contexts measured at once; the geometry is static, so order does not matter
 
 // name, width, height, deviceScaleFactor, mobile
 const VIEWPORTS = [
@@ -40,68 +40,69 @@ const args = process.argv.slice(2);
 const opt = k => { const i = args.indexOf(k); return i >= 0 ? args[i + 1] : null; };
 const sheetPath = opt('--sheet');
 const only = opt('--only')?.split(',');
+const chapters = chapterIds().filter(id => !only || only.includes(id));
 
-const browser = await chromium.launch({ channel: 'chrome', headless: true });
-const probe = await browser.newPage();
-await probe.goto(SITE);
-const chapters = (await probe.$$eval('.chapter', els => els.map(e => e.id))).filter(id => !only || only.includes(id));
-await probe.close();
+const browser = await launch();
 
-const failures = [];
-const shots = [];   // { viewport, chapter, jpegBase64 }
-const rows = [];
-for (const [name, w, h, dpr, mobile] of VIEWPORTS) {
+// Measures every chapter at one viewport: the table row, the failures and, with --sheet, the screenshots.
+async function measure([name, w, h, dpr, mobile]) {
   const ctx = await browser.newContext({ viewport: { width: w, height: h }, deviceScaleFactor: dpr, isMobile: mobile, hasTouch: mobile });
   const page = await ctx.newPage();
-  const warnings = [];
-  page.on('console', m => { if (m.type() === 'warning' || m.type() === 'error') warnings.push(m.text()); });
-  // Warm the web font in this context first: the overflow numbers mean nothing in the fallback font.
-  await page.goto(SITE);
-  await page.evaluate(() => document.fonts.load('16px VT323'));
-  let worst = { rows: 0, chapter: '' }, screen, font, bars, first = true;
-  const perChapter = [];
+  const logged = [];
+  page.on('console', m => { if (m.type() === 'warning' || m.type() === 'error') logged.push(m.text()); });
+  const failures = [], shots = [], perChapter = [];
+  let worst = { rows: 0, chapter: '' }, view;
   for (const id of chapters) {
-    warnings.length = 0;
-    await page.goto(`${SITE}?show=${id}`);
-    await page.waitForFunction(() => document.fonts.check('16px VT323'));
-    await page.evaluate(() => document.fonts.ready);
-    await page.evaluate(() => new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r))));
+    logged.length = 0;
+    await openChapter(page, id);
     const m = await page.evaluate(() => {
-      const r = el => { const b = el.getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom, w: b.width, h: b.height }; };
-      const screen = r(document.querySelector('.screen'));
-      const stage = r(document.querySelector('.stage'));
-      const tube = document.querySelector('.tube');
+      const rect = el => { const b = el.getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom, w: b.width, h: b.height }; };
+      const stageEl = document.querySelector('.stage'), tube = document.querySelector('.tube');
+      const stage = rect(stageEl), screen = rect(document.querySelector('.screen'));
+      const prop = name => parseFloat(getComputedStyle(stageEl).getPropertyValue(name));   // the grid and the band are declared in style.css
       const cs = getComputedStyle(tube);
-      const text = document.getElementById('screen-text');
       const font = parseFloat(cs.fontSize), lineH = parseFloat(cs.lineHeight);
-      const used = text.getBoundingClientRect().height / lineH;
+      const used = document.getElementById('screen-text').getBoundingClientRect().height / lineH;
       const avail = (tube.clientHeight - parseFloat(cs.paddingTop) - parseFloat(cs.paddingBottom)) / lineH;
-      const cols = Math.floor((tube.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)) / (font * 0.4));
-      const vw = innerWidth, vh = innerHeight;
-      const inside = b => b.l >= -0.5 && b.t >= -0.5 && b.r <= vw + 0.5 && b.b <= vh + 0.5;
-      const overlap = (a, b) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
-      // the computer (wall above the bezel to the desk edge) as fractions of the photo height; must be visible on landscape screens
-      const bandTop = stage.t + .22 * stage.h, bandBottom = stage.t + .80 * stage.h;
-      const bars = Math.max(0, Math.round((vw - stage.w) / 2));
-      return { vw, vh, screen, font, lineH, used, avail, cols, bars, computerVisible: bandTop >= -0.5 && bandBottom <= vh + 0.5, screenInside: inside(screen) };
+      const cols = Math.floor((tube.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight)) / (font * prop('--adv')));
+      const inside = b => b.l >= -0.5 && b.t >= -0.5 && b.r <= innerWidth + 0.5 && b.b <= innerHeight + 0.5;
+      const bandTop = stage.t + prop('--band-top') * stage.h, bandBottom = stage.t + prop('--band-bottom') * stage.h;
+      return {
+        screen, font, used, avail, cols, wantCols: prop('--cols'), wantRows: prop('--rows'),
+        bars: Math.max(0, Math.round((innerWidth - stage.w) / 2)),
+        screenInside: inside(screen),
+        keepComputer: prop('--keep-computer') === 1,
+        computerVisible: bandTop >= -0.5 && bandBottom <= innerHeight + 0.5,
+      };
     });
-    if (first) { screen = m.screen; font = m.font; bars = m.bars; first = false; }
+    view = m;
     if (m.used > worst.rows) worst = { rows: m.used, chapter: id };
     perChapter.push(`${id}=${m.used.toFixed(1)}`);
     const problems = [];
     if (!m.screenInside) problems.push('screen leaves the viewport');
-    if (w > h && h >= 500 && !m.computerVisible) problems.push('the keyboard or the top of the monitor is cropped');
+    if (m.keepComputer && !m.computerVisible) problems.push('the keyboard or the top of the monitor is cropped');
+    if (m.cols < m.wantCols) problems.push(`only ${m.cols} of ${m.wantCols} columns`);
+    if (m.avail + 0.05 < m.wantRows) problems.push(`only ${m.avail.toFixed(1)} of ${m.wantRows} rows fit`);
     if (m.used > m.avail + 0.05) problems.push(`overflows: ${m.used.toFixed(1)} rows used, ${m.avail.toFixed(1)} available`);
-    if (warnings.some(t => t.includes('overflows the tube'))) problems.push('crt.js warned about overflow');
-    if (m.cols < 46) problems.push(`only ${m.cols} columns`);
     if (m.font < MIN_FONT_PX) problems.push(`font ${m.font.toFixed(1)}px < ${MIN_FONT_PX}px`);
+    if (logged.length) problems.push(`console: ${logged[0]}`);
     if (problems.length) failures.push(`${name} ${w}x${h} · ${id}: ${problems.join('; ')}`);
     if (sheetPath) shots.push({ viewport: `${name} ${w}x${h}`, chapter: id, jpeg: (await page.screenshot({ type: 'jpeg', quality: 62, scale: 'css' })).toString('base64') });
   }
-  rows.push([name, `${w}x${h}`, `${Math.round(screen.w)}x${Math.round(screen.h)}`, `${Math.round(100 * screen.w / w)}%`, `${font.toFixed(1)}px`, bars ? `${bars}px` : '-', `${worst.rows.toFixed(1)}/${ROWS} (${worst.chapter})`]);
-  if (rows.length === 1 || name.startsWith('MacBook Air')) console.log(`rows per chapter at ${w}x${h}: ${perChapter.join(' ')}`);
   await ctx.close();
+  const row = [name, `${w}x${h}`, `${Math.round(view.screen.w)}x${Math.round(view.screen.h)}`, `${Math.round(100 * view.screen.w / w)}%`,
+    `${view.font.toFixed(1)}px`, view.bars ? `${view.bars}px` : '-', `${worst.rows.toFixed(1)}/${view.wantRows} (${worst.chapter})`];
+  return { name, w, h, row, failures, shots, perChapter };
 }
+
+// CONCURRENCY viewports at a time; results stay in VIEWPORTS order.
+const results = [];
+for (let i = 0; i < VIEWPORTS.length; i += CONCURRENCY) results.push(...await Promise.all(VIEWPORTS.slice(i, i + CONCURRENCY).map(measure)));
+const failures = results.flatMap(r => r.failures);
+const shots = results.flatMap(r => r.shots);
+const rows = results.map(r => r.row);
+for (const r of results) if (r === results[0] || r.name.startsWith('MacBook Air')) console.log(`rows per chapter at ${r.w}x${r.h}: ${r.perChapter.join(' ')}`);
+
 // Behaviour pass at one laptop size: the welcome types itself, the skip link reaches the briefing, the
 // briefing's last line leads into the story, and the story's last line leads back to the briefing.
 {
