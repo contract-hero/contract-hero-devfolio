@@ -1,7 +1,7 @@
 # Álvaro Lillo Igualada — profile source of truth
 
 Every claim on contracthero.dev, resume.pdf and LinkedIn derives from this file. Change it here first.
-Last reviewed: 2026-09-15.
+Last reviewed: 2026-09-16.
 
 ## Identity
 
@@ -45,7 +45,13 @@ Status confirmed 2026-09-07: still employed, same role, after the August 2026 re
 - Numbers policy: no "N merged PRs into MystenLabs" (repos are SAML-gated, unverifiable). No hackathon
   submission counts (ETHGlobal only exposes winners). Event sizes from ethglobal.com are fine.
 
+### Parenting break · Feb 2023 – Sep 2023
+- After the Dapper Labs layoffs, seven months at home with the first child. Stated on the site as one line with
+  the dates; LinkedIn shows it as the gap between the two roles.
+
 ### Freelance — Smart Contract Engineer · Sep 2023 – Sep 2025 · remote
+- Working alone for several clients: scoping, negotiating and shipping without a team behind. The site tells
+  this as "owning the whole problem"; the résumé keeps the deliverables only.
 - Ported the Band Protocol oracle from Solidity to Cadence for Flow: testnet (Oct 2023), mainnet-ready
   (Jan 2024), Cadence 1.0 upgrade (Aug 2024). onflow/band-oracle-contracts, 5 merged PRs.
 - Upgraded Celer cBridge and auxiliary contracts to Cadence 1.0; suite audited by Oak Security.
@@ -74,6 +80,12 @@ Status confirmed 2026-09-07: still employed, same role, after the August 2026 re
 - Technical support for a B2B electronic trading platform (institutional brokers over FIX).
 - Optimised transaction processing: 20% reduction in processing time; improved stability.
 
+## Site story (contracthero.dev)
+
+The landing page tells the journey in seven screens plus a briefing; each chapter closes with one dim
+"earned:" line naming what that stage added. Chapter facts come from this file. The site carries fewer
+facts than the résumé on purpose: it is read on a CRT-sized 46×12 grid, one screen per chapter.
+
 ## Open source (headline first)
 
 Placement policy (2026-09-15): the résumé has no Open Source section. sui-pilot and the Flow token standards
@@ -98,6 +110,7 @@ appear only inside the experience bullets. The full list belongs to the site, wh
 
 - Master's in Teacher Training — URJC, Madrid, 2016–2017. Thesis: programming education through video games.
 - Bachelor's in Telecommunication Engineering — Technical University of Madrid, 2006–2013.
+  Final thesis: home automation (domotics). Hired by BME while finishing it.
   Erasmus year at Metropolia University of Applied Sciences, Helsinki, 2010–2011.
 
 ## Skills (for LinkedIn and the résumé strip)

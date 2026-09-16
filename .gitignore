@@ -1,3 +1,8 @@
 .DS_Store
 node_modules/
 *.log
+
+# impeccable rewrites its hook cache on every edit; keep it out of the tree
+.impeccable/hook.cache.json
+# dev-only tooling
+tools/node_modules/

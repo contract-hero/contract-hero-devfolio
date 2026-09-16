@@ -21,79 +21,82 @@ a { color: inherit; }
   overflow: hidden;
 }
 
-/* The stage is the photo's own box, scaled to cover the viewport. Everything on the
-   screen is positioned in the photo's coordinates, so the mapping survives any crop.
-   --ar must equal the photo's pixel aspect ratio (1920x1080 and 1080x1920 today).
-   The portrait switch below must match the <source media> in index.html. */
+/* One square photo for every viewport. The stage is the photo's own box; everything on the screen is
+   positioned in the photo's coordinates, so the mapping survives any crop.
+
+   Size: cover the viewport (--cover), but never let the screen grow past 90% of the viewport width or
+   72% of its height (--S). In portrait the photo zooms in past cover, up to 1.4x, until the screen
+   reaches 90% of the width: a phone shows the monitor and the keyboard, not the whole room.
+   Position: the crop is anchored on the centre of the screen (--cx/--cy), which sits at 50% of the
+   width and 47% of the height of the viewport, clamped so the photo edge never enters the viewport.
+
+   --ar is the photo's pixel aspect ratio. --sx/--sy/--sw/--sh is the black screen rectangle inside
+   assets/room.jpg as fractions of the photo: the INSET line printed by tools/measure-screen.py. */
 .stage {
-  position: absolute; left: 50%; top: 50%;
-  transform: translate(-50%, -50%);
-  --ar: 16 / 9;
-  width: max(100vw, calc(100vh * var(--ar)));
-  width: max(100vw, calc(100dvh * var(--ar)));
-  aspect-ratio: var(--ar);
-  container-type: inline-size;
-  --u: 1vw;                    /* fallback: tracks the viewport, ~10% small; @supports below switches to 1cqw, which tracks the stage */
-  /* the black screen rectangle inside room-wide.jpg: the INSET line printed by tools/measure-screen.py */
-  --sx: 24.15%; --sy: 9.20%; --sw: 51.21%; --sh: 52.52%;
+  position: absolute;
+  --ar: 1;
+  --sx: .3027; --sy: .3179; --sw: .3960; --sh: .2945;   /* INSET line for assets/room.jpg, 2048x2048 */
+  --cx: calc(var(--sx) + var(--sw) / 2);
+  --cy: calc(var(--sy) + var(--sh) / 2);
+  --vh: 100vh;
+  --cover: max(100vw, calc(var(--vh) * var(--ar)));
+  --fit-w: calc(90vw / var(--sw));
+  --fit-h: calc(.72 * var(--vh) / var(--sh));
+  --want: var(--cover);
+  --S: min(var(--want), var(--fit-w), var(--fit-h));
+  --H: calc(var(--S) / var(--ar));
+  width: var(--S);
+  height: var(--H);
+  left: clamp(min(0px, calc(100vw - var(--S))), calc(50vw - var(--S) * var(--cx)), max(0px, calc(100vw - var(--S))));
+  top:  clamp(min(0px, calc(var(--vh) - var(--H))), calc(.47 * var(--vh) - var(--H) * var(--cy)), max(0px, calc(var(--vh) - var(--H))));
 }
-@supports (font-size: 1cqw) { .stage { --u: 1cqw; } }
+@media (orientation: portrait) { .stage { --want: max(var(--cover), min(var(--fit-w), calc(1.4 * var(--cover)))); } }
+@supports (height: 1dvh) { .stage { --vh: 100dvh; } }
 .stage img { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-@media (orientation: portrait) {
-  .stage {
-    --ar: 9 / 16;
-    /* the black screen rectangle inside room-tall.jpg: measure-screen.py INSET line, centre_y_fraction 0.45 */
-    --sx: 10.78%; --sy: 27.00%; --sw: 78.44%; --sh: 29.75%;
-  }
-}
 
 /* ---------- the screen ---------- */
 .screen {
   position: absolute;
-  left: var(--sx); top: var(--sy); width: var(--sw); height: var(--sh);
+  left: calc(var(--sx) * 100%); top: calc(var(--sy) * 100%);
+  width: calc(var(--sw) * 100%); height: calc(var(--sh) * 100%);
   border-radius: 1.4% / 1.9%;
   overflow: hidden;
   background:
     radial-gradient(ellipse at 50% 42%, rgba(24, 70, 36, .45), rgba(4, 10, 6, .15) 72%);
-  box-shadow: inset 0 0 4cqw rgba(0, 0, 0, .75);
+  box-shadow: inset 0 0 calc(var(--S) * .02) rgba(0, 0, 0, .75);
 }
 .spill {
   position: absolute; pointer-events: none;
-  left: calc(var(--sx) - 6%); width: calc(var(--sw) + 12%);
-  top: calc(var(--sy) + var(--sh)); height: 14%;
+  left: calc((var(--sx) - .06) * 100%); width: calc((var(--sw) + .12) * 100%);
+  top: calc((var(--sy) + var(--sh)) * 100%); height: 14%;
   background: radial-gradient(ellipse at 50% 0%, rgba(90,255,140,.13), rgba(0,0,0,0) 70%);
 }
+/* The screen is a fixed terminal grid: 46 columns by 12 rows, on any device. VT323 advances 0.4em per
+   character, so 46 columns at 4.9% of the screen width use 90% of it; 12 rows at line-height 1.15 use
+   67.6% of the width, which is 90% of a 4:3 screen's height. Percentage padding is relative to the width
+   on every side, so 3% 4% leaves exactly that room. */
 .tube {
   position: absolute; inset: 0;
-  padding: 4.2% 4.6%;
+  padding: 3% 4%;
   overflow: hidden;
-  font-size: clamp(13px, calc(1.5 * var(--u)), 30px);
-  line-height: 1.2;
+  font-size: calc(var(--S) * var(--sw) * .049);
+  line-height: 1.15;
   animation: flicker 6s infinite steps(1);
-}
-@media (orientation: portrait) {
-  .tube { font-size: clamp(13px, calc(2.8 * var(--u)), 26px); }
 }
 .text {
   will-change: transform;
   text-shadow: 0 0 5px var(--glow), 0 0 12px rgba(90,255,140,.18);
 }
-.text p { margin: 0 0 .32em; }
+.text p, .text pre { margin: 0; }
 .text a { text-decoration: underline; text-decoration-color: var(--phosphor-dim); text-underline-offset: .15em; }
 .text a:hover, .text a:focus-visible { background: var(--phosphor); color: #030503; text-shadow: none; outline: none; }
-.text .kv { margin-bottom: .12em; }
 
 /* the story's own classes, shared by the screen and the no-JS page */
 .cmd, .dim, .k { color: var(--phosphor-dim); }
 .hi { color: var(--phosphor-hi); }
-.kv { display: grid; grid-template-columns: var(--kv-col, 8.5ch) 1fr; gap: 0 1ch; }
-.sp { margin-top: .9em; }
-/* phones in portrait: tighter padding, gaps and label column so the briefing fits */
-@media (orientation: portrait) and (max-width: 640px) {
-  .tube { padding: 2.4% 3.6%; }
-  .kv { --kv-col: 7.5ch; }
-  .sp { margin-top: .5em; }
-}
+.kv { display: grid; grid-template-columns: 7ch 1fr; gap: 0 1ch; }
+.sp { margin-top: .6em !important; }           /* half a blank row */
+pre { font: inherit; white-space: pre; }
 
 .cursor {
   display: inline-block; width: .6em; height: 1em; vertical-align: -.12em; margin-left: 1px;
@@ -110,31 +113,25 @@ a { color: inherit; }
     radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 58%, rgba(0,0,0,.42) 100%);
 }
 
-/* ---------- hud ---------- */
-.hud {
-  position: absolute; left: 0; right: 0; bottom: 3.5vh;
-  display: flex; justify-content: center; gap: 3ch; flex-wrap: wrap;
-  font-size: clamp(15px, 1.6vw, 19px); color: var(--phosphor-dim);
-  text-shadow: 0 0 6px rgba(90,255,140,.25), 0 1px 3px rgba(0,0,0,.9);   /* legible on the lit keyboard in ultrawide crops */
+/* ---------- the corner control ---------- */
+.jump {
+  position: fixed; z-index: 10;
+  right: max(14px, env(safe-area-inset-right)); bottom: max(12px, env(safe-area-inset-bottom));
+  padding: 6px 10px;
+  font-size: clamp(17px, 1.4vw, 24px); line-height: 1;
+  color: var(--phosphor-dim); text-decoration: none;
+  text-shadow: 0 0 6px rgba(90,255,140,.25), 0 1px 3px rgba(0,0,0,.9);   /* legible on the lit desk */
 }
-.hud a { text-decoration: none; }
-.hud a:hover, .hud a:focus-visible { color: var(--phosphor); outline: none; }
-.hint { transition: opacity .6s; }
-.hint.gone { opacity: 0; }
+.jump:hover, .jump:focus-visible { color: var(--phosphor); outline: none; text-decoration: underline; text-underline-offset: .2em; }
 
 /* ---------- the story text (source of truth for the screen) ---------- */
 html.js .chapters {
   position: absolute; top: 0; left: 0; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
 }
 html.no-js .scene { display: none; }
-html.no-js .chapters { max-width: 72ch; margin: 0 auto; padding: 8vh 6vw; font-size: 22px; line-height: 1.3; }
+html.no-js .chapters { max-width: 60ch; margin: 0 auto; padding: 8vh 6vw 14vh; font-size: 24px; line-height: 1.25; }
 html.no-js .chapter { margin-bottom: 3em; }
-html.no-js .chapter p { margin: 0 0 .4em; }
-html.no-js .kv { --kv-col: 9ch; }
-
-/* skip link for keyboard users */
-.skip { position: fixed; left: -999px; top: 8px; z-index: 10; padding: 6px 10px; background: var(--phosphor); color: #000; }
-.skip:focus { left: 8px; }
+html.no-js .chapter p, html.no-js .chapter pre { margin: 0; }
 
 @keyframes blink { 50% { opacity: 0; } }
 @keyframes flicker {
@@ -148,5 +145,4 @@ html.no-js .kv { --kv-col: 9ch; }
 }
 @media (prefers-reduced-motion: reduce) {
   .tube, .cursor { animation: none; }
-  .hint { transition: none; }
 }

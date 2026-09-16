@@ -1,4 +1,5 @@
-"""Find the black CRT screen rectangle in a room photo and print it as the CSS variables style.css needs.
+"""Find the black CRT screen rectangle in a room photo and print it as the CSS variables style.css needs
+(fractions of the photo, 0-1).
 
 No Python dependencies, but macOS only: it shells out to `sips` to decode the image to BMP, then
 scans outward from a start pixel until it leaves the dark region.
@@ -101,8 +102,8 @@ aspect = (r - l) / (b - t)
 if not 1.2 < aspect < 2.2:
     die(f"implausible screen aspect {aspect:.2f}; the start point is probably not on the screen")
 
-sx, sy, sw, sh = 100 * l / w, 100 * t / h, 100 * (r - l) / w, 100 * (b - t) / h
+sx, sy, sw, sh = l / w, t / h, (r - l) / w, (b - t) / h
 ix, iy = sw * 0.012, sh * 0.016
 print(f"image {w}x{h}  screen px: left={l} right={r} top={t} bottom={b}  ({r - l}x{b - t}, aspect {aspect:.3f})")
-print(f"raw:   --sx: {sx:.2f}%; --sy: {sy:.2f}%; --sw: {sw:.2f}%; --sh: {sh:.2f}%;")
-print(f"INSET: --sx: {sx + ix:.2f}%; --sy: {sy + iy:.2f}%; --sw: {sw - 2 * ix:.2f}%; --sh: {sh - 2 * iy:.2f}%;   <- paste this into style.css")
+print(f"raw:   --sx: {sx:.4f}; --sy: {sy:.4f}; --sw: {sw:.4f}; --sh: {sh:.4f};")
+print(f"INSET: --sx: {sx + ix:.4f}; --sy: {sy + iy:.4f}; --sw: {sw - 2 * ix:.4f}; --sh: {sh - 2 * iy:.4f};   <- paste this into style.css")

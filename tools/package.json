@@ -1,0 +1,12 @@
+{
+  "name": "contracthero-tools",
+  "private": true,
+  "type": "module",
+  "description": "Dev-only checks for the site. Not published; the site itself has no build step.",
+  "scripts": {
+    "check": "node check-viewports.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.50.0"
+  }
+}

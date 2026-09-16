@@ -4,16 +4,16 @@
   const screen = document.querySelector('.screen');
   const tube = document.querySelector('.tube');
   const out = document.getElementById('screen-text');
-  const hint = document.getElementById('hint');
+  const jump = document.getElementById('jump');
   const chaptersRoot = document.getElementById('chapters');
   const chapters = Array.from(chaptersRoot.querySelectorAll('.chapter'));
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const tubeStyle = getComputedStyle(tube);   // live view: one call keeps returning current values
 
-  const PX_PER_CHAR = 2;          // scroll pixels per typed character
-  const HOLD = 0.55;              // viewport heights to rest on a finished chapter
+  const PX_PER_CHAR = 3;          // scroll pixels per typed character; chapters are short, so a wheel notch types ~30 characters
+  const HOLD = 0.6;               // viewport heights to rest on a finished chapter
   const LAST_HOLD = 0.35;         // the briefing rests less: the page ends there
-  const BOOT_MS = [22, 38];       // per-character delay while the boot chapter self-types
+  const BOOT_MS = [12, 22];       // per-character delay while the boot chapter self-types (~4 s for the whole chapter)
   const AWAKE_PX = 30;            // scroll distance after which the reader has started
 
   // In JS mode the screen is the accessible copy; the chapters stay in the DOM for crawlers and no-JS.
@@ -28,12 +28,14 @@
     return nodes;
   };
   // Section ids of the previous site, so old deep links still land somewhere sensible.
-  const ALIASES = { experience: 'y2006', teaching: 'y2017', tool: 'oss', runtime: 'oss', program: 'y2025', claim: 'boot' };
+  const ALIASES = { experience: 'y2006', teaching: 'y2017', tool: 'y2025', runtime: 'y2025', oss: 'y2025', program: 'y2025', claim: 'boot' };
   const chapterIndex = id => chapters.findIndex(c => c.id === (ALIASES[id] || id));
 
   // Collapse HTML indentation so it does not count as typed characters. Whitespace-only nodes are
-  // dropped. This mutates the chapters in place; the screen clones them afterwards.
+  // dropped. ASCII art inside <pre> keeps every space. This mutates the chapters in place; the screen
+  // clones them afterwards.
   chapters.forEach(ch => textNodes(ch).forEach(t => {
+    if (t.parentElement.closest('pre')) return;
     if (t.data.trim()) t.data = t.data.replace(/\s+/g, ' '); else t.remove();
   }));
   const lengths = chapters.map(ch => ch.textContent.length);
@@ -77,10 +79,17 @@
     frames.set(i, f);
     return f;
   }
-  let cur = -1, curN = -1;
+  // The corner control points at the briefing, and back to the start once the briefing is on screen.
+  const last = chapters.length - 1;
+  function setJump(i) {
+    const back = i === last;
+    jump.textContent = back ? '> rewind' : '> briefing';
+    jump.setAttribute('href', back ? '#boot' : '#briefing');
+  }
+  let cur = -1, curN = -1, fontsReady = !document.fonts;   // the fallback font wraps differently: only judge overflow once the web font is in
   function paint(i, n) {
     const f = frame(i);
-    if (i !== cur) out.replaceChildren(...f.nodes);
+    if (i !== cur) { out.replaceChildren(...f.nodes); setJump(i); }
     let budget = n, tail = null;
     for (const { node, full } of f.texts) {
       const keep = Math.min(budget, full.length);
@@ -100,7 +109,7 @@
     let over = padT + (cursor.getBoundingClientRect().bottom - out.getBoundingClientRect().top) + padB - tube.clientHeight;
     over = over > 0 ? Math.ceil(over / lineH) * lineH : 0;   // scroll by whole lines
     out.style.transform = over ? `translateY(${-over}px)` : '';
-    if (over && n === segs[i].n) console.warn(`crt.js: chapter "${segs[i].ch.id}" overflows the tube by ${over}px at ${innerWidth}x${innerHeight}; its first lines are off screen`);
+    if (over && n === segs[i].n && fontsReady) console.warn(`crt.js: chapter "${segs[i].ch.id}" overflows the tube by ${over}px at ${innerWidth}x${innerHeight}; its first lines are off screen`);
   }
 
   // ?show=<chapter id> pins one chapter, fully typed: the text never changes, though the page still
@@ -127,8 +136,8 @@
   function repaint() { cur = -1; schedule(); }
 
   // ---- the boot chapter types itself -------------------------------------
-  const BOOT_DELAY_MS = 500;      // let the page settle before the first character
-  const SENTENCE_MS = 260;        // extra pause after a full stop
+  const BOOT_DELAY_MS = 350;      // let the page settle before the first character
+  const SENTENCE_MS = 180;        // extra pause after a full stop
   function finishBoot() { if (bootChars < bootSeg.n) { bootChars = bootSeg.n; schedule(); } }
   function boot() {
     if (reduced) return finishBoot();
@@ -142,7 +151,7 @@
     };
     setTimeout(tick, BOOT_DELAY_MS);
   }
-  function wake() { finishBoot(); hint.classList.add('gone'); }
+  function wake() { finishBoot(); }
 
   // ---- events ------------------------------------------------------------
   let typingTimer = 0;
@@ -185,12 +194,11 @@
   if (showId !== null && pin < 0) {
     console.error(`crt.js: ?show=${showId} is not a chapter id. Valid: ${chapters.map(c => c.id).join(', ')}`);
     out.textContent = `unknown chapter: ${showId}`;
-    hint.classList.add('gone');
     return;
   }
   render();
-  if (document.fonts) document.fonts.ready.then(repaint);   // metrics change when the web font arrives
-  if (pin >= 0) { hint.classList.add('gone'); return; }
+  if (document.fonts) document.fonts.ready.then(() => { fontsReady = true; repaint(); });   // metrics change when the web font arrives
+  if (pin >= 0) return;
   // The browser performs its own fragment scroll at load; ours must run after it.
   const arrive = () => requestAnimationFrame(() => {
     if (location.hash && jumpTo(location.hash.slice(1), false)) return;

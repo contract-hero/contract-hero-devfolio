@@ -2,7 +2,7 @@
 <html lang="en" class="no-js">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>Álvaro Lillo Igualada — I make hard stacks teachable</title>
   <meta name="description" content="Solutions engineer focused on developer education. I make hard stacks teachable: from vocational classrooms to bootcamps, hackathons, docs, video and developer tooling. Move, Sui, Flow, Claude Code.">
   <meta name="theme-color" content="#000000">
@@ -25,112 +25,117 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<a class="skip" href="#briefing">Skip to the briefing</a>
+<!-- One control for the whole page: jumps to the briefing, and back to the start once you are there (crt.js flips it). First tab stop on purpose. -->
+<a class="jump" id="jump" href="#briefing">&gt; briefing</a>
 
 <main id="story" class="story">
 
   <div class="scene">
     <div class="stage">
-      <picture>
-        <!-- Must match the @media (orientation: portrait) block in style.css that switches --ar and --sx/--sy/--sw/--sh. The photo is decorative: the chapters carry the copy. -->
-        <source media="(orientation: portrait)" srcset="assets/room-tall.jpg">
-        <img src="assets/room-wide.jpg" alt="" decoding="async" fetchpriority="high">
-      </picture>
+      <!-- The photo is decorative: the chapters carry the copy. One square render for every viewport; style.css crops it around the screen. -->
+      <img src="assets/room.jpg" alt="" decoding="async" fetchpriority="high">
       <div class="spill"></div>
       <div class="screen">
         <div class="tube"><div class="text" id="screen-text"></div></div>
         <div class="glass"></div>
       </div>
     </div>
-    <div class="hud">
-      <span class="hint" id="hint">scroll to follow the story ↓</span>
-      <a href="#briefing">&gt; skip to the briefing</a>
-    </div>
   </div>
 
+  <!-- The story. Each chapter must fit the screen grid: 46 columns by 12 rows, spacers count for half a row.
+       tools/check-viewports.mjs fails when a chapter overflows. ASCII art is plain ASCII only: VT323 has no box-drawing glyphs. -->
   <div class="chapters" id="chapters">
 
     <article class="chapter" id="boot">
       <p class="dim">contracthero.dev · v3 · 2026</p>
-      <p class="dim">booting ... ok</p>
       <p class="dim">loading profile: alvaro_lillo_igualada ... ok</p>
       <p class="sp hi">Wake up.</p>
-      <p>This screen tells one story: a teacher who learned to write smart contracts, then went back to teaching them.</p>
-      <p class="sp">Scroll to follow the white rabbit.</p>
+      <p>A teacher who learned to write smart contracts, then went back to teaching them.</p>
+      <p class="sp dim">scroll to follow the white rabbit</p>
       <p class="dim">&gt; or <a href="#briefing">skip to the briefing</a></p>
     </article>
 
     <article class="chapter" id="y2006">
       <p class="cmd">$ cat 2006-2013.log</p>
-      <p class="hi">Madrid. Telecommunication engineering.</p>
-      <p>Technical University of Madrid, 2006 to 2013. Signals, networks, and the first programs that did what I meant instead of what I typed.</p>
-      <p>2010 to 2011: Erasmus year at Metropolia University of Applied Sciences, Helsinki.</p>
+      <p class="hi">Telecommunication engineering, Madrid.</p>
+<pre class="sp">
+  MAD -----------------------------> HEL</pre>
+      <p>Erasmus year in Helsinki. First time explaining my ideas to a room that did not share my language.</p>
+      <p class="sp">Final thesis: home automation. Hired before it was finished.</p>
+      <p class="sp dim">earned: teaching across borders</p>
     </article>
 
     <article class="chapter" id="y2014">
       <p class="cmd">$ cat 2014-2017.log</p>
-      <p class="hi">Bolsas y Mercados Españoles. Full-stack developer.</p>
-      <p>The Spanish stock exchange. A B2B electronic trading platform: institutional brokers, market access over FIX.</p>
-      <p>Technical support for the people whose trading day depended on it. Optimised transaction processing: 20% less processing time and a more stable platform.</p>
+      <p class="hi">Bolsas y Mercados Españoles. Full stack.</p>
+      <p>The Spanish stock exchange.</p>
+<pre class="sp">
+  broker --FIX--> [ platform ] --> market</pre>
+      <p class="sp">Institutional trading, B2B. Support for people whose day depended on it. Transactions 20% faster.</p>
+      <p class="sp dim">earned: fintech, and calm on a bad day</p>
     </article>
 
     <article class="chapter" id="y2017">
       <p class="cmd">$ cat 2017-2021.log</p>
-      <p class="hi">Department of Education. Technical college lead teacher.</p>
-      <p>2016 to 2017: Master's in Teacher Training, URJC Madrid. Thesis: programming education through video games.</p>
-      <p>Then four years teaching in technical colleges in Madrid and Valencia. Four schools, 60 to 120 students a year. OOP, SQL, networks, web programming, systems administration.</p>
-      <p>Lead teacher meant coordinating the teaching team of each school: every subject aligned to the official programme, every teacher on the agreed syllabus and pace, every student's objectives tracked across subjects.</p>
-      <p>This is where "I make hard stacks teachable" was earned.</p>
+      <p class="hi">Detour one: the classroom.</p>
+      <p>Teaching master's, then four years as lead teacher in technical colleges.</p>
+<pre class="sp">
+  curriculum
+  |-- OOP · SQL · networks · web · sysadmin
+  |-- 4 schools · 60-120 students a year
+  '-- one syllabus, every teacher in sync</pre>
+      <p class="sp">Hard things, explained to every level, daily.</p>
+      <p class="dim">earned: "I make hard stacks teachable"</p>
     </article>
 
     <article class="chapter" id="y2022">
       <p class="cmd">$ cat 2022-2023.log</p>
-      <p class="hi">Dapper Labs. Smart contract engineer on Flow.</p>
-      <p>Authored the Fungible Token Switchboard: one receiver capability for any token. Contract, tests, docs and follow-ups. Part of the Flow FT standard, deployed on mainnet.</p>
-      <p>Authored the Fungible Tokens Metadata FLIP, merged August 2022, and the FungibleTokenMetadataViews contract.</p>
-      <p>Hybrid custody contracts for walletless onboarding. Six documentation PRs to the Cadence language. Drafted the Cadence Style Guide FLIP. Led the FLIP discussions for the token standards. Flow Certified Developer.</p>
+      <p class="hi">Detour two: smart contracts.</p>
+      <p>Blockchain since college. Taught myself Cadence. Hired by Dapper Labs, on Flow.</p>
+<pre class="sp">
+  FLOW --+
+  USDC --+--> [ switchboard ] --> one vault
+  FUSD --+</pre>
+      <p class="sp">Authored the FT Switchboard and the FT Metadata standard. Open source, on mainnet.</p>
+      <p class="dim">earned: standards work, in the open</p>
     </article>
 
     <article class="chapter" id="y2023">
       <p class="cmd">$ cat 2023-2025.log</p>
-      <p class="hi">Freelance. Smart contract engineer.</p>
-      <p>Ported the Band Protocol oracle from Solidity to Cadence: testnet October 2023, mainnet-ready January 2024, Cadence 1.0 August 2024.</p>
-      <p>Upgraded Celer cBridge and its auxiliary contracts to Cadence 1.0. The suite was audited by Oak Security.</p>
-      <p>Built Trade Wars: a fully on-chain, massively multiplayer trading game on Sui. Move and TypeScript.</p>
-      <p>Documentation upstream: cadence-lang.org, cadence-tools, aptos-core.</p>
+      <p class="hi">Feb 2023: layoffs.</p>
+      <p>Seven months of parenting. Then freelance.</p>
+<pre class="sp">
+  Solidity --port--> Cadence    Band oracle
+  cBridge  --1.0---> audited    Celer
+  Trade Wars: an on-chain MMO on Sui</pre>
+      <p class="sp">Several clients, one engineer. Scoping, negotiating, shipping alone.</p>
+      <p class="dim">earned: owning the whole problem</p>
     </article>
 
     <article class="chapter" id="y2025">
       <p class="cmd">$ cat 2025-now.log</p>
       <p class="hi">Sui Foundation. Solutions engineer.</p>
-      <p>Both halves of the story become one job.</p>
-      <p>Sui Builders Bootcamp: five days of Move and Sui plus a hackathon day, for cohorts of 30 to 40 pre-selected developers. Ankara, Bucharest, Paris, and online. At every stop, the local ambassadors are trained to run the next edition on their own.</p>
-      <p>Hackathons: Sui's presence at ETHGlobal New York and Lisbon (800+ hackers each), EncodeHub London, and online hackathons of 100+ developers. Define the workshop and the prize tracks, teach it live, mentor all weekend, judge.</p>
-      <p>Also: Move review of partner contracts, on-call support for exchanges and DEXs, a hands-on DeepBook course, video tutorials for the Walrus Foundation, and Builder Growth Champions: a zero-budget builder program designed on paper and cancelled in a reorganisation before its first cohort.</p>
-    </article>
-
-    <article class="chapter" id="oss">
-      <p class="cmd">$ ls ~/open-source</p>
-      <p class="hi">sui-pilot/</p>
-      <p>Claude Code plugin for Sui and Move. 800+ bundled docs, a Move language server and the Sui Prover as MCP servers, review skills. Built on the pattern Vercel published for its Next.js Claude Code plugin.</p>
-      <p class="hi">flow-ft/</p>
-      <p>The Flow fungible token standard: Switchboard, Metadata Views and their FLIP. 138 stars.</p>
-      <p class="hi">agentic-community-college/</p>
-      <p>An exploratory proof of concept: a course runtime that runs test-gated lessons inside Claude Code, built to see which parts of teaching an agent can hold. Two courses run on it, a third is in progress.</p>
-      <p class="hi">also/</p>
-      <p>Trade Wars, sui-pbo, Merkle Mountain Ranges, Bloom filters in Move, vlerv, code-forge.</p>
+<pre>
+  teaching  --+
+              +--> developer education
+  contracts --+</pre>
+      <p class="sp">Bootcamps: five days of Move and a hackathon, then the local ambassadors run the next one. Ankara · Bucharest · Paris · online.</p>
+      <p>Hackathons: ETHGlobal NYC and Lisbon.</p>
+      <p>Tooling: sui-pilot, a Claude Code plugin.</p>
+      <p class="dim">earned: all paths, one job</p>
     </article>
 
     <article class="chapter" id="briefing">
       <p class="cmd">$ whoami</p>
       <p class="hi">Álvaro Lillo Igualada · Madrid, remote</p>
-      <p>Solutions engineer focused on developer education, with a developer-relations edge.</p>
-      <p>I make hard stacks teachable: from vocational classrooms to bootcamps, hackathons, docs, video and developer tooling.</p>
-      <div class="sp kv"><span class="k">stack</span><span>Move (Sui) · Cadence (Flow) · Solidity · TypeScript · Rust</span></div>
-      <div class="kv"><span class="k">tooling</span><span>Claude Code plugins · MCP servers · Claude Agent SDK</span></div>
-      <div class="kv"><span class="k">craft</span><span>curriculum design · bootcamps · train-the-trainer · hackathon workshops and judging · technical writing</span></div>
+      <p>Solutions engineer · developer education.</p>
+      <p>I make hard stacks teachable.</p>
+      <div class="sp kv"><span class="k">stack</span><span>Move · Cadence · Solidity · TS · Rust</span></div>
+      <div class="kv"><span class="k">tooling</span><span>Claude Code plugins · MCP · Agent SDK</span></div>
+      <div class="kv"><span class="k">craft</span><span>curricula · bootcamps · hackathons</span></div>
       <div class="kv"><span class="k">langs</span><span>Spanish · English · Valencian · French</span></div>
-      <div class="sp kv"><span class="k">links</span><span><a href="resume.pdf">resume.pdf</a> · <a href="https://github.com/alilloig">github</a> · <a href="https://www.linkedin.com/in/alilloig">linkedin</a> · <a href="https://x.com/TheContractHero">x</a> · <a href="mailto:alilloig@gmail.com">mail</a></span></div>
+      <div class="kv"><span class="k">oss</span><span><a href="https://github.com/contract-hero/sui-pilot">sui-pilot</a> · <a href="https://github.com/onflow/flow-ft">flow-ft</a> · <a href="https://github.com/contract-hero/agentic-community-college">acc</a> · trade wars</span></div>
+      <div class="kv"><span class="k">links</span><span><a href="resume.pdf">resume.pdf</a> · <a href="https://github.com/alilloig">github</a> · <a href="https://www.linkedin.com/in/alilloig">linkedin</a> · <a href="https://x.com/TheContractHero">x</a> · <a href="mailto:alilloig@gmail.com">mail</a></span></div>
     </article>
 
   </div>
