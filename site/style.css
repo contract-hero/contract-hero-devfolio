@@ -104,13 +104,14 @@ a { color: inherit; }
   background: radial-gradient(ellipse at 50% 0%, rgba(90,255,140,.13), rgba(0,0,0,0) 70%);
 }
 /* The screen is a fixed terminal grid, --cols by --rows (46 by 12), on any device: the type is sized so
-   --cols characters of --adv em each use 90% of the screen width. 12 rows at line-height 1.15 use 67.5%
-   of the width, which is 93% of this 1.38:1 screen's height. Percentage padding is relative to the width on
-   every side, so 2% 4% leaves room for all 12. tools/check-viewports.mjs reads --cols and --rows and
+   --cols characters of --adv em each use 90% of the screen width. 12 rows at line-height 1.15 are then
+   24.7% of the screen width, which is 94% of this 1.39:1 screen's height (--sw/--sh). Percentage padding is
+   relative to the width on every side, so 1.5% 4% adds 4.2% of the height and the rows clear the box by 2%;
+   3% does not fit. tools/check-viewports.mjs reads --cols and --rows and
    fails a chapter that does not fit. */
 .tube {
   position: absolute; inset: 0;
-  padding: 2% 4%;
+  padding: 1.5% 4%;
   overflow: hidden;
   font-size: calc(var(--S) * var(--sw) * .9 / (var(--cols) * var(--adv)));
   line-height: 1.15;

@@ -11,11 +11,11 @@ Usage: measure-screen.py <image> [threshold=45] [centre_y_fraction=0.5]
 
 Each edge is sampled at several points and the INNERMOST sample wins (max of the left and top samples,
 min of the right and bottom), so a CRT glass whose edges bow outwards yields the rectangle inside its
-corners, where text is safe. Two lines are printed: that rectangle, and the same rectangle inset ~1.2%
-of its width and ~1.6% of its height per side so the text stays off the glass edge. Paste the INSET
-line into style.css. The tool refuses to print CSS when the samples do not describe one plausible screen.
+corners, where text is safe. After the samples and the pixel rectangle, two CSS lines are printed: that
+rectangle, and the same rectangle inset ~1.2% of its width and ~1.6% of its height per side so the text
+stays off the glass edge. Paste the INSET line into style.css. The tool refuses to print CSS when the samples do not describe one plausible screen.
 """
-import os, struct, subprocess, sys, tempfile
+import os, statistics, struct, subprocess, sys, tempfile
 
 def die(msg):
     raise SystemExit(f"measure-screen: {msg}")
@@ -97,6 +97,9 @@ for name, s, span in (("left", L, w), ("right", R, w), ("top", Tp, h), ("bottom"
         die(f"only {len(s)} {name} samples (need {MIN}); the start point is probably not on the screen")
     if max(s) - min(s) > 0.08 * span:
         die(f"{name} samples disagree by more than 8% of the image; the scan hit more than one dark object")
+    inner = max(s) if name in ("left", "top") else min(s)
+    if abs(inner - statistics.median(s)) > 0.02 * span:
+        die(f"the innermost {name} sample ({inner}) is more than 2% of the image inside the median ({statistics.median(s)}); one scanline stopped early, this is not curved glass. Samples: {sorted(s)}")
 l, r, t, b = max(L), min(R), max(Tp), min(B)   # innermost sample per side: safe inside a curved glass
 if not (0 < l < r < w - 1 and 0 < t < b < h - 1):
     die(f"the rectangle runs to the image edge: left={l} right={r} top={t} bottom={b}")
