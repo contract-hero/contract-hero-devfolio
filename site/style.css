@@ -154,18 +154,23 @@ pre { font: inherit; white-space: pre; }
    than the painted dot so it covers it fully. */
 .led {
   position: absolute; pointer-events: none;
-  --d: .0062;
+  --d: .0068;
+  /* one hue per state; the lens is built from it: a saturated dome, a lit core, a dark rim and a specular hit */
+  --led: #7ee23a; --led-core: #e6ffc4; --led-deep: #2f7a12; --led-glow: rgba(140, 255, 60, .6);
   left: calc((.6646 - var(--d) / 2) * 100%); top: calc((.6392 - var(--d) / 2) * 100%);
   width: calc(var(--d) * 100%); height: calc(var(--d) * 100%);
   border-radius: 50%;
-  background: radial-gradient(circle at 40% 35%, #f4ffd0, #a6ff4a 45%, #5fbf1a 100%);
-  box-shadow: 0 0 calc(var(--S) * .004) #9dff4a, 0 0 calc(var(--S) * .01) rgba(140, 255, 60, .55);
-  transition: background .25s, box-shadow .25s;
+  background:
+    radial-gradient(circle at 34% 30%, rgba(255, 255, 255, .95) 0 14%, rgba(255, 255, 255, 0) 32%),   /* specular hit */
+    radial-gradient(circle at 50% 55%, var(--led-core) 0 18%, var(--led) 46%, var(--led-deep) 100%);      /* lit dome */
+  box-shadow:
+    inset 0 0 0 calc(var(--S) * .0006) rgba(0, 0, 0, .55),                                                /* the housing rim */
+    inset 0 calc(var(--S) * -.001) calc(var(--S) * .0015) rgba(0, 0, 0, .35),                             /* shade under the dome */
+    0 0 calc(var(--S) * .003) var(--led),
+    0 0 calc(var(--S) * .012) var(--led-glow);
+  transition: box-shadow .25s;   /* gradients do not transition; the glow does */
 }
-.stage.off .led {
-  background: radial-gradient(circle at 40% 35%, #ffd0c8, #ff3b2f 45%, #a8140c 100%);
-  box-shadow: 0 0 calc(var(--S) * .004) #ff4a3a, 0 0 calc(var(--S) * .01) rgba(255, 60, 40, .55);
-}
+.stage.off .led { --led: #ff3b2f; --led-core: #ffd6cf; --led-deep: #8a0f08; --led-glow: rgba(255, 60, 40, .6); }
 /* A latching switch: while the screen is on the cap sits pushed into the case, so the photo's raised
    cap gets a shadow along its top edge, a darker face and a thin lit lip at the bottom. Off leaves the
    photo alone: the cap is out. --press is the depth in stage pixels. */
