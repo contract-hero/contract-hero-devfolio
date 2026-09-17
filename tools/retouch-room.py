@@ -1,58 +1,67 @@
-"""One-off retouch of assets/room.jpg (2026-09-16): the two stacks of floppy disks were regenerated.
-2026-09-17: the monitor bezel was redone the same way with a 1024px crop at (512, 440), box (70,180,950,845),
-feather 14, prompt "a thin dark inner frame lip of the same depth on all four sides, screen a flat pure
-black rectangle, everything else exactly as it is"; the edit aligned at (0,0), outside-box diff 3.74.
+"""Paste a Nano Banana Pro edit of one region back into assets/room.jpg, leaving the rest of the frame
+unchanged apart from the JPEG re-encode.
 
-How it was done, so it can be repeated for another object:
-1. Cut a 512x512 context crop around each object with sips (offsets below).
+Recipe:
+1. Cut a square context crop around the object: `sips -c N N --cropOffset Y X room.jpg --out crop.jpg`
+   (sips takes height width, then y x).
 2. Ask Nano Banana Pro through the Higgsfield CLI to change only that object, with the crop as image 1
-   and a reference photo of the real object as image 2:
-     higgsfield generate create nano_banana_pro --prompt "..." --image-references crop.jpg \
-       --image-references reference.png --aspect_ratio 1:1 --resolution 1k --wait --json
-3. Run this script: it downsizes each edit to the crop size, aligns it to the original by brute-force
-   offset search on the pixels OUTSIDE the object box, and pastes only the box back through a feathered
-   mask. The blend bleeds about one feather radius past the box; the rest of the frame is unchanged apart
-   from the JPEG re-encode.
-Needs Pillow: python3 -m venv /tmp/venv && /tmp/venv/bin/pip install pillow && /tmp/venv/bin/python tools/retouch-room.py
-Inputs are expected in the working directory: room.jpg (original), left-edit.png, right-edit.png.
+   (and a reference photo of the real object as image 2 when there is one):
+     higgsfield generate create nano_banana_pro --prompt "Change ONLY ... everything else exactly as it is" \
+       --image-references crop.jpg --aspect_ratio 1:1 --resolution 1k --wait --json
+3. Run this script: it resizes the edit to the crop size, aligns it to the original by brute-force
+   offset search on the pixels OUTSIDE the box, and pastes only the box back through a feathered mask.
+   The blend bleeds about one feather radius past the box.
+
+Usage: retouch-room.py <room.jpg> <out.jpg> <edit.png> <X> <Y> <N> <l,t,r,b> [feather=12]
+  X Y N       the crop's offset and size in the room photo
+  l,t,r,b     the box to paste back, in crop coordinates
+Needs Pillow: python3 -m venv /tmp/venv && /tmp/venv/bin/pip install pillow && /tmp/venv/bin/python tools/retouch-room.py ...
+
+Done so far (2048x2048 room.jpg):
+  2026-09-16 floppy stacks: crops 512 at (130,1150) box 110,160,405,290 and (1536,1200) box 205,185,512,330.
+  2026-09-17 monitor bezel: crop 1024 at (512,440) box 70,180,950,845 feather 14 ("a thin dark inner frame
+             lip of the same depth on all four sides, screen a flat pure black rectangle"); aligned at (0,0).
 """
-from PIL import Image, ImageFilter, ImageChops, ImageStat
-room = Image.open('room.jpg').convert('RGB')
-def patch(edit_path, ox, oy, box, feather=12, search=6):
-    """Paste the floppy region of an edited 512-crop back into the room at (ox, oy).
-    box = (l, t, r, b) in crop coordinates. The edit is aligned by brute-force offset search on the
-    pixels OUTSIDE the box, then blended through a feathered mask."""
-    edit = Image.open(edit_path).convert('RGB').resize((512, 512), Image.LANCZOS)
-    orig = room.crop((ox, oy, ox + 512, oy + 512))
-    # alignment: minimise mean abs diff outside the box
-    outside = Image.new('L', (512, 512), 255)
-    from PIL import ImageDraw
-    ImageDraw.Draw(outside).rectangle([box[0]-20, box[1]-20, box[2]+20, box[3]+20], fill=0)
-    best = (1e9, 0, 0)
-    for dx in range(-search, search + 1):
-        for dy in range(-search, search + 1):
-            shifted = ImageChops.offset(edit, dx, dy)
-            diff = ImageChops.difference(shifted, orig).convert('L')
-            score = ImageStat.Stat(diff, mask=outside).mean[0]
-            if score < best[0]: best = (score, dx, dy)
-    score, dx, dy = best
-    base_score = ImageStat.Stat(ImageChops.difference(edit, orig).convert('L'), mask=outside).mean[0]
-    print(f'{edit_path}: outside-box mean diff {base_score:.2f} -> {score:.2f} at offset ({dx},{dy})')
-    # A best offset on the search boundary means the true offset is outside the window, and ImageChops.offset
-    # wraps pixels around the crop edge: refuse rather than composite a misaligned patch.
-    if score > base_score or abs(dx) == search or abs(dy) == search:
-        raise SystemExit(f'{edit_path}: alignment failed ({score:.2f} at {dx},{dy}); nothing written')
-    edit = ImageChops.offset(edit, dx, dy)
-    mask = Image.new('L', (512, 512), 0)
-    ImageDraw.Draw(mask).rectangle(list(box), fill=255)
-    mask = mask.filter(ImageFilter.GaussianBlur(feather))
-    blended = Image.composite(edit, orig, mask)
-    room.paste(blended, (ox, oy))
-    return score
-patch('left-edit.png', 130, 1150, (110, 160, 405, 290))
-patch('right-edit.png', 1536, 1200, (205, 185, 512, 330))
-room.save('room-fixed.jpg', quality=88, subsampling=0, optimize=True)
-import os; print('room-fixed.jpg', os.path.getsize('room-fixed.jpg'), 'bytes')
-# proof crops for review
-room.crop((130, 1150, 642, 1662)).save('fixed-left.jpg', quality=90)
-room.crop((1536, 1200, 2048, 1712)).save('fixed-right.jpg', quality=90)
+import os, sys
+from PIL import Image, ImageFilter, ImageChops, ImageStat, ImageDraw
+
+def die(msg):
+    raise SystemExit(f"retouch-room: {msg}")
+
+if len(sys.argv) not in (8, 9):
+    die(__doc__.split("Usage: ")[1].split("\n")[0])
+src, out, edit_path = sys.argv[1:4]
+try:
+    ox, oy, n = (int(v) for v in sys.argv[4:7])
+    box = tuple(int(v) for v in sys.argv[7].split(","))
+    feather = int(sys.argv[8]) if len(sys.argv) == 9 else 12
+    if len(box) != 4: raise ValueError
+except ValueError:
+    die("X, Y, N and feather must be integers and the box four comma-separated integers")
+
+room = Image.open(src).convert("RGB")
+edit = Image.open(edit_path).convert("RGB").resize((n, n), Image.LANCZOS)
+orig = room.crop((ox, oy, ox + n, oy + n))
+
+# alignment: minimise the mean abs diff outside the box
+outside = Image.new("L", (n, n), 255)
+ImageDraw.Draw(outside).rectangle([box[0] - 20, box[1] - 20, box[2] + 20, box[3] + 20], fill=0)
+def score(img):
+    return ImageStat.Stat(ImageChops.difference(img, orig).convert("L"), mask=outside).mean[0]
+search = 8
+base = score(edit)
+best = min(((score(ImageChops.offset(edit, dx, dy)), dx, dy) for dx in range(-search, search + 1) for dy in range(-search, search + 1)))
+s, dx, dy = best
+print(f"outside-box mean diff {base:.2f} -> {s:.2f} at offset ({dx},{dy})")
+# A best offset on the search boundary means the true offset is outside the window, and ImageChops.offset
+# wraps pixels around the crop edge: refuse rather than composite a misaligned patch.
+if s > base or abs(dx) == search or abs(dy) == search:
+    die(f"alignment failed ({s:.2f} at {dx},{dy}); nothing written")
+edit = ImageChops.offset(edit, dx, dy)
+
+mask = Image.new("L", (n, n), 0)
+ImageDraw.Draw(mask).rectangle(list(box), fill=255)
+mask = mask.filter(ImageFilter.GaussianBlur(feather))
+room.paste(Image.composite(edit, orig, mask), (ox, oy))
+room.save(out, quality=88, subsampling=0, optimize=True)
+print(out, os.path.getsize(out), "bytes")
