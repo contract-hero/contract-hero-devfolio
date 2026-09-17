@@ -3,9 +3,11 @@
 // a landscape display, the side fade is missing where the photo is narrower than the viewport, the page logs
 // a warning, an error, an uncaught exception or a failed request, or the type gets too small to read. Then a
 // behaviour pass drives the live page: the welcome self-types, a resize keeps the screen, the skip link and
-// the two in-screen links land where they say, focus never enters the hidden chapters, old deep-link ids
-// still resolve, an unknown ?show id paints its error, reduced motion shows the welcome complete, and the
-// no-JS page renders.
+// the two in-screen links land where they say, focus never enters the hidden chapters, the power button
+// turns the screen off and on from the keyboard with the LED following, old deep-link ids still resolve,
+// an unknown ?show id paints its error, reduced motion shows the welcome complete and toggles the power
+// without animation, and the no-JS page renders. The power button must also stay inside the viewport
+// and be at least MIN_TAP_PX wide on a phone.
 //
 //   pnpm -C tools install
 //   node tools/check-viewports.mjs                    # table + exit code
@@ -18,6 +20,7 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { SITE, launch, listen, chapterIds, openChapter, waitForFont } from './page.mjs';
 
 const MIN_FONT_PX = 15;       // below this VT323 stops being comfortable on a phone
+const MIN_TAP_PX = 24;        // the power button must be at least this wide on a phone
 const CONCURRENCY = 4;        // viewport contexts measured at once; the geometry is static, so order does not matter
 const BOOT_BUDGET_MS = 7000;  // the welcome self-types in ~4.5 s; wall-clock, so leave headroom
 
@@ -91,6 +94,8 @@ async function measure([name, w, h, dpr, mobile]) {
         bands: Math.max(0, Math.round((innerHeight - stage.h) / 2)),
         faded: (img.maskImage || img.webkitMaskImage || 'none') !== 'none',
         screenInside: screen.w > 0 && inside(screen),                     // an all-zero rect (display:none) must not read as inside
+        power: rect(document.querySelector('.power')),
+        powerInside: inside(rect(document.querySelector('.power'))),
         wide: text.scrollWidth > tube.clientWidth,                        // <pre> never wraps: art wider than the grid is clipped silently
         keepComputer: prop('--keep-computer') === 1,
         computerVisible: bandTop >= -0.5 && bandBottom <= innerHeight + 0.5,
@@ -102,6 +107,8 @@ async function measure([name, w, h, dpr, mobile]) {
     perChapter.push(`${id}=${m.used.toFixed(1)}`);
     const problems = [];
     if (!m.screenInside) problems.push('screen leaves the viewport');
+    if (m.power.w <= 0 || !m.powerInside) problems.push('the power button leaves the viewport');
+    if (mobile && m.power.w < MIN_TAP_PX) problems.push(`power button ${m.power.w.toFixed(0)}px wide < ${MIN_TAP_PX}px`);
     if (m.keepComputer && !m.computerVisible) problems.push('the keyboard or the top of the monitor is cropped');
     if ((m.bars > 0 || m.bands > 0) && !m.faded) problems.push('the photo does not fill the viewport and the fade mask is off');
     if (m.cols < m.wantCols) problems.push(`only ${m.cols} of ${m.wantCols} columns`);
@@ -206,6 +213,13 @@ async function reducedMotion() {
   await waitForFont(page);
   await page.waitForTimeout(600);
   if (!await (await screenText(page)).includes('scroll down to find out')) failures.push('reduced motion: the welcome is not complete without typing');
+  // No keyframes run, so the power button must toggle without waiting on any animation and never leave .waking behind.
+  await page.click('.power'); await page.waitForTimeout(100);
+  const rmOff = await page.evaluate(() => { const c = document.querySelector('.stage').classList; return { off: c.contains('off'), waking: c.contains('waking'), tube: getComputedStyle(document.querySelector('.tube')).opacity }; });
+  if (!rmOff.off || rmOff.waking || rmOff.tube !== '0') failures.push(`reduced motion: power off: ${JSON.stringify(rmOff)}`);
+  await page.click('.power'); await page.waitForTimeout(100);
+  const rmOn = await page.evaluate(() => { const c = document.querySelector('.stage').classList; return { off: c.contains('off'), waking: c.contains('waking'), pressed: document.querySelector('.power').getAttribute('aria-pressed') }; });
+  if (rmOn.off || rmOn.waking || rmOn.pressed !== 'true') failures.push(`reduced motion: power on: ${JSON.stringify(rmOn)}`);
   if (logged.length) failures.push(`reduced motion: the page reported: ${logged[0]}`);
   await ctx.close();
 }

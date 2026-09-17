@@ -171,31 +171,36 @@ pre { font: inherit; white-space: pre; }
   transition: box-shadow .25s;   /* gradients do not transition; the glow does */
 }
 .stage.off .led { --led: #ff3b2f; --led-core: #ffd6cf; --led-deep: #8a0f08; --led-glow: rgba(255, 60, 40, .6); }
-/* A latching switch: while the screen is on the cap sits pushed into the case, so the photo's raised
-   cap gets a shadow along its top edge, a darker face and a thin lit lip at the bottom. Off leaves the
-   photo alone: the cap is out. --press is the depth in stage pixels. */
+/* A latching switch. The button is the tap area: the painted cap grown 30% to the left and 40% up and
+   down (not to the right: on a portrait phone the cap sits at the viewport edge) so a phone can hit it;
+   ::before is the cap itself. While the screen is on the cap sits pushed into the case, so the photo's
+   raised cap gets a darker face and shadows: top edge, left edge, lit bottom lip. Off leaves the photo
+   alone: the cap is out. --press scales the shadows with --S. */
 .power {
   position: absolute;
-  --px: .6733; --py: .6289; --pw: .0269; --ph: .0186;
-  left: calc(var(--px) * 100%); top: calc(var(--py) * 100%);
-  width: calc(var(--pw) * 100%); height: calc(var(--ph) * 100%);
-  margin: 0; padding: 0; border: 0; border-radius: 12% / 20%;
+  --px: .6733; --py: .6289; --pw: .0269; --ph: .0186;   /* the painted cap, in photo fractions */
+  left: calc((var(--px) - var(--pw) * .3) * 100%); top: calc((var(--py) - var(--ph) * .4) * 100%);
+  width: calc(var(--pw) * 1.3 * 100%); height: calc(var(--ph) * 1.8 * 100%);
+  margin: 0; padding: 0; border: 0; background: transparent; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
   --press: calc(var(--S) * .004);
+}
+.power::before {
+  content: ''; position: absolute; inset: 22.2% 0 22.2% 23.1%;   /* .4ph / 1.8ph and .3pw / 1.3pw: back to the cap */
+  border-radius: 12% / 20%;
   background: rgba(20, 10, 4, .22);
   box-shadow: inset 0 var(--press) calc(var(--press) * 2) rgba(0, 0, 0, .7),
               inset calc(var(--press) * .5) 0 var(--press) rgba(0, 0, 0, .35),
               inset 0 calc(var(--press) * -.5) 0 rgba(255, 220, 180, .18);
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
   transition: background .12s, box-shadow .12s;
 }
-.stage.off .power { background: transparent; box-shadow: none; }
-.power:active { background: rgba(20, 10, 4, .32); box-shadow: inset 0 calc(var(--press) * 1.5) calc(var(--press) * 3) rgba(0, 0, 0, .8); }
-.power:focus-visible { outline: 2px solid var(--phosphor); outline-offset: 2px; }
+.stage.off .power::before { background: transparent; box-shadow: none; }
+.power:active::before { background: rgba(20, 10, 4, .32); box-shadow: inset 0 calc(var(--press) * 1.5) calc(var(--press) * 3) rgba(0, 0, 0, .8); }
+.power:focus-visible { outline: 2px solid var(--phosphor); outline-offset: 0; border-radius: 12% / 20%; }
 
 /* Screen off: the tube is black and the spill is gone. With motion allowed, the tube collapses like a
-   CRT losing its beam and holds the last frame; waking runs the warm-up once, then the idle flicker
-   takes over again (crt.js drops .waking on animationend). */
+   CRT losing its beam and holds the last frame; waking runs the warm-up once alongside the idle flicker,
+   and the base flicker restarts when crt.js drops .waking on animationend. */
 .stage.off .tube { opacity: 0; }
 @media (prefers-reduced-motion: no-preference) {
   .stage.off .tube { animation: crt-off .7s ease-in forwards; }

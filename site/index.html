@@ -25,7 +25,7 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<!-- Keyboard users: the screen has no focusable element until the briefing is typed, so the first tab stop jumps there. Visible only on focus. -->
+<!-- Keyboard users: first in the DOM, so the first tab stop skips the monitor (its power button) and the typing and jumps to the briefing. Visible only on focus. -->
 <a class="skip" href="#briefing">Skip to the briefing</a>
 
 <main id="story" class="story">
@@ -41,7 +41,7 @@
       </div>
       <!-- Easter egg: the monitor's power button and LED, laid over the ones painted in the photo. -->
       <span class="led" aria-hidden="true"></span>
-      <button class="power" type="button" aria-label="Monitor power" aria-pressed="true" title="power"></button>
+      <button class="power" type="button" aria-label="Monitor power" aria-pressed="true"></button>
     </div>
   </div>
 

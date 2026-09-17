@@ -191,8 +191,11 @@
     const on = stage.classList.toggle('off') === false;
     stage.classList.toggle('waking', on && !reduced);   // reduced motion runs no crt-on, so no animationend would clear it
     power.setAttribute('aria-pressed', String(on));
+    tube.inert = !on;   // the hidden links leave the tab order and the accessibility tree
   });
-  tube.addEventListener('animationend', e => { if (e.animationName === 'crt-on') stage.classList.remove('waking'); });
+  const woke = e => { if (e.animationName === 'crt-on') stage.classList.remove('waking'); };
+  tube.addEventListener('animationend', woke);
+  tube.addEventListener('animationcancel', woke);
 
   // ---- go ----------------------------------------------------------------
   layout();
