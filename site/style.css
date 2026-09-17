@@ -116,6 +116,7 @@ a { color: inherit; }
   font-size: calc(var(--S) * var(--sw) * .9 / (var(--cols) * var(--adv)));
   line-height: 1.15;
   animation: flicker 6s infinite steps(1);
+  --beam: 0 0 calc(var(--S) * .012) var(--glow);   /* the glow of the collapsed raster in the power keyframes */
 }
 .text {
   will-change: transform;
@@ -170,7 +171,9 @@ pre { font: inherit; white-space: pre; }
    photo alone: the cap is out. --press is the depth in stage pixels. */
 .power {
   position: absolute;
-  left: 67.33%; top: 62.89%; width: 2.69%; height: 1.86%;
+  --px: .6733; --py: .6289; --pw: .0269; --ph: .0186;
+  left: calc(var(--px) * 100%); top: calc(var(--py) * 100%);
+  width: calc(var(--pw) * 100%); height: calc(var(--ph) * 100%);
   margin: 0; padding: 0; border: 0; border-radius: 12% / 20%;
   --press: calc(var(--S) * .004);
   background: rgba(20, 10, 4, .22);
@@ -185,10 +188,14 @@ pre { font: inherit; white-space: pre; }
 .power:active { background: rgba(20, 10, 4, .32); box-shadow: inset 0 calc(var(--press) * 1.5) calc(var(--press) * 3) rgba(0, 0, 0, .8); }
 .power:focus-visible { outline: 2px solid var(--phosphor); outline-offset: 2px; }
 
-/* Screen off: the tube collapses like a CRT losing its beam and holds the last frame. Waking runs the
-   warm-up once, then the idle flicker takes over again (crt.js drops .waking on animationend). */
-.stage.off .tube { animation: crt-off .7s ease-in forwards; }
-.stage.waking .tube { animation: crt-on .9s ease-out, flicker 6s infinite steps(1); }
+/* Screen off: the tube is black and the spill is gone. With motion allowed, the tube collapses like a
+   CRT losing its beam and holds the last frame; waking runs the warm-up once, then the idle flicker
+   takes over again (crt.js drops .waking on animationend). */
+.stage.off .tube { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .stage.off .tube { animation: crt-off .7s ease-in forwards; }
+  .stage.waking .tube { animation: crt-on .9s ease-out, flicker 6s infinite steps(1); }
+}
 .stage.off .screen { background: radial-gradient(ellipse at 50% 42%, rgba(10, 14, 11, .6), rgba(2, 3, 2, .3) 72%); }
 .spill { transition: opacity .5s; }
 .stage.off .spill { opacity: 0; }
@@ -209,8 +216,8 @@ html.no-js .chapter { margin-bottom: 3em; }
 
 /* Power on: the beam warms up. A brief overbright bloom, slightly stretched, that settles into place. */
 @keyframes crt-on {
-  0%   { transform: scale(1, .006); opacity: 0; filter: brightness(4); background: var(--phosphor-hi); box-shadow: 0 0 calc(var(--S) * .012) var(--glow); }
-  20%  { transform: scale(1, .006); opacity: 1; filter: brightness(6); background: var(--phosphor-hi); box-shadow: 0 0 calc(var(--S) * .012) var(--glow); }
+  0%   { transform: scale(1, .006); opacity: 0; filter: brightness(4); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  20%  { transform: scale(1, .006); opacity: 1; filter: brightness(6); background: var(--phosphor-hi); box-shadow: var(--beam); }
   45%  { transform: scale(1.02, 1.02); opacity: 1; filter: brightness(2.2); background: rgba(157, 255, 176, .1); box-shadow: none; }
   100% { transform: none; opacity: 1; filter: none; background: transparent; box-shadow: none; }
 }
@@ -220,9 +227,9 @@ html.no-js .chapter { margin-bottom: 3em; }
 @keyframes crt-off {
   0%   { transform: none; opacity: 1; filter: none; background: transparent; box-shadow: none; }
   35%  { transform: scale(1, .4); background: rgba(157, 255, 176, .12); }
-  55%  { transform: scale(1, .006); opacity: 1; filter: brightness(1.6); background: var(--phosphor-hi); box-shadow: 0 0 calc(var(--S) * .012) var(--glow); }
-  80%  { transform: scale(.03, .006); opacity: 1; filter: brightness(2); background: var(--phosphor-hi); box-shadow: 0 0 calc(var(--S) * .012) var(--glow); }
-  100% { transform: scale(.01, .006); opacity: 0; filter: brightness(1); background: var(--phosphor-hi); box-shadow: 0 0 calc(var(--S) * .012) var(--glow); }
+  55%  { transform: scale(1, .006); opacity: 1; filter: brightness(1.6); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  80%  { transform: scale(.03, .006); opacity: 1; filter: brightness(2); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  100% { transform: scale(.01, .006); opacity: 0; filter: brightness(1); background: var(--phosphor-hi); box-shadow: var(--beam); }
 }
 @keyframes flicker {
   0%, 100% { opacity: 1; }
@@ -234,7 +241,6 @@ html.no-js .chapter { margin-bottom: 3em; }
   64% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .tube, .cursor, .stage.waking .tube { animation: none; }
-  .stage.off .tube { animation: none; visibility: hidden; }
+  .tube, .cursor { animation: none; }
   .spill { transition: none; }
 }

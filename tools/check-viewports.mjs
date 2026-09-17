@@ -160,12 +160,18 @@ async function behaviour() {
   }
 
   // The power button (easter egg) is the next tab stop; Enter turns the screen off and on, the LED follows.
-  await page.focus('.power'); await page.keyboard.press('Enter'); await page.waitForTimeout(900);
-  const off = await page.evaluate(() => ({ stage: document.querySelector('.stage').classList.contains('off'),
+  // Each press is awaited on the end of its keyframes rather than a fixed wait.
+  const pressPower = name => page.evaluate(name => new Promise(r => {
+    document.querySelector('.tube').addEventListener('animationend', e => { if (e.animationName === name) r(); }, { once: true });
+    document.querySelector('.power').click();
+  }), name);
+  await pressPower('crt-off');
+  const off = await page.evaluate(() => ({ off: document.querySelector('.stage').classList.contains('off'),
     pressed: document.querySelector('.power').getAttribute('aria-pressed'), tube: getComputedStyle(document.querySelector('.tube')).opacity }));
-  if (!off.stage || off.pressed !== 'false' || off.tube !== '0') fail(`power off did not black the screen: ${JSON.stringify(off)}`);
-  await page.keyboard.press('Enter'); await page.waitForTimeout(1100);
-  if (await page.evaluate(() => document.querySelector('.stage').className !== 'stage')) fail('power on did not clear the off and waking states');
+  if (!off.off || off.pressed !== 'false' || off.tube !== '0') fail(`power off did not black the screen: ${JSON.stringify(off)}`);
+  await pressPower('crt-on');
+  const on = await page.evaluate(() => { const c = document.querySelector('.stage').classList; return { off: c.contains('off'), waking: c.contains('waking'), pressed: document.querySelector('.power').getAttribute('aria-pressed') }; });
+  if (on.off || on.waking || on.pressed !== 'true') fail(`power on did not restore the screen: ${JSON.stringify(on)}`);
 
   await page.focus('.skip');   // the skip link is visible only while focused
   await clickAndExpect('.skip', 'whoami', 'the skip link did not land on the briefing');
