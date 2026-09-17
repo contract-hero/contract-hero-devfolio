@@ -183,6 +183,20 @@
     if (jumpTo(id, true)) { e.preventDefault(); history.replaceState(null, '', '#' + id); }
   });
 
+  // ---- power button (easter egg) ----------------------------------------------
+  // Off collapses the tube and leaves it black; the story keeps scrolling underneath, so turning it
+  // back on shows wherever the reader is. .off and .waking on .stage drive the CSS and hold the state.
+  const power = document.querySelector('.power'), stage = document.querySelector('.stage');
+  power.addEventListener('click', () => {
+    const on = stage.classList.toggle('off') === false;
+    stage.classList.toggle('waking', on && !reduced);   // reduced motion runs no crt-on, so no animationend would clear it
+    power.setAttribute('aria-pressed', String(on));
+    tube.inert = !on;   // the hidden links leave the tab order and the accessibility tree
+  });
+  const woke = e => { if (e.animationName === 'crt-on') stage.classList.remove('waking'); };
+  tube.addEventListener('animationend', woke);
+  tube.addEventListener('animationcancel', woke);
+
   // ---- go ----------------------------------------------------------------
   layout();
   if (showId !== null && pin < 0) {

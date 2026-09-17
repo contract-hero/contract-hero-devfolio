@@ -116,6 +116,7 @@ a { color: inherit; }
   font-size: calc(var(--S) * var(--sw) * .9 / (var(--cols) * var(--adv)));
   line-height: 1.15;
   animation: flicker 6s infinite steps(1);
+  --beam: 0 0 calc(var(--S) * .012) var(--glow);   /* the glow of the collapsed raster in the power keyframes */
 }
 .text {
   will-change: transform;
@@ -147,6 +148,67 @@ pre { font: inherit; white-space: pre; }
     radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 58%, rgba(0,0,0,.42) 100%);
 }
 
+/* ---------- power button and LED (easter egg) ----------
+   Both sit over the ones painted in assets/room.jpg, in photo fractions like the screen: LED centre
+   (1361,1309) 9px wide, button box (1379,1288)-(1434,1326) of 2048. The LED overlay is a little wider
+   than the painted dot so it covers it fully. */
+.led {
+  position: absolute; pointer-events: none;
+  --d: .0068;
+  /* one hue per state; the lens is built from it: a saturated dome, a lit core, a shaded underside and a specular hit */
+  --led: #7ee23a; --led-core: #e6ffc4; --led-deep: #2f7a12; --led-glow: rgba(140, 255, 60, .6);
+  left: calc((.6646 - var(--d) / 2) * 100%); top: calc((.6392 - var(--d) / 2) * 100%);
+  width: calc(var(--d) * 100%); height: calc(var(--d) * 100%);
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 34% 30%, rgba(255, 255, 255, .95) 0 14%, rgba(255, 255, 255, 0) 32%),   /* specular hit */
+    radial-gradient(circle at 50% 55%, var(--led-core) 0 18%, var(--led) 46%, var(--led-deep) 100%);      /* lit dome */
+  box-shadow:
+    inset 0 calc(var(--S) * -.001) calc(var(--S) * .0015) rgba(0, 0, 0, .35),                             /* shade under the dome */
+    0 0 calc(var(--S) * .003) var(--led),
+    0 0 calc(var(--S) * .012) var(--led-glow);
+  transition: box-shadow .25s;   /* gradients do not transition; the glow does */
+}
+.stage.off .led { --led: #ff3b2f; --led-core: #ffd6cf; --led-deep: #8a0f08; --led-glow: rgba(255, 60, 40, .6); }
+/* A latching switch. The button is the tap area: the painted cap grown 30% to the left and 40% up and
+   down (not to the right: on a portrait phone the cap sits at the viewport edge) so a phone can hit it;
+   ::before is the cap itself. While the screen is on the cap sits pushed into the case, so the photo's
+   raised cap gets a darker face and shadows: top edge, left edge, lit bottom lip. Off leaves the photo
+   alone: the cap is out. --press scales the shadows with --S. */
+.power {
+  position: absolute;
+  --px: .6733; --py: .6289; --pw: .0269; --ph: .0186;   /* the painted cap, in photo fractions */
+  left: calc((var(--px) - var(--pw) * .3) * 100%); top: calc((var(--py) - var(--ph) * .4) * 100%);
+  width: calc(var(--pw) * 1.3 * 100%); height: calc(var(--ph) * 1.8 * 100%);
+  margin: 0; padding: 0; border: 0; background: transparent; cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  --press: calc(var(--S) * .004);
+}
+.power::before {
+  content: ''; position: absolute; inset: 22.2% 0 22.2% 23.1%;   /* .4ph / 1.8ph and .3pw / 1.3pw: back to the cap */
+  border-radius: 12% / 20%;
+  background: rgba(20, 10, 4, .22);
+  box-shadow: inset 0 var(--press) calc(var(--press) * 2) rgba(0, 0, 0, .7),
+              inset calc(var(--press) * .5) 0 var(--press) rgba(0, 0, 0, .35),
+              inset 0 calc(var(--press) * -.5) 0 rgba(255, 220, 180, .18);
+  transition: background .12s, box-shadow .12s;
+}
+.stage.off .power::before { background: transparent; box-shadow: none; }
+.power:active::before { background: rgba(20, 10, 4, .32); box-shadow: inset 0 calc(var(--press) * 1.5) calc(var(--press) * 3) rgba(0, 0, 0, .8); }
+.power:focus-visible { outline: 2px solid var(--phosphor); outline-offset: 0; border-radius: 12% / 20%; }
+
+/* Screen off: the tube is black and the spill is gone. With motion allowed, the tube collapses like a
+   CRT losing its beam and holds the last frame; waking runs the warm-up once alongside the idle flicker,
+   and the base flicker restarts when crt.js drops .waking on animationend. */
+.stage.off .tube { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  .stage.off .tube { animation: crt-off .7s ease-in forwards; }
+  .stage.waking .tube { animation: crt-on .9s ease-out, flicker 6s infinite steps(1); }
+}
+.stage.off .screen { background: radial-gradient(ellipse at 50% 42%, rgba(10, 14, 11, .6), rgba(2, 3, 2, .3) 72%); }
+.spill { transition: opacity .5s; }
+.stage.off .spill { opacity: 0; }
+
 /* ---------- skip link for keyboard users (visible only on focus) ---------- */
 .skip { position: fixed; left: -999px; top: 8px; z-index: 10; padding: 6px 10px; background: var(--phosphor); color: #000; font-size: 18px; text-decoration: none; }
 .skip:focus { left: 8px; }
@@ -160,6 +222,24 @@ html.no-js .chapters { max-width: 60ch; margin: 0 auto; padding: 8vh 6vw 14vh; f
 html.no-js .chapter { margin-bottom: 3em; }
 
 @keyframes blink { 50% { opacity: 0; } }
+
+/* Power on: the beam warms up. A brief overbright bloom, slightly stretched, that settles into place. */
+@keyframes crt-on {
+  0%   { transform: scale(1, .006); opacity: 0; filter: brightness(4); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  20%  { transform: scale(1, .006); opacity: 1; filter: brightness(6); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  45%  { transform: scale(1.02, 1.02); opacity: 1; filter: brightness(2.2); background: rgba(157, 255, 176, .1); box-shadow: none; }
+  100% { transform: none; opacity: 1; filter: none; background: transparent; box-shadow: none; }
+}
+/* Power off: the beam loses vertical deflection first, so the raster squeezes into a bright line; then
+   horizontal, so the line shrinks to a dot; then the dot decays. The brightness rises as the same
+   energy lands on less phosphor. */
+@keyframes crt-off {
+  0%   { transform: none; opacity: 1; filter: none; background: transparent; box-shadow: none; }
+  35%  { transform: scale(1, .4); background: rgba(157, 255, 176, .12); }
+  55%  { transform: scale(1, .006); opacity: 1; filter: brightness(1.6); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  80%  { transform: scale(.03, .006); opacity: 1; filter: brightness(2); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  100% { transform: scale(.01, .006); opacity: 0; filter: brightness(1); background: var(--phosphor-hi); box-shadow: var(--beam); }
+}
 @keyframes flicker {
   0%, 100% { opacity: 1; }
   7%  { opacity: .985; }
@@ -171,4 +251,5 @@ html.no-js .chapter { margin-bottom: 3em; }
 }
 @media (prefers-reduced-motion: reduce) {
   .tube, .cursor { animation: none; }
+  .spill { transition: none; }
 }
