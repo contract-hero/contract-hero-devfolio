@@ -147,6 +147,52 @@ pre { font: inherit; white-space: pre; }
     radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 58%, rgba(0,0,0,.42) 100%);
 }
 
+/* ---------- power button and LED (easter egg) ----------
+   Both sit over the ones painted in assets/room.jpg, in photo fractions like the screen: LED centre
+   (1361,1309) 9px wide, button box (1379,1288)-(1434,1326) of 2048. The LED overlay is a little wider
+   than the painted dot so it covers it fully. */
+.led {
+  position: absolute; pointer-events: none;
+  --d: .0062;
+  left: calc((.6646 - var(--d) / 2) * 100%); top: calc((.6392 - var(--d) / 2) * 100%);
+  width: calc(var(--d) * 100%); height: calc(var(--d) * 100%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 40% 35%, #f4ffd0, #a6ff4a 45%, #5fbf1a 100%);
+  box-shadow: 0 0 calc(var(--S) * .004) #9dff4a, 0 0 calc(var(--S) * .01) rgba(140, 255, 60, .55);
+  transition: background .25s, box-shadow .25s;
+}
+.stage.off .led {
+  background: radial-gradient(circle at 40% 35%, #ffd0c8, #ff3b2f 45%, #a8140c 100%);
+  box-shadow: 0 0 calc(var(--S) * .004) #ff4a3a, 0 0 calc(var(--S) * .01) rgba(255, 60, 40, .55);
+}
+/* A latching switch: while the screen is on the cap sits pushed into the case, so the photo's raised
+   cap gets a shadow along its top edge, a darker face and a thin lit lip at the bottom. Off leaves the
+   photo alone: the cap is out. --press is the depth in stage pixels. */
+.power {
+  position: absolute;
+  left: 67.33%; top: 62.89%; width: 2.69%; height: 1.86%;
+  margin: 0; padding: 0; border: 0; border-radius: 12% / 20%;
+  --press: calc(var(--S) * .004);
+  background: rgba(20, 10, 4, .22);
+  box-shadow: inset 0 var(--press) calc(var(--press) * 2) rgba(0, 0, 0, .7),
+              inset calc(var(--press) * .5) 0 var(--press) rgba(0, 0, 0, .35),
+              inset 0 calc(var(--press) * -.5) 0 rgba(255, 220, 180, .18);
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: background .12s, box-shadow .12s;
+}
+.stage.off .power { background: transparent; box-shadow: none; }
+.power:active { background: rgba(20, 10, 4, .32); box-shadow: inset 0 calc(var(--press) * 1.5) calc(var(--press) * 3) rgba(0, 0, 0, .8); }
+.power:focus-visible { outline: 2px solid var(--phosphor); outline-offset: 2px; }
+
+/* Screen off: the tube collapses like a CRT losing its beam and holds the last frame. Waking runs the
+   warm-up once, then the idle flicker takes over again (crt.js drops .waking on animationend). */
+.stage.off .tube { animation: crt-off .7s ease-in forwards; }
+.stage.waking .tube { animation: crt-on .9s ease-out, flicker 6s infinite steps(1); }
+.stage.off .screen { background: radial-gradient(ellipse at 50% 42%, rgba(10, 14, 11, .6), rgba(2, 3, 2, .3) 72%); }
+.spill { transition: opacity .5s; }
+.stage.off .spill { opacity: 0; }
+
 /* ---------- skip link for keyboard users (visible only on focus) ---------- */
 .skip { position: fixed; left: -999px; top: 8px; z-index: 10; padding: 6px 10px; background: var(--phosphor); color: #000; font-size: 18px; text-decoration: none; }
 .skip:focus { left: 8px; }
@@ -160,6 +206,24 @@ html.no-js .chapters { max-width: 60ch; margin: 0 auto; padding: 8vh 6vw 14vh; f
 html.no-js .chapter { margin-bottom: 3em; }
 
 @keyframes blink { 50% { opacity: 0; } }
+
+/* Power on: the beam warms up. A brief overbright bloom, slightly stretched, that settles into place. */
+@keyframes crt-on {
+  0%   { transform: scale(1, .006); opacity: 0; filter: brightness(4); background: var(--phosphor-hi); box-shadow: 0 0 calc(var(--S) * .012) var(--glow); }
+  20%  { transform: scale(1, .006); opacity: 1; filter: brightness(6); background: var(--phosphor-hi); box-shadow: 0 0 calc(var(--S) * .012) var(--glow); }
+  45%  { transform: scale(1.02, 1.02); opacity: 1; filter: brightness(2.2); background: rgba(157, 255, 176, .1); box-shadow: none; }
+  100% { transform: none; opacity: 1; filter: none; background: transparent; box-shadow: none; }
+}
+/* Power off: the beam loses vertical deflection first, so the raster squeezes into a bright line; then
+   horizontal, so the line shrinks to a dot; then the dot decays. The brightness rises as the same
+   energy lands on less phosphor. */
+@keyframes crt-off {
+  0%   { transform: none; opacity: 1; filter: none; background: transparent; box-shadow: none; }
+  35%  { transform: scale(1, .4); background: rgba(157, 255, 176, .12); }
+  55%  { transform: scale(1, .006); opacity: 1; filter: brightness(1.6); background: var(--phosphor-hi); box-shadow: 0 0 calc(var(--S) * .012) var(--glow); }
+  80%  { transform: scale(.03, .006); opacity: 1; filter: brightness(2); background: var(--phosphor-hi); box-shadow: 0 0 calc(var(--S) * .012) var(--glow); }
+  100% { transform: scale(.01, .006); opacity: 0; filter: brightness(1); background: var(--phosphor-hi); box-shadow: 0 0 calc(var(--S) * .012) var(--glow); }
+}
 @keyframes flicker {
   0%, 100% { opacity: 1; }
   7%  { opacity: .985; }
@@ -170,5 +234,7 @@ html.no-js .chapter { margin-bottom: 3em; }
   64% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .tube, .cursor { animation: none; }
+  .tube, .cursor, .stage.waking .tube { animation: none; }
+  .stage.off .tube { animation: none; visibility: hidden; }
+  .spill { transition: none; }
 }

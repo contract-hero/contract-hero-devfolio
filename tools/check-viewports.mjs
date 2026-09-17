@@ -159,6 +159,15 @@ async function behaviour() {
     if (await page.evaluate(() => !!document.activeElement?.closest('#chapters'))) { fail('Tab reached a link inside the hidden chapters'); break; }
   }
 
+  // The power button (easter egg) is the next tab stop; Enter turns the screen off and on, the LED follows.
+  await page.focus('.power'); await page.keyboard.press('Enter'); await page.waitForTimeout(900);
+  const off = await page.evaluate(() => ({ stage: document.querySelector('.stage').classList.contains('off'),
+    pressed: document.querySelector('.power').getAttribute('aria-pressed'), tube: getComputedStyle(document.querySelector('.tube')).opacity }));
+  if (!off.stage || off.pressed !== 'false' || off.tube !== '0') fail(`power off did not black the screen: ${JSON.stringify(off)}`);
+  await page.keyboard.press('Enter'); await page.waitForTimeout(1100);
+  if (await page.evaluate(() => document.querySelector('.stage').className !== 'stage')) fail('power on did not clear the off and waking states');
+
+  await page.focus('.skip');   // the skip link is visible only while focused
   await clickAndExpect('.skip', 'whoami', 'the skip link did not land on the briefing');
   await clickAndExpect('#screen-text a[href="#engineer"]', '1-engineer', "the briefing's story link did not land on the first chapter");
   await page.evaluate(() => scrollTo(0, document.body.scrollHeight)); await page.waitForTimeout(300);
