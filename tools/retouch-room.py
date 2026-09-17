@@ -1,4 +1,7 @@
 """One-off retouch of assets/room.jpg (2026-09-16): the two stacks of floppy disks were regenerated.
+2026-09-17: the monitor bezel was redone the same way with a 1024px crop at (512, 440), box (70,180,950,845),
+feather 14, prompt "a thin dark inner frame lip of the same depth on all four sides, screen a flat pure
+black rectangle, everything else exactly as it is"; the edit aligned at (0,0), outside-box diff 3.74.
 
 How it was done, so it can be repeated for another object:
 1. Cut a 512x512 context crop around each object with sips (offsets below).

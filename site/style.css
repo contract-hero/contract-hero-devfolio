@@ -43,7 +43,7 @@ a { color: inherit; }
 .stage {
   position: absolute;
   --ar: 1;
-  --sx: .3027; --sy: .3179; --sw: .3960; --sh: .2945;   /* INSET line for assets/room.jpg, 2048x2048 */
+  --sx: .3135; --sy: .3310; --sw: .3720; --sh: .2690;   /* assets/room.jpg, 2048x2048: the glass is slightly curved, so this is the rectangle inside its corners (measure-screen.py: max of L/T, min of R/B), inset ~0.5% */
   --cx: calc(var(--sx) + var(--sw) / 2);
   --cy: calc(var(--sy) + var(--sh) / 2);
   --cols: 46; --rows: 12; --adv: .4;                 /* the terminal grid; VT323 advances .4em per character */
@@ -105,12 +105,12 @@ a { color: inherit; }
 }
 /* The screen is a fixed terminal grid, --cols by --rows (46 by 12), on any device: the type is sized so
    --cols characters of --adv em each use 90% of the screen width. 12 rows at line-height 1.15 use 67.5%
-   of the width, which is 90% of a 4:3 screen's height. Percentage padding is relative to the width on
-   every side, so 3% 4% leaves room for all 12. tools/check-viewports.mjs reads --cols and --rows and
+   of the width, which is 93% of this 1.38:1 screen's height. Percentage padding is relative to the width on
+   every side, so 2% 4% leaves room for all 12. tools/check-viewports.mjs reads --cols and --rows and
    fails a chapter that does not fit. */
 .tube {
   position: absolute; inset: 0;
-  padding: 3% 4%;
+  padding: 2% 4%;
   overflow: hidden;
   font-size: calc(var(--S) * var(--sw) * .9 / (var(--cols) * var(--adv)));
   line-height: 1.15;
