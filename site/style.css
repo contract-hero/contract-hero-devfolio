@@ -116,6 +116,7 @@ a { color: inherit; }
   font-size: calc(var(--S) * var(--sw) * .9 / (var(--cols) * var(--adv)));
   line-height: 1.15;
   animation: flicker 6s infinite steps(1);
+  filter: url(#barrel);   /* the glass is curved: crt.js fills the map, so before that the scale is 0 and the tube is flat */
   --beam: 0 0 calc(var(--S) * .012) var(--glow);   /* the glow of the collapsed raster in the power keyframes */
 }
 .text {
@@ -140,6 +141,7 @@ pre { font: inherit; white-space: pre; }
 }
 .screen.typing .cursor { animation: none; }
 
+.barrel { position: absolute; width: 0; height: 0; overflow: hidden; }
 .glass {
   position: absolute; inset: 0; pointer-events: none;
   background:
