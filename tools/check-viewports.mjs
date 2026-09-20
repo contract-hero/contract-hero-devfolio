@@ -73,6 +73,8 @@ async function measure([name, w, h, dpr, mobile]) {
   for (const id of chapters) {
     logged.length = 0;
     await openChapter(page, id);
+    // The barrel map is armed once its data URL decodes; the assertions below give the readable message.
+    await page.waitForFunction(() => document.querySelector('#barrel feImage').hasAttribute('href'), null, { timeout: 2000 }).catch(() => {});
     const m = await page.evaluate(() => {
       const rect = el => { const b = el.getBoundingClientRect(); return { l: b.left, t: b.top, r: b.right, b: b.bottom, w: b.width, h: b.height }; };
       const stageEl = document.querySelector('.stage'), tube = document.querySelector('.tube'), text = document.getElementById('screen-text');
@@ -99,6 +101,11 @@ async function measure([name, w, h, dpr, mobile]) {
         wide: text.scrollWidth > tube.clientWidth,                        // <pre> never wraps: art wider than the grid is clipped silently
         keepComputer: prop('--keep-computer') === 1,
         computerVisible: bandTop >= -0.5 && bandBottom <= innerHeight + 0.5,
+        barrel: {
+          href: (document.querySelector('#barrel feImage').getAttribute('href') || '').slice(0, 14),
+          scale: parseFloat(document.querySelector('#barrel feDisplacementMap').getAttribute('scale')),
+          used: getComputedStyle(document.querySelector('.screen')).filter,
+        },
       };
     });
     view = m;
@@ -116,6 +123,9 @@ async function measure([name, w, h, dpr, mobile]) {
     if (m.used > m.avail + 0.05) problems.push(`overflows: ${m.used.toFixed(1)} rows used, ${m.avail.toFixed(1)} available`);
     if (m.wide) problems.push('text wider than the screen');
     if (m.font < MIN_FONT_PX) problems.push(`font ${m.font.toFixed(1)}px < ${MIN_FONT_PX}px`);
+    if (m.barrel.href !== 'data:image/png') problems.push('the barrel displacement map was never painted');
+    if (!(m.barrel.scale > 0)) problems.push('the barrel scale is still 0: the screen is flat');
+    if (!m.barrel.used.includes('barrel')) problems.push('.screen no longer uses the barrel filter');
     if (logged.length) problems.push(`page reported: ${logged[0]}`);
     if (problems.length) failures.push(`${name} ${w}x${h} · ${id}: ${problems.join('; ')}`);
     if (sheetPath) shots.push({ viewport: `${name} ${w}x${h}`, chapter: id, jpeg: (await page.screenshot({ type: 'jpeg', quality: 62, scale: 'css' })).toString('base64') });
