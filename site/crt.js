@@ -62,12 +62,12 @@
   }
 
   // ---- the curved glass --------------------------------------------------
-  // The same barrel warp as the terminal's CRT shader (~/.config/ghostty/shaders/crt.glsl): a point at
+  // The same barrel warp as the terminal's CRT shader (~/.config/ghostty/shaders/crt.glsl), at a third of its strength: a point at
   // (ux, uy) in [-1, 1] shows the pixel at ux + ux * uy² * CURVATURE, and likewise for y. feDisplacementMap
   // reads the offset from a map image: R and G hold the x and y offsets as 0.5 + offset / scale, and the
   // scale is CURVATURE times the tube width in px, so the map itself is size-free apart from the tube's
   // aspect ratio. Corners pull inwards and show the dark screen behind, as the shader paints its bezel.
-  const CURVATURE = 0.10;
+  const CURVATURE = 0.03;   // the shader runs 0.10 on a flat panel; on a real VT100 the outer rows bow 1-2%, and more leaves a void at the corners
   const MAP_PX = 256;
   const filter = document.getElementById('barrel');
   const feImage = filter.querySelector('feImage');
