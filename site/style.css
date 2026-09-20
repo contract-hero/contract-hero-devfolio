@@ -87,12 +87,17 @@ a { color: inherit; }
 }
 
 /* ---------- the screen ---------- */
-.screen {
+/* The screen and the glass over it share the photo's screen rectangle. The glass is a sibling, not a
+   child, so the barrel filter on the screen warps the raster and not the scanlines. */
+.screen, .glass {
   position: absolute;
   left: calc(var(--sx) * 100%); top: calc(var(--sy) * 100%);
   width: calc(var(--sw) * 100%); height: calc(var(--sh) * 100%);
   border-radius: 1.4% / 1.9%;
+}
+.screen {
   overflow: hidden;
+  filter: url(#barrel);   /* the glass is curved: crt.js fills the map, so before that the scale is 0 and the screen is flat */
   /* The tube face: a faint phosphor tint in the middle that is black by the bezel, as on a real terminal.
      A tint that reaches the edge shows as a green wash in the empty margin under the last row. */
   background:
@@ -118,7 +123,6 @@ a { color: inherit; }
   font-size: calc(var(--S) * var(--sw) * .9 / (var(--cols) * var(--adv)));
   line-height: 1.15;
   animation: flicker 6s infinite steps(1);
-  filter: url(#barrel);   /* the glass is curved: crt.js fills the map, so before that the scale is 0 and the tube is flat */
   --beam: 0 0 calc(var(--S) * .012) var(--glow);   /* the glow of the collapsed raster in the power keyframes */
 }
 .text {
@@ -145,7 +149,7 @@ pre { font: inherit; white-space: pre; }
 
 .barrel { position: absolute; width: 0; height: 0; overflow: hidden; }
 .glass {
-  position: absolute; inset: 0; pointer-events: none;
+  pointer-events: none;
   background:
     repeating-linear-gradient(0deg, rgba(0,0,0,.26) 0 1px, rgba(0,0,0,0) 1px 3px),
     radial-gradient(ellipse at 24% 10%, rgba(255,255,255,.05), rgba(255,255,255,0) 45%),
@@ -228,22 +232,21 @@ html.no-js .chapter { margin-bottom: 3em; }
 @keyframes blink { 50% { opacity: 0; } }
 
 /* Power on: the beam warms up. A brief overbright bloom, slightly stretched, that settles into place. */
-/* Every keyframe keeps url(#barrel) in its filter list: a keyframe with a different list is not interpolated and the curve would snap back on animationend. */
 @keyframes crt-on {
-  0%   { transform: scale(1, .006); opacity: 0; filter: url(#barrel) brightness(4); background: var(--phosphor-hi); box-shadow: var(--beam); }
-  20%  { transform: scale(1, .006); opacity: 1; filter: url(#barrel) brightness(6); background: var(--phosphor-hi); box-shadow: var(--beam); }
-  45%  { transform: scale(1.02, 1.02); opacity: 1; filter: url(#barrel) brightness(2.2); background: rgba(157, 255, 176, .1); box-shadow: none; }
-  100% { transform: none; opacity: 1; filter: url(#barrel) brightness(1); background: transparent; box-shadow: none; }
+  0%   { transform: scale(1, .006); opacity: 0; filter: brightness(4); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  20%  { transform: scale(1, .006); opacity: 1; filter: brightness(6); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  45%  { transform: scale(1.02, 1.02); opacity: 1; filter: brightness(2.2); background: rgba(157, 255, 176, .1); box-shadow: none; }
+  100% { transform: none; opacity: 1; filter: none; background: transparent; box-shadow: none; }
 }
 /* Power off: the beam loses vertical deflection first, so the raster squeezes into a bright line; then
    horizontal, so the line shrinks to a dot; then the dot decays. The brightness rises as the same
    energy lands on less phosphor. */
 @keyframes crt-off {
-  0%   { transform: none; opacity: 1; filter: url(#barrel) brightness(1); background: transparent; box-shadow: none; }
+  0%   { transform: none; opacity: 1; filter: none; background: transparent; box-shadow: none; }
   35%  { transform: scale(1, .4); background: rgba(157, 255, 176, .12); }
-  55%  { transform: scale(1, .006); opacity: 1; filter: url(#barrel) brightness(1.6); background: var(--phosphor-hi); box-shadow: var(--beam); }
-  80%  { transform: scale(.03, .006); opacity: 1; filter: url(#barrel) brightness(2); background: var(--phosphor-hi); box-shadow: var(--beam); }
-  100% { transform: scale(.01, .006); opacity: 0; filter: url(#barrel) brightness(1); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  55%  { transform: scale(1, .006); opacity: 1; filter: brightness(1.6); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  80%  { transform: scale(.03, .006); opacity: 1; filter: brightness(2); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  100% { transform: scale(.01, .006); opacity: 0; filter: none; background: var(--phosphor-hi); box-shadow: var(--beam); }
 }
 @keyframes flicker {
   0%, 100% { opacity: 1; }

@@ -58,27 +58,25 @@
     });
     bootSeg = segs.find(s => s.timed);
     story.style.height = (y + viewportH) + 'px';      // +1 viewport: the sticky scene occupies one
-    curve();
   }
 
   // ---- the curved glass --------------------------------------------------
-  // The same barrel warp as the terminal's CRT shader (~/.config/ghostty/shaders/crt.glsl), at a third of its strength: a point at
-  // (ux, uy) in [-1, 1] shows the pixel at ux + ux * uy² * CURVATURE, and likewise for y. feDisplacementMap
-  // reads the offset from a map image: R and G hold the x and y offsets as 0.5 + offset / scale, and the
-  // scale is CURVATURE times the tube width in px, so the map itself is size-free apart from the tube's
-  // aspect ratio. Corners pull inwards and show the dark screen behind, as the shader paints its bezel.
+  // The classic Shadertoy CRT barrel (the curve() of a Ghostty crt.glsl shader) at a third of its strength:
+  // a point at (ux, uy) in [-1, 1] shows the pixel at ux + ux * uy² * CURVATURE, and likewise for y.
+  // feDisplacementMap reads the offset from a map image: R and G hold the x and y offsets as
+  // 0.5 + offset / scale, and the scale is CURVATURE times the screen width in px, so the map depends only
+  // on the screen's aspect ratio, which the photo fixes (--sw/--sh): it is built once, on the first size.
+  // Corners pull inwards and show the black screen of the photo, as the shader paints its bezel.
   const CURVATURE = 0.03;   // the shader runs 0.10 on a flat panel; on a real VT100 the outer rows bow 1-2%, and more leaves a void at the corners
-  const MAP_PX = 256;
+  const MAP_PX = 128;       // the field is smooth; the filter scales the map up
   const filter = document.getElementById('barrel');
   const feImage = filter.querySelector('feImage');
   const feMap = filter.querySelector('feDisplacementMap');
-  let mapAspect = 0;
   function curve() {
-    const W = tube.clientWidth, H = tube.clientHeight;
+    const W = screen.clientWidth, H = screen.clientHeight;
     if (!W || !H) return;
-    const aspect = H / W;
-    if (Math.abs(aspect - mapAspect) > .005) {
-      mapAspect = aspect;
+    if (!feImage.hasAttribute('href')) {
+      const aspect = H / W;
       const canvas = document.createElement('canvas');
       canvas.width = canvas.height = MAP_PX;
       const ctx = canvas.getContext('2d');
@@ -100,6 +98,7 @@
     for (const el of [filter, feImage]) { el.setAttribute('width', W); el.setAttribute('height', H); }
     feMap.setAttribute('scale', CURVATURE * W);
   }
+  new ResizeObserver(curve).observe(screen);   // the filter tracks its own element, not the scroll layout's resize guard
 
   // ---- painting --------------------------------------------------------
   // One clone per chapter, built on first use and cached. A repaint only rewrites text data, toggles

@@ -37,12 +37,12 @@
       <div class="spill"></div>
       <div class="screen">
         <div class="tube"><div class="text" id="screen-text"></div></div>
-        <div class="glass"></div>
       </div>
-      <!-- The tube's barrel warp: crt.js paints the displacement map and sizes the filter to the tube. -->
-      <svg class="barrel" aria-hidden="true" focusable="false" width="0" height="0">
-        <filter id="barrel" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB" x="0" y="0" width="1" height="1">
-          <feImage result="map" preserveAspectRatio="none" x="0" y="0" width="1" height="1"/>
+      <div class="glass"></div>
+      <!-- The screen's barrel warp: crt.js paints the displacement map and sizes the filter to the screen. -->
+      <svg class="barrel" aria-hidden="true" focusable="false">
+        <filter id="barrel" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB" x="0" y="0">
+          <feImage result="map" preserveAspectRatio="none" x="0" y="0"/>
           <feDisplacementMap in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="G" scale="0"/>
         </filter>
       </svg>
