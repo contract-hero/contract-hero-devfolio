@@ -93,15 +93,17 @@ a { color: inherit; }
   width: calc(var(--sw) * 100%); height: calc(var(--sh) * 100%);
   border-radius: 1.4% / 1.9%;
   overflow: hidden;
+  /* The tube face: a faint phosphor tint in the middle that is black by the bezel, as on a real terminal.
+     A tint that reaches the edge shows as a green wash in the empty margin under the last row. */
   background:
-    radial-gradient(ellipse at 50% 42%, rgba(24, 70, 36, .45), rgba(4, 10, 6, .15) 72%);
+    radial-gradient(ellipse at 50% 45%, rgba(20, 60, 30, .25), rgba(2, 6, 3, .1) 50%, rgba(0, 0, 0, .7) 95%);
   box-shadow: inset 0 0 calc(var(--S) * .02) rgba(0, 0, 0, .75);
 }
 .spill {
   position: absolute; pointer-events: none;
   left: calc((var(--sx) - .06) * 100%); width: calc((var(--sw) + .12) * 100%);
-  top: calc((var(--sy) + var(--sh)) * 100%); height: 14%;
-  background: radial-gradient(ellipse at 50% 0%, rgba(90,255,140,.13), rgba(0,0,0,0) 70%);
+  top: calc(var(--band-bottom) * 100% - 1%); height: 12%;   /* phosphor light on the desk below the case, not on the bezel lip */
+  background: radial-gradient(ellipse at 50% 0%, rgba(90,255,140,.07), rgba(0,0,0,0) 70%);
 }
 /* The screen is a fixed terminal grid, --cols by --rows (46 by 12), on any device: the type is sized so
    --cols characters of --adv em each use 90% of the screen width. 12 rows at line-height 1.15 are then
