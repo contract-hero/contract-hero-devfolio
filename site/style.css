@@ -228,21 +228,22 @@ html.no-js .chapter { margin-bottom: 3em; }
 @keyframes blink { 50% { opacity: 0; } }
 
 /* Power on: the beam warms up. A brief overbright bloom, slightly stretched, that settles into place. */
+/* Every keyframe keeps url(#barrel) in its filter list: a keyframe with a different list is not interpolated and the curve would snap back on animationend. */
 @keyframes crt-on {
-  0%   { transform: scale(1, .006); opacity: 0; filter: brightness(4); background: var(--phosphor-hi); box-shadow: var(--beam); }
-  20%  { transform: scale(1, .006); opacity: 1; filter: brightness(6); background: var(--phosphor-hi); box-shadow: var(--beam); }
-  45%  { transform: scale(1.02, 1.02); opacity: 1; filter: brightness(2.2); background: rgba(157, 255, 176, .1); box-shadow: none; }
-  100% { transform: none; opacity: 1; filter: none; background: transparent; box-shadow: none; }
+  0%   { transform: scale(1, .006); opacity: 0; filter: url(#barrel) brightness(4); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  20%  { transform: scale(1, .006); opacity: 1; filter: url(#barrel) brightness(6); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  45%  { transform: scale(1.02, 1.02); opacity: 1; filter: url(#barrel) brightness(2.2); background: rgba(157, 255, 176, .1); box-shadow: none; }
+  100% { transform: none; opacity: 1; filter: url(#barrel) brightness(1); background: transparent; box-shadow: none; }
 }
 /* Power off: the beam loses vertical deflection first, so the raster squeezes into a bright line; then
    horizontal, so the line shrinks to a dot; then the dot decays. The brightness rises as the same
    energy lands on less phosphor. */
 @keyframes crt-off {
-  0%   { transform: none; opacity: 1; filter: none; background: transparent; box-shadow: none; }
+  0%   { transform: none; opacity: 1; filter: url(#barrel) brightness(1); background: transparent; box-shadow: none; }
   35%  { transform: scale(1, .4); background: rgba(157, 255, 176, .12); }
-  55%  { transform: scale(1, .006); opacity: 1; filter: brightness(1.6); background: var(--phosphor-hi); box-shadow: var(--beam); }
-  80%  { transform: scale(.03, .006); opacity: 1; filter: brightness(2); background: var(--phosphor-hi); box-shadow: var(--beam); }
-  100% { transform: scale(.01, .006); opacity: 0; filter: brightness(1); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  55%  { transform: scale(1, .006); opacity: 1; filter: url(#barrel) brightness(1.6); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  80%  { transform: scale(.03, .006); opacity: 1; filter: url(#barrel) brightness(2); background: var(--phosphor-hi); box-shadow: var(--beam); }
+  100% { transform: scale(.01, .006); opacity: 0; filter: url(#barrel) brightness(1); background: var(--phosphor-hi); box-shadow: var(--beam); }
 }
 @keyframes flicker {
   0%, 100% { opacity: 1; }
