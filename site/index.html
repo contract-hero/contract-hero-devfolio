@@ -39,10 +39,11 @@
         <div class="tube"><div class="text" id="screen-text"></div></div>
       </div>
       <div class="glass"></div>
-      <!-- The screen's barrel warp: crt.js paints the displacement map and sizes the filter to the screen. -->
+      <!-- The screen's barrel warp: crt.js paints the displacement map and sets the scale. Bounding-box units on
+           purpose: with userSpaceOnUse WebKit clips the filtered screen to a fraction of its width. -->
       <svg class="barrel" aria-hidden="true" focusable="false">
-        <filter id="barrel" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB" x="0" y="0">
-          <feImage result="map" preserveAspectRatio="none" x="0" y="0"/>
+        <filter id="barrel" filterUnits="objectBoundingBox" primitiveUnits="objectBoundingBox" color-interpolation-filters="sRGB" x="0" y="0" width="1" height="1">
+          <feImage result="map" preserveAspectRatio="none" x="0" y="0" width="1" height="1"/>
           <feDisplacementMap in="SourceGraphic" in2="map" xChannelSelector="R" yChannelSelector="G" scale="0"/>
         </filter>
       </svg>

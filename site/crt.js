@@ -63,42 +63,52 @@
   // ---- the curved glass --------------------------------------------------
   // The classic Shadertoy CRT barrel (the curve() of a Ghostty crt.glsl shader) at a third of its strength:
   // a point at (ux, uy) in [-1, 1] shows the pixel at ux + ux * uy² * CURVATURE, and likewise for y.
-  // feDisplacementMap reads the offset from a map image: R and G hold the x and y offsets as
-  // 0.5 + offset / scale, and the scale is CURVATURE times the screen width in px, so the map depends only
-  // on the screen's aspect ratio, which the photo fixes (--sw/--sh): it is built once, on the first size.
-  // Corners pull inwards and show the black screen of the photo, as the shader paints its bezel.
+  // feDisplacementMap reads the offset from a map image: R and G hold 0.5 + offset / scale. The filter
+  // runs in objectBoundingBox units, where Chrome and Firefox multiply scale by the screen WIDTH on both
+  // axes, so scale is the constant CURVATURE and nothing is sized in px. ux spans 2 units across that width,
+  // so an offset of ux * uy² * CURVATURE is CURVATURE * W * (ux * uy² / 2) px: that is the / 2 in the map.
+  // The y channel shares the width-based scale, so it carries H / W. That ratio comes from the photo's
+  // --sw / --sh / --ar and never changes at runtime, so the map is built once; change the INSET line or
+  // --ar and this is rebuilt on the next load. WebKit multiplies the y offset by the height instead, so
+  // Safari bows the rows 28% less: accepted. Corners pull inwards and show the black screen of the photo,
+  // as the shader paints its bezel. The SVG ships scale="0", so a map that never decodes leaves the
+  // screen flat rather than shifted (a missing map reads as an offset of -scale / 2).
   const CURVATURE = 0.03;   // the shader runs 0.10 on a flat panel; on a real VT100 the outer rows bow 1-2%, and more leaves a void at the corners
   const MAP_PX = 128;       // the field is smooth; the filter scales the map up
-  const filter = document.getElementById('barrel');
-  const feImage = filter.querySelector('feImage');
-  const feMap = filter.querySelector('feDisplacementMap');
+  const feImage = document.querySelector('#barrel feImage');
+  const feMap = document.querySelector('#barrel feDisplacementMap');
   function curve() {
-    const W = screen.clientWidth, H = screen.clientHeight;
-    if (!W || !H) return;
-    if (!feImage.hasAttribute('href')) {
-      const aspect = H / W;
-      const canvas = document.createElement('canvas');
-      canvas.width = canvas.height = MAP_PX;
-      const ctx = canvas.getContext('2d');
-      const img = ctx.createImageData(MAP_PX, MAP_PX);
-      const d = img.data;
-      for (let j = 0, k = 0; j < MAP_PX; j++) {
-        const uy = ((j + .5) / MAP_PX) * 2 - 1;
-        for (let i = 0; i < MAP_PX; i++, k += 4) {
-          const ux = ((i + .5) / MAP_PX) * 2 - 1;
-          d[k] = Math.round(255 * (.5 + ux * uy * uy / 2));            // x offset, in units of the width
-          d[k + 1] = Math.round(255 * (.5 + uy * ux * ux * aspect / 2)); // y offset, same units
-          d[k + 2] = 0;
-          d[k + 3] = 255;
-        }
-      }
-      ctx.putImageData(img, 0, 0);
-      feImage.setAttribute('href', canvas.toDataURL());
+    const stageStyle = getComputedStyle(screen.parentElement);
+    const v = name => parseFloat(stageStyle.getPropertyValue(name));
+    const aspect = v('--sh') / (v('--sw') * v('--ar'));   // screen height / width: the stage is --S by --S / --ar
+    if (!(aspect > 0)) {
+      // WebKit runs a deferred script before the stylesheet applies: come back on the next frame.
+      if (document.readyState !== 'complete') return requestAnimationFrame(curve);
+      throw new Error('style.css no longer declares --sw, --sh and --ar on .stage');
     }
-    for (const el of [filter, feImage]) { el.setAttribute('width', W); el.setAttribute('height', H); }
-    feMap.setAttribute('scale', CURVATURE * W);
+    const canvas = document.createElement('canvas');
+    canvas.width = canvas.height = MAP_PX;
+    const ctx = canvas.getContext('2d');
+    const img = ctx.createImageData(MAP_PX, MAP_PX);
+    const d = img.data;
+    for (let j = 0, k = 0; j < MAP_PX; j++) {
+      const uy = ((j + .5) / MAP_PX) * 2 - 1;
+      for (let i = 0; i < MAP_PX; i++, k += 4) {
+        const ux = ((i + .5) / MAP_PX) * 2 - 1;
+        d[k] = Math.round(255 * (.5 + ux * uy * uy / 2));              // x offset, in units of the width
+        d[k + 1] = Math.round(255 * (.5 + uy * ux * ux * aspect / 2));   // y offset; the single scale is built from W, so y carries H / W
+        d[k + 2] = 0;
+        d[k + 3] = 255;
+      }
+    }
+    ctx.putImageData(img, 0, 0);
+    const url = canvas.toDataURL();
+    const probe = new Image();   // arm the displacement only once the map decodes
+    probe.onload = () => { feImage.setAttribute('href', url); feMap.setAttribute('scale', CURVATURE); };
+    probe.onerror = () => console.warn('crt.js: the barrel map did not decode; the screen stays flat');
+    probe.src = url;
   }
-  new ResizeObserver(curve).observe(screen);   // the filter tracks its own element, not the scroll layout's resize guard
+  curve();
 
   // ---- painting --------------------------------------------------------
   // One clone per chapter, built on first use and cached. A repaint only rewrites text data, toggles

@@ -97,7 +97,7 @@ a { color: inherit; }
 }
 .screen {
   overflow: hidden;
-  filter: url(#barrel);   /* the glass is curved: crt.js fills the map, so before that the scale is 0 and the screen is flat */
+  filter: url(#barrel);   /* the tube face is curved. The SVG ships scale="0", so until crt.js fills the map the screen renders flat */
   /* The tube face: a faint phosphor tint in the middle that is black by the bezel, as on a real terminal.
      A tint that reaches the edge shows as a green wash in the empty margin under the last row. */
   background:
@@ -107,7 +107,7 @@ a { color: inherit; }
 .spill {
   position: absolute; pointer-events: none;
   left: calc((var(--sx) - .06) * 100%); width: calc((var(--sw) + .12) * 100%);
-  top: calc(var(--band-bottom) * 100% - 1%); height: 12%;   /* phosphor light on the desk below the case, not on the bezel lip */
+  top: calc(var(--band-bottom) * 100% - 1%); height: 12%;   /* the glow falls from the foot of the case onto the desk; at --sy + --sh it sat on the bezel lip */
   background: radial-gradient(ellipse at 50% 0%, rgba(90,255,140,.07), rgba(0,0,0,0) 70%);
 }
 /* The screen is a fixed terminal grid, --cols by --rows (46 by 12), on any device: the type is sized so
