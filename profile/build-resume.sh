@@ -1,18 +1,16 @@
 #!/usr/bin/env bash
 # Render profile/resume.html to profile/resume.pdf, assert it is still one page, and copy it to site/.
-# macOS only by default: override CHROME=<path> for another install. The A4 page size comes from
-# @page in resume.html, not from a flag here; without that rule Chrome falls back to Letter.
+# Needs the installed Google Chrome and tools/node_modules (pnpm install in tools/). The A4 page size comes
+# from @page in resume.html; without that rule Chrome falls back to Letter.
 set -euo pipefail
 cd "$(dirname "$0")"
-CHROME="${CHROME:-/Applications/Google Chrome.app/Contents/MacOS/Google Chrome}"
-[ -x "$CHROME" ] || { echo "Chrome not found at $CHROME; set CHROME=<path>" >&2; exit 1; }
+[ -d ../tools/node_modules/playwright-core ] || { echo "run 'pnpm install' in tools/ first" >&2; exit 1; }
 
-# Render to a temp file so a failed render never overwrites the last good PDF. Chrome's stderr stays
-# visible: it is the only channel that explains a failure. A throwaway profile avoids the lock held by
-# a normal Chrome that is already open.
+# Render to a temp file so a failed render never overwrites the last good PDF.
 tmp="$(mktemp -t resume).pdf"
-"$CHROME" --headless=new --disable-gpu --no-pdf-header-footer --user-data-dir="$(mktemp -d)" \
-  --print-to-pdf="$tmp" "file://$PWD/resume.html"
+# Playwright drives the installed Google Chrome and waits for the web fonts before printing (see
+# tools/render-resume.mjs); Chrome's own --print-to-pdf prints on `load`, before the fonts arrive.
+node ../tools/render-resume.mjs "$tmp"
 [ -s "$tmp" ] || { echo "Chrome wrote no PDF" >&2; exit 1; }
 
 # Count /Page objects (the [^s] excludes /Pages) and stop if the résumé no longer fits one page.
