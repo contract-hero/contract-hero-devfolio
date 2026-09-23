@@ -125,7 +125,7 @@ appear only inside the experience bullets. The full list belongs to the site, wh
 2. **Flow token standards** — onflow/flow-ft · 138★ · 50 forks. Switchboard + Metadata Views + FLIP (above).
 3. **Agentic Community College** — course runtime for Claude Code (MCP server, conductor agent, authoring
    skills, declarative probes). Courses: acc-deepbook-course (4 lessons), acc-evm-wal (6 lessons, 75 tests),
-   acc-claude-agent-sdk (in progress, Sep 2026). No user numbers, ever.
+   acc-claude-sdk (in progress, Sep 2026). No user numbers, ever.
    Framing policy (2026-09-15): an exploratory proof of concept. Site and LinkedIn only, as part of the story; never on
    the résumé, and not the headline artifact.
 4. Also: Trade Wars; sui-pbo (EIP-5791 port to Sui); Merkle Mountain Ranges (Move + Cadence); Bloom filters
