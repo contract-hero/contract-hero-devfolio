@@ -142,7 +142,8 @@
       if (keep > 0) tail = node;
       budget -= keep;
     }
-    for (const el of f.elements) el.style.display = el.textContent ? '' : 'none';
+    // A <br> never has text; hiding it would drop the line break it exists for.
+    for (const el of f.elements) if (el.tagName !== 'BR') el.style.display = el.textContent ? '' : 'none';
     if (tail) tail.parentNode.insertBefore(cursor, tail.nextSibling); else out.prepend(cursor);
     // Keep the cursor inside the tube's content box. Measured against .text with rects: the cursor and
     // .text move together under the transform, so it cancels, and offsetParent differences between
