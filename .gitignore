@@ -4,3 +4,6 @@ node_modules/
 
 # impeccable rewrites its hook cache on every edit; keep it out of the tree
 .impeccable/hook.cache.json
+
+# local git worktrees
+.claude/worktrees/
