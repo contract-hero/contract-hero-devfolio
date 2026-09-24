@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>skypies for macOS — install, shortcuts, CLI</title>
-<meta name="description" content="skypies for macOS: manage the files your agents produce, and organize all your pies-in-the-sky. Download the app, then learn the shortcuts, the CLI and the peer-to-peer sharing.">
+<title>skypies for macOS — install, shortcuts, Claude Code plugin</title>
+<meta name="description" content="skypies for macOS: manage the files your agents produce, and organize all your pies-in-the-sky. Download the app, then learn the shortcuts, the Claude Code plugin and the peer-to-peer sharing.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="skypies for macOS">
 <meta property="og:description" content="Manage the files your agents produce, and organize all your pies-in-the-sky. Tabs, live reload, deep links, reader mode, peer-to-peer sharing.">
@@ -418,28 +418,15 @@ footer .spacer { flex: 1 1 auto; }
   </div>
 </section>
 
-<section id="cli" aria-labelledby="cli-title">
+<section id="plugin" aria-labelledby="plugin-title">
   <div class="wrap">
-    <h2 id="cli-title">CLI</h2>
-    <p class="sec-lede">A small <code>skypies</code> binary hands an intent to the running app through the URL scheme. Nothing is staged or fetched without your click in the app.</p>
+    <h2 id="plugin-title">Claude Code plugin</h2>
+    <p class="sec-lede">The app includes an MCP server, <code>skypies-mcp</code>. The Claude Code plugin is a companion to the app. It finds the installed app and runs this server. It downloads nothing.</p>
     <div class="card cli">
-      <div class="row">
-        <p><code>skypies open &lt;path&gt;</code> opens the file in a tab. It runs <code>open skypies://open?path=&lt;encoded&gt;</code>.</p>
-        <pre><code>skypies open ./docs/report.html</code></pre>
-      </div>
-      <div class="row">
-        <p><code>skypies reveal &lt;path&gt;</code> expands and highlights the file in the tree without changing the preview.</p>
-        <pre><code>skypies reveal ./docs/report.html</code></pre>
-      </div>
-      <div class="row">
-        <p><code>skypies beam &lt;path&gt;</code> opens the send dialog for that file so you can mint a Beam link.</p>
-        <pre><code>skypies beam ./docs/report.html</code></pre>
-      </div>
-      <div class="row">
-        <p><code>skypies receive &lt;ticket&gt;</code> opens the confirm-and-fetch dialog. A full <code>skypies://receive?…</code> link works too.</p>
-        <pre><code>skypies receive "skypies://receive?ticket=…"</code></pre>
-      </div>
-      <p class="tight-above">From Claude Code, the <code>skypies-mcp</code> server drives the same features through the running app. The Claude Code plugin installs it. See the <a href="https://github.com/contract-hero/skypies-plugin#readme"><code>skypies-plugin</code> README</a>.</p>
+      <p class="tight-below">Install the app first. Then run:</p>
+      <pre><code>claude plugin marketplace add contract-hero/plugin-marketplace
+claude plugin install skypies@contract-hero</code></pre>
+      <p class="tight-above">From a Claude Code session, the plugin makes a link for your paired devices, beams an artifact, pairs a device and lists paired devices. See the <a href="https://github.com/contract-hero/skypies-plugin#readme"><code>skypies-plugin</code> README</a>.</p>
     </div>
   </div>
 </section>

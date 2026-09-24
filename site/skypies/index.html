@@ -292,12 +292,12 @@ footer .wrap { display: flex; justify-content: space-between; align-items: cente
 
 <section class="section" id="plugin" aria-labelledby="h-plugin">
   <div class="wrap">
-    <div class="plugin-head"><p class="label">05 / Plugin + MCP</p><h2 id="h-plugin">Claude Code talks<br> to the running app.</h2><p class="body-copy"><code>skypies-mcp</code> is a stdio MCP server and a thin client of the app. From a Claude Code session it can mint a device link, beam an artifact, pair a device and list paired devices. The plugin bundles the server, a pairing hook and an artifact-links skill, so each session can end with a clickable <code>skypies://</code> link.</p></div>
-    <div class="terminal" id="plugin-cmd"><p class="label">Install from Claude Code</p><pre><code><span class="command">/plugin</span> marketplace add contract-hero/plugin-marketplace
-<span class="command">/plugin</span> install skypies@contract-hero</code></pre></div>
+    <div class="plugin-head"><p class="label">05 / Plugin + MCP</p><h2 id="h-plugin">Claude Code talks<br> to the running app.</h2><p class="body-copy">The Mac app includes <code>skypies-mcp</code>, a stdio MCP server. The Claude Code plugin is a companion to the app. It finds the installed app and runs this server. It downloads nothing. From a Claude Code session, it makes a link for your paired devices, beams an artifact, pairs a device and lists paired devices. The plugin also adds a pairing hook and an artifact-links skill, so each session can end with a clickable <code>skypies://</code> link.</p></div>
+    <div class="terminal" id="plugin-cmd"><p class="label">Install the Mac app first. Then run:</p><pre><code><span class="command">claude</span> plugin marketplace add contract-hero/plugin-marketplace
+<span class="command">claude</span> plugin install skypies@contract-hero</code></pre></div>
     <div class="three">
       <article><h3>Deep links</h3><p><code>skypies://open?path=…</code> opens a file. <code>skypies://reveal?path=…</code> highlights it in the tree. <code>&amp;line=N</code> supplies a line target.</p></article>
-      <article><h3>CLI</h3><p><code>skypies open</code>, <code>skypies reveal</code>, <code>skypies beam</code> and <code>skypies receive</code> hand an intent to the app. Nothing is staged or fetched without your click.</p></article>
+      <article><h3>Needs the Mac app</h3><p>The plugin works only when skypies for Mac is installed. It runs the MCP server inside <code>skypies.app</code>. The app does each action. Nothing is fetched without your click in the app.</p></article>
       <article><h3>Feedback loop</h3><p>Comments you leave on an artifact in the app are readable from the session that wrote it, and can be marked as resolved from there.</p></article>
     </div>
   </div>
@@ -308,7 +308,7 @@ footer .wrap { display: flex; justify-content: space-between; align-items: cente
     <div class="oss-intro"><div><p class="label">06 / Get it</p><h2 id="h-oss">One app.<br> One plugin.</h2></div><p class="body-copy">The Mac app is a free download. The Claude Code plugin is open source. It connects your Claude Code sessions to the running app.</p></div>
     <div class="repos">
       <a class="repo" href="https://github.com/contract-hero/skypies-releases/releases/latest/download/skypies-universal.dmg"><span class="name">skypies for Mac</span><span class="what">One universal DMG for Apple Silicon and Intel. macOS 11 or later.</span><span class="arrow" aria-hidden="true">↓</span></a>
-      <a class="repo" href="https://github.com/contract-hero/skypies-plugin"><span class="name">skypies-plugin</span><span class="what">The Claude Code plugin: MCP launcher, pairing hook, artifact-links skill.</span><span class="arrow" aria-hidden="true">↗</span></a>
+      <a class="repo" href="https://github.com/contract-hero/skypies-plugin"><span class="name">skypies-plugin</span><span class="what">The Claude Code companion to the Mac app: link tools, pairing hook, artifact-links skill.</span><span class="arrow" aria-hidden="true">↗</span></a>
     </div>
     <p class="license">The plugin is open source under Apache-2.0. No telemetry: nothing about what you read, open or write is collected. Networking is opt-in; remote actions share directly with other devices.</p>
   </div>
