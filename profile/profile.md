@@ -45,7 +45,7 @@ Status confirmed 2026-09-07: still employed, same role, after the August 2026 re
   (sui-pilot), agentic workflows for video and docs. Claim allowed on the site, LinkedIn and the résumé
   (decided 2026-09-16). TODO: concrete examples (what the team adopted, how many people, since when).
   Claim NOT allowed: experience with the Claude Agent SDK or any agent SDK (none; the ACC course about the
-  SDK is authoring in progress, not production use). The site says "Claude Code tooling: plugins · MCPs".
+  SDK is authoring in progress, not production use). The site lists the plugin marketplace in the oss row (2026-09-24).
 - **AI tooling.** Built and maintain sui-pilot (see Open source). Architecture follows the pattern Vercel
   published for its Next.js Claude Code plugin: slim always-on preamble, bundled docs, hook-driven skill
   injection. Claim allowed: "built on the pattern Vercel published". Claim NOT allowed: "outperforms".
@@ -109,15 +109,16 @@ found"). No dates in the story: the résumé and LinkedIn carry the timeline. Th
 without dates. The story sells how the engineering-educator profile was forged, not achievements; those stay
 on the résumé. The current role is worded as solutions engineer, web3 and AI; "forward deployed engineer" is
 not used. Briefing rows (2026-09-16): stack "Move · TS · Cadence · Solidity" (Rust stays on the résumé only);
-ai "Claude Code tooling: plugins · MCPs" linking https://contract-hero.github.io/plugin-marketplace/;
 teach "tech colleges · bootcamps · hackathons" linking the Paris bootcamp Luma page
 (https://luma.com/8383yqqc, "Sui Bootcamp: Paris 2026", hosted with DeVinci Blockchain) and the ETHGlobal
 workshop video (https://www.youtube.com/watch?v=g0zjIF_lbdQ, "EVM x Sui | Alvaro Lillo | ETHGlobal");
 domains "fintech · DeFi · web3 · AI · education"; langs "Spanish · English · French · Catalan";
 links "resume · github · linkedin · x · mail" (resume.pdf, github.com/alilloig, linkedin.com/in/alilloig, x.com/TheContractHero, mail);
-oss "sui-pilot · flow-ft · acc · mmr" linking the sui-pilot and ACC landing pages
+oss, two lines (2026-09-24; replaces the old ai row), the label linking https://github.com/contract-hero:
+"sui-pilot · acc · flow-ft · mmr" linking the sui-pilot and ACC landing pages
 (https://contract-hero.github.io/sui-pilot/, https://contract-hero.github.io/agentic-community-college/),
-onflow/flow-ft and github.com/alilloig/merkle-mountain-range-contracts. No corner control: the story's last
+onflow/flow-ft and github.com/alilloig/merkle-mountain-range-contracts; then "agents plugin marketplace" linking
+https://contract-hero.github.io/plugin-marketplace/. No corner control: the story's last
 line links back to the briefing; a focus-only skip link serves keyboard users. Chapter facts come from this file. The screen is a CRT-sized 46×12 grid, one screen per chapter.
 
 ## Open source (headline first)
