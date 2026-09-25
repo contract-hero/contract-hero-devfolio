@@ -14,7 +14,7 @@ I make hard stacks teachable.
 
 I make hard stacks teachable: from vocational classrooms to bootcamps, hackathons, docs, video and developer tooling.
 
-I taught for four years in Spain's technical colleges before I wrote a smart contract. Then I wrote a lot of them: the Fungible Token Switchboard and the FT Metadata standard on Flow at Dapper Labs, an oracle port and a bridge upgrade as a freelancer, a fully on-chain game on Sui. Now, as a solutions engineer at the Sui Foundation, the two halves are the same job.
+I taught for four years in Spain's technical colleges before I wrote a smart contract. Then I wrote a lot of them: the Fungible Token Switchboard and the FT Metadata standard on Flow at Dapper Labs (today the #6 most-imported contract on mainnet), an oracle port and a bridge upgrade as a freelancer, a fully on-chain game on Sui. Now, as a solutions engineer at the Sui Foundation, the two halves are the same job.
 
 What that looks like day to day:
 
@@ -66,7 +66,8 @@ May 2022 – Feb 2023 · Remote
 Core contracts and standards for the Flow blockchain.
 
 • Authored the Fungible Token Switchboard: one receiver capability that accepts any fungible token. Contract, tests, documentation and follow-ups; part of the Flow FT standard, deployed on mainnet.
-• Authored the Fungible Tokens Metadata FLIP (merged Aug 2022) and the FungibleTokenMetadataViews contract; implemented the views on the reference token.
+• Authored the Fungible Tokens Metadata FLIP (merged Aug 2022) and the FungibleTokenMetadataViews contract; implemented the views on the reference token. Today it is the #6 most-imported contract on Flow mainnet (431 contracts).
+• #2 contributor to the Flow FT standard (onflow/flow-ft), whose FungibleToken is the #2 most-imported contract on mainnet (3,424 contracts).
 • Linked-account (hybrid custody) contracts and transactions for walletless onboarding.
 • Six documentation PRs to the Cadence language reference; drafted the Cadence Style Guide FLIP. Led Flow Improvement Proposal discussions for the token standards.
 • Flow Certified Developer.

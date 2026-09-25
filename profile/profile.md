@@ -75,6 +75,14 @@ Status confirmed 2026-09-07: still employed, same role, after the August 2026 re
   mainnet at 0xf233dcee88fe0abe.
 - Authored the **Fungible Tokens Metadata FLIP** (merged Aug 31, 2022) and the FungibleTokenMetadataViews
   contract; implemented the views on ExampleToken (flow-ft #81, #89, #91, #93).
+- **Usage numbers (checked 2026-09-25).** Source: contractbrowser.com "Top Composers", read from its API
+  (`/api/contracts?queryType=top&network=mainnet`). The metric is dependants: deployed mainnet contracts that
+  import the contract (6,814 contracts tracked). FungibleTokenMetadataViews is #6 (431 dependent contracts);
+  FungibleToken is #2 (3,424). #2 contributor to onflow/flow-ft (55 commits; joshuahannan 89).
+  Claim allowed: "#6 most-imported contract on Flow mainnet (431 contracts)" for MetadataViews, and
+  "#2 contributor to flow-ft, whose FungibleToken is the #2 most-imported (3,424)". Claim NOT allowed:
+  authorship of FungibleToken (joshuahannan wrote it; 6 of my commits touch it), "used by" or "users"
+  (the count is of importing contracts, not people or transactions). The Switchboard has 2 dependants: no number.
 - Linked-account (hybrid custody) contracts and transactions for walletless onboarding, in onflow/sc-eng-gaming
   (#31, #39). Cadence attachments refactor (#29).
 - Six merged docs PRs to onflow/cadence; drafted the Cadence Style Guide FLIP (onflow/flow #1006, cadence #1719).
