@@ -33,8 +33,8 @@ Status confirmed 2026-09-07: still employed, same role, after the August 2026 re
   judge submissions. ETHGlobal New York (Jun 12–14, 2026; 800+ hackers; Sui prizes $9k, Walrus tracks),
   ETHGlobal Lisbon (Jul 24–26, 2026; 800+ hackers; Sui prizes $4k), EncodeHub London, and several online
   hackathons with 100+ developers each, including one for Eve Frontier builders.
-  Workshop video (ETHGlobal, 2026): https://www.youtube.com/watch?v=g0zjIF_lbdQ ("EVM x Sui"). TODO: which city,
-  and the other one.
+  Workshop videos (ETHGlobal, 2026, both "EVM x Sui"): https://www.youtube.com/watch?v=g0zjIF_lbdQ and
+  https://www.youtube.com/watch?v=Etss5H-UyUk. TODO: which city is which.
 - **Move review.** Review Move smart-contract implementations built by colleagues for supported partners.
 - **Partner support.** On-call technical support for exchange/DEX partners: triage inquiries and bugs,
   troubleshoot, escalate inside the team.
@@ -163,6 +163,6 @@ Train-the-trainer · Hackathon workshops and judging · Technical writing · Dev
 
 - Number of online bootcamp editions; number of ambassadors trained.
 - Walrus video tutorials: count, URLs, dates.
-- The second ETHGlobal workshop video URL (one is recorded above) and a 90-second segment for the site.
+- Which ETHGlobal city each workshop video is from, and a 90-second segment for the site.
 - Hero photo from an ETHGlobal event (landscape, ≥ 2000px).
 - Builder Growth Champions pitch + playbook files for the site.
