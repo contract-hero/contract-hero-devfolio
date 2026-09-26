@@ -120,11 +120,10 @@ teach "tech colleges · bootcamps · hackathons" linking the Paris bootcamp Luma
 workshop video (https://www.youtube.com/watch?v=g0zjIF_lbdQ, "EVM x Sui | Alvaro Lillo | ETHGlobal");
 domains "fintech · DeFi · web3 · AI · education"; langs "Spanish · English · French · Catalan";
 links "resume · github · linkedin · x · mail" (resume.pdf, github.com/alilloig, linkedin.com/in/alilloig, x.com/TheContractHero, mail);
-oss, two lines (2026-09-24; replaces the old ai row), the label linking https://github.com/contract-hero:
-"sui-pilot · acc · flow-ft · mmr" linking the sui-pilot and ACC landing pages
-(https://contract-hero.github.io/sui-pilot/, https://contract-hero.github.io/agentic-community-college/),
-onflow/flow-ft and github.com/alilloig/merkle-mountain-range-contracts; then "agents plugin marketplace" linking
-https://contract-hero.github.io/plugin-marketplace/. No corner control: the story's last
+oss, two lines (2026-09-26; replaces the old ai row; acc is not listed), the label linking
+https://github.com/contract-hero: "claude code plugins · sui-pilot ·" then "flow-ft · mmr", linking
+https://contract-hero.github.io/plugin-marketplace/, https://contract-hero.github.io/sui-pilot/, onflow/flow-ft
+and github.com/alilloig/merkle-mountain-range-contracts. No corner control: the story's last
 line links back to the briefing; a focus-only skip link serves keyboard users. Chapter facts come from this file. The screen is a CRT-sized 46×12 grid, one screen per chapter.
 
 ## Open source (headline first)
