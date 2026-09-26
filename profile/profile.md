@@ -115,7 +115,7 @@ title and closes with one dim "earned:" line; the last one pays off the welcome 
 found"). No dates in the story: the résumé and LinkedIn carry the timeline. The parenting break is one clause
 without dates. The story sells how the engineering-educator profile was forged, not achievements; those stay
 on the résumé. The current role is worded as solutions engineer, web3 and AI; "forward deployed engineer" is
-not used. Briefing rows (2026-09-16): stack "Move · TS · Cadence · Solidity" (Rust stays on the résumé only);
+not used. Briefing rows, in screen order links, oss, stack, domains, teach, langs (order decided 2026-09-26; rows 2026-09-16): stack "Move · TS · Cadence · Solidity" (Rust stays on the résumé only);
 teach "tech colleges · bootcamps · hackathons" linking the Paris bootcamp Luma page
 (https://luma.com/8383yqqc, "Sui Bootcamp: Paris 2026", hosted with DeVinci Blockchain) and the ETHGlobal
 workshop video (https://www.youtube.com/watch?v=g0zjIF_lbdQ, "EVM x Sui | Alvaro Lillo | ETHGlobal");
