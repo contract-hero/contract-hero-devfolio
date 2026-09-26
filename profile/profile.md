@@ -83,7 +83,8 @@ Status confirmed 2026-09-07: still employed, same role, after the August 2026 re
   joshuahannan 89). Claim allowed: "#6 most-imported contract on Flow mainnet (431 contracts)" for
   FungibleTokenMetadataViews only (not MetadataViews, the NFT contract at #3), and
   "#2 contributor to flow-ft, whose FungibleToken is the #2 most-imported (3,424)". Claim NOT allowed:
-  authorship of FungibleToken (joshuahannan wrote it; 6 of my commits touch it), "used by" or "users"
+  authorship of FungibleToken (joshuahannan wrote it; 6 of my commits touch it), "built the Flow token
+  standards" (the headline says "top contributor to the Flow token standards", decided 2026-09-26), "used by" or "users"
   (the count is of importing contracts, not people or transactions). The Switchboard has 2 dependants: no number.
   Per contract: https://contractbrowser.com/api/contracts/A.f233dcee88fe0abe.<Name>?network=mainnet. Contributors:
   `gh api repos/onflow/flow-ft/contributors`. Surfaces: résumé, LinkedIn, and the site's contracts chapter (rank

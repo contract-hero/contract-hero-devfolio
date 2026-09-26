@@ -4,7 +4,7 @@ Derived from `profile.md` (2026-09-25). Character limits: headline 220, About 2,
 
 ## Headline (≤220 chars)
 
-Solutions Engineer @ Sui Foundation · developer education for Move & Sui · built sui-pilot and the Flow token standards · former technical-college teacher
+Solutions Engineer @ Sui Foundation · developer education for Move & Sui · built sui-pilot · top contributor to the Flow token standards · former technical-college teacher
 
 ## Banner tagline (if you make a banner image)
 
