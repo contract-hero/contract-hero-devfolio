@@ -1,0 +1,80 @@
+[
+  {
+    "id": "plugins",
+    "repo": "contract-hero/plugin-marketplace",
+    "ref": "main",
+    "revision": "f3fa711aca988cbceed85dceb596009e1a09562e",
+    "directory": "docs",
+    "mount": "plugins"
+  },
+  {
+    "id": "sui-pilot",
+    "repo": "contract-hero/sui-pilot",
+    "ref": "main",
+    "revision": "280357025bfc414473b1a7656f8de555ad5e674a",
+    "directory": "site",
+    "mount": "sui-pilot",
+    "extras": [
+      "sui-pilot.jpg",
+      "EVAL_FRAMEWORK.html",
+      "SUI_PILOT_TOUR.html",
+      "POINT_VS_INDEX.html"
+    ]
+  },
+  {
+    "id": "code-forge",
+    "repo": "contract-hero/code-forge",
+    "ref": "main",
+    "revision": "ae299af6a53e2c0856cd04713388677b024d9898",
+    "directory": "docs",
+    "mount": "code-forge"
+  },
+  {
+    "id": "acc",
+    "repo": "contract-hero/agentic-community-college",
+    "ref": "main",
+    "revision": "af34bcfc6073736899dc47af61d45dfad06d6dbe",
+    "directory": "docs",
+    "mount": "agentic-community-college"
+  },
+  {
+    "id": "acc-deepbook",
+    "repo": "contract-hero/acc-deepbook-course",
+    "ref": "main",
+    "revision": "7a51897ee3ee922cdc7077179f4f1b5bb4b75b50",
+    "directory": "docs",
+    "mount": "acc-deepbook-course"
+  },
+  {
+    "id": "acc-evm-wal",
+    "repo": "contract-hero/acc-evm-wal",
+    "ref": "main",
+    "revision": "7cbdc229760b3eee7683546a966151147a0106a6",
+    "directory": "docs",
+    "mount": "acc-evm-wal"
+  },
+  {
+    "id": "deepbook-snippets",
+    "repo": "contract-hero/deepbook-snippets",
+    "ref": "main",
+    "revision": "a7c1e399a38315811270d2577eda2b041b6f68cc",
+    "directory": "docs",
+    "mount": "deepbook-snippets"
+  },
+  {
+    "id": "display-v2",
+    "repo": "alilloig/display-v2-forum",
+    "ref": "gh-pages",
+    "revision": "930842a60a7906e965e9055d31f1d1f6e465e86b",
+    "directory": ".",
+    "mount": "display-v2"
+  },
+  {
+    "id": "sui-dapp-testing",
+    "repo": "alilloig/agentic-identity-crisis",
+    "ref": "main",
+    "revision": "b99b92848da95edcac5fba028c6cd70ca364031f",
+    "directory": ".",
+    "mount": "learn/sui-dapp-testing"
+  }
+]

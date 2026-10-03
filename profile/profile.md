@@ -1,7 +1,7 @@
 # Álvaro Lillo Igualada — profile source of truth
 
 Every claim on contracthero.dev, resume.pdf and LinkedIn derives from this file. Change it here first.
-Last reviewed: 2026-09-25.
+Last reviewed: 2026-10-03 (portfolio structure and workshop mapping; prior dated metrics unchanged).
 
 ## Identity
 
@@ -33,8 +33,11 @@ Status confirmed 2026-09-07: still employed, same role, after the August 2026 re
   judge submissions. ETHGlobal New York (Jun 12–14, 2026; 800+ hackers; Sui prizes $9k, Walrus tracks),
   ETHGlobal Lisbon (Jul 24–26, 2026; 800+ hackers; Sui prizes $4k), EncodeHub London, and several online
   hackathons with 100+ developers each, including one for Eve Frontier builders.
-  Workshop videos (ETHGlobal, 2026, both "EVM x Sui"): https://www.youtube.com/watch?v=g0zjIF_lbdQ and
-  https://www.youtube.com/watch?v=Etss5H-UyUk. TODO: which city is which.
+  Workshop mapping confirmed by Álvaro, 2026-10-03: the first EVM × Sui material was built for NYC
+  (https://www.youtube.com/watch?v=g0zjIF_lbdQ); Hashi was built for Lisbon
+  (https://www.youtube.com/watch?v=Etss5H-UyUk). No London footage available; photos may follow.
+  Portfolio case studies link to MystenLabs/evm-sui and MystenLabs/hashi-integrations upstream.
+  Exclude walrus-onboarding from the portfolio (author preference, 2026-10-03).
 - **Move review.** Review Move smart-contract implementations built by colleagues for supported partners.
 - **Partner support.** On-call technical support for exchange/DEX partners: triage inquiries and bugs,
   troubleshoot, escalate inside the team.
@@ -115,16 +118,20 @@ title and closes with one dim "earned:" line; the last one pays off the welcome 
 found"). No dates in the story: the résumé and LinkedIn carry the timeline. The parenting break is one clause
 without dates. The story sells how the engineering-educator profile was forged, not achievements; those stay
 on the résumé. The current role is worded as solutions engineer, web3 and AI; "forward deployed engineer" is
-not used. Briefing rows, in screen order links, oss, stack, domains, teach, langs (order decided 2026-09-26; rows 2026-09-16): stack "Move · TS · Cadence · Solidity" (Rust stays on the résumé only);
+not used. Briefing rows, in screen order links, work, stack, domains, teach, langs (order decided 2026-09-26; rows 2026-09-16): stack "Move · TS · Cadence · Solidity" (Rust stays on the résumé only);
 teach "tech colleges · bootcamps · hackathons" linking the Paris bootcamp Luma page
 (https://luma.com/8383yqqc, "Sui Bootcamp: Paris 2026", hosted with DeVinci Blockchain) and the ETHGlobal
 workshop video (https://www.youtube.com/watch?v=g0zjIF_lbdQ, "EVM x Sui | Alvaro Lillo | ETHGlobal");
 domains "fintech · DeFi · web3 · AI · education"; langs "Spanish · English · French · Catalan";
 links "resume · github · linkedin · x · mail" (resume.pdf, github.com/alilloig, linkedin.com/in/alilloig, x.com/TheContractHero, mail);
-oss, two lines (2026-09-26; replaces the old ai row; acc is not listed), the label linking
-https://github.com/contract-hero: "claude code plugins · sui-pilot ·" then "flow-ft · mmr", linking
-https://contract-hero.github.io/plugin-marketplace/, https://contract-hero.github.io/sui-pilot/, onflow/flow-ft
-and github.com/alilloig/merkle-mountain-range-contracts. No corner control: the story's last
+work, two lines (2026-10-03): the label links to /work/, the curated catalog. The visible links remain
+"claude code plugins · sui-pilot ·" then "flow-ft · mmr", linking to /plugins/, /sui-pilot/,
+onflow/flow-ft and github.com/alilloig/merkle-mountain-range-contracts. The hackathons link leads to
+/learn/#workshops, which labels NYC and Lisbon accurately and includes London's role without invented footage.
+The original CRT design, story, assets, and controls stay intact. /learn/ collects teaching material; ACC and
+its courses appear as supporting experiments. Owned project pages are assembled into the existing Netlify
+deployment from pinned public source revisions. Mysten project sources remain upstream; no forks are needed.
+No corner control: the story's last
 line links back to the briefing; a focus-only skip link serves keyboard users. Chapter facts come from this file. The screen is a CRT-sized 46×12 grid, one screen per chapter.
 
 ## Open source (headline first)
@@ -164,6 +171,6 @@ Train-the-trainer · Hackathon workshops and judging · Technical writing · Dev
 
 - Number of online bootcamp editions; number of ambassadors trained.
 - Walrus video tutorials: count, URLs, dates.
-- Which ETHGlobal city each workshop video is from, and a 90-second segment for the site.
+- Choose a 90-second segment from the confirmed NYC and Lisbon recordings.
 - Hero photo from an ETHGlobal event (landscape, ≥ 2000px).
 - Builder Growth Champions pitch + playbook files for the site.
