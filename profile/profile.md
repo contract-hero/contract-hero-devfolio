@@ -1,7 +1,7 @@
 # Álvaro Lillo Igualada — profile source of truth
 
 Every claim on contracthero.dev, resume.pdf and LinkedIn derives from this file. Change it here first.
-Last reviewed: 2026-10-03 (portfolio structure and workshop mapping; prior dated metrics unchanged).
+Last reviewed: 2026-10-03 (storytelling, portfolio structure and workshop mapping; prior dated metrics unchanged).
 
 ## Identity
 
@@ -90,8 +90,10 @@ Status confirmed 2026-09-07: still employed, same role, after the August 2026 re
   standards" (the headline says "top contributor to the Flow token standards", decided 2026-09-26), "used by" or "users"
   (the count is of importing contracts, not people or transactions). The Switchboard has 2 dependants: no number.
   Per contract: https://contractbrowser.com/api/contracts/A.f233dcee88fe0abe.<Name>?network=mainnet. Contributors:
-  `gh api repos/onflow/flow-ft/contributors`. Surfaces: résumé, LinkedIn, and the site's contracts chapter (rank
-  only, grid-bound) as the one exception to the no-achievements story rule (decided 2026-09-25). Time word: "now".
+  `gh api repos/onflow/flow-ft/contributors`. Surfaces: résumé, LinkedIn, and the Flow case study at
+  /work/flow/. The ranking moved off the CRT story on 2026-10-03 to keep the career transition readable.
+  A refresh attempt that day returned HTTP 504 from the ranking API; the case study explicitly dates the
+  verified #6 / 431-contract snapshot to 2026-09-25.
   Counts drift: check them again before each résumé export and update every surface with the date here.
 - Linked-account (hybrid custody) contracts and transactions for walletless onboarding, in onflow/sc-eng-gaming
   (#31, #39). Cadence attachments refactor (#29).
@@ -111,11 +113,18 @@ Status confirmed 2026-09-07: still employed, same role, after the August 2026 re
 
 ## Site story (contracthero.dev)
 
-Screen order (decided 2026-09-16): a welcome screen first (Matrix-style joke, "Wake up, {hiring_manager}..."
+Screen order (decided 2026-09-16; storytelling refined 2026-10-03): a welcome screen first (Matrix-style joke, "Wake up, {hiring_manager}..."
 with the placeholder left unresolved on purpose), then the briefing with every link, then five story chapters
 named by stage: engineer, exchange, classroom, contracts, solutions. Each chapter opens with a catchphrase
 title and closes with one dim "earned:" line; the last one pays off the welcome joke ("the niche profile,
-found"). No dates in the story: the résumé and LinkedIn carry the timeline. The parenting break is one clause
+found"). The opening asks, "Looking for someone who can build it and teach it?" The chapters use first person
+and connect the stages through the work itself, without inventing motives for the career changes. The
+classroom chapter connects building systems to teaching how they work; the contracts chapter retains
+self-taught Cadence, Dapper, the layoff, seven months with the first child, and freelancing. The solutions
+chapter joins teaching builders, training local instructors, partner support, AI adoption, and tools such as
+Sui Pilot. Its diagram combines "teaching" and "blockchain" into solutions engineering. The Switchboard
+diagram shows one receiver routing to distinct token vaults. Commands carry a quiet [1/5]–[5/5] progress cue.
+No dates in the story: the résumé and LinkedIn carry the timeline. The parenting break is one clause
 without dates. The story sells how the engineering-educator profile was forged, not achievements; those stay
 on the résumé. The current role is worded as solutions engineer, web3 and AI; "forward deployed engineer" is
 not used. Briefing rows, in screen order links, work, stack, domains, teach, langs (order decided 2026-09-26; rows 2026-09-16): stack "Move · TS · Cadence · Solidity" (Rust stays on the résumé only);
@@ -128,11 +137,13 @@ work, two lines (2026-10-03): the label links to /work/, the curated catalog. Th
 "claude code plugins · sui-pilot ·" then "flow-ft · mmr", linking to /plugins/, /sui-pilot/,
 onflow/flow-ft and github.com/alilloig/merkle-mountain-range-contracts. The hackathons link leads to
 /learn/#workshops, which labels NYC and Lisbon accurately and includes London's role without invented footage.
-The original CRT design, story, assets, and controls stay intact. /learn/ collects teaching material; ACC and
+The CRT room, screen geometry, assets, and controls stay intact; text glow and scanline contrast are reduced
+on small screens for legibility. /learn/ collects teaching material; ACC and
 its courses appear as supporting experiments. Owned project pages are assembled into the existing Netlify
 deployment from pinned public source revisions. Mysten project sources remain upstream; no forks are needed.
-No corner control: the story's last
-line links back to the briefing; a focus-only skip link serves keyboard users. Chapter facts come from this file. The screen is a CRT-sized 46×12 grid, one screen per chapter.
+No corner control: the story's last line links to /work/ ("explore my work") and back to the briefing;
+a focus-only skip link serves keyboard users. Chapter facts come from this file. The screen is a CRT-sized
+46×12 grid, one screen per chapter.
 
 ## Open source (headline first)
 

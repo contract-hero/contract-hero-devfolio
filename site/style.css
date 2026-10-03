@@ -134,6 +134,8 @@ a { color: inherit; }
 
 /* the story's own classes, shared by the screen and the no-JS page */
 .cmd, .dim, .k { color: var(--phosphor-dim); }
+.chapter-heading { display: flex; justify-content: space-between; gap: 1ch; white-space: nowrap; }
+.chapter-count { flex-shrink: 0; }
 .hi { color: var(--phosphor-hi); }
 .kv { display: grid; grid-template-columns: 7ch 1fr; gap: 0 1ch; }
 :where(.text, html.no-js .chapter) :where(p, pre) { margin: 0; }   /* zero specificity, so .sp wins in both render modes */
@@ -151,9 +153,16 @@ pre { font: inherit; white-space: pre; }
 .glass {
   pointer-events: none;
   background:
-    repeating-linear-gradient(0deg, rgba(0,0,0,.26) 0 1px, rgba(0,0,0,0) 1px 3px),
+    repeating-linear-gradient(0deg, rgba(0,0,0,var(--scanline-alpha, .26)) 0 1px, rgba(0,0,0,0) 1px 3px),
     radial-gradient(ellipse at 24% 10%, rgba(255,255,255,.05), rgba(255,255,255,0) 45%),
     radial-gradient(ellipse at 50% 50%, rgba(0,0,0,0) 58%, rgba(0,0,0,.42) 100%);
+}
+
+/* At phone-size type, broad glow and dark scanlines obscure the letter shapes. Keep the CRT colour
+   and glass, with a tighter glow for portrait phones and short landscape windows. */
+@media (max-width: 600px), (max-height: 500px) {
+  .text { text-shadow: 0 0 2px rgba(90,255,140,.32), 0 0 5px rgba(90,255,140,.12); }
+  .glass { --scanline-alpha: .14; }
 }
 
 /* ---------- power button and LED (easter egg) ----------
