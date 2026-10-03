@@ -58,7 +58,7 @@ async function processFiles(directory: string, source: Source) {
     if (extname(file) === '.html') {
       const $ = load(content);
       const path = '/' + relative(output, file).replaceAll('\\', '/').replace(/index\.html$/, '');
-      const canonical = origin + path;
+      const canonical = origin + (source.id === 'sui-dapp-testing' ? `/${source.mount}/` : path);
       $('link[rel="canonical"],meta[property="og:url"]').remove();
       $('head').append(`<link rel="canonical" href="${canonical}"><meta property="og:url" content="${canonical}">`);
       // Migrate navigation to this preview/production host, while metadata remains canonical.
@@ -108,6 +108,8 @@ for (let i = 0; i < sources.length; i += 3) {
     const target = join(output, source.mount);
     await copyPublic(join(checkout, source.directory), target);
     for (const extra of source.extras ?? []) await cp(join(checkout, extra), join(target, extra));
+    // The old guide index was only a meta refresh; serve the actual guide at its clean new URL.
+    if (source.id === 'sui-dapp-testing') await cp(join(target, 'chrome-mcp-slush-setup.html'), join(target, 'index.html'));
     await access(join(target, 'index.html')); // Never publish an empty replacement site.
     await processFiles(target, source);
     console.log(`Assembled /${source.mount}/`);
