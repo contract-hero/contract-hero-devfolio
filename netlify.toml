@@ -1,9 +1,31 @@
 [build]
-  publish = "site"
-  command = "echo static site, nothing to build"
+  publish = "dist"
+  command = "pnpm build && pnpm check"
   # Netlify's UI-installed Essential Gatsby plugin survives the Gatsby removal; tell it to stand down.
   [build.environment]
     NETLIFY_SKIP_GATSBY_BUILD_PLUGIN = "true"
+    NODE_VERSION = "22"
+
+# Former project names remain valid on the consolidated host. Browser fragments survive these redirects.
+[[redirects]]
+  from = "/plugin-marketplace/*"
+  to = "/plugins/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/display-v2-forum/*"
+  to = "/display-v2/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/agentic-identity-crisis/*"
+  to = "/learn/sui-dapp-testing/:splat"
+  status = 301
+
+[[redirects]]
+  from = "/skypies-core/*"
+  to = "/skypies/:splat"
+  status = 301
 
 # The Gatsby-era blog is gone; keep old inbound links alive.
 [[redirects]]

@@ -1,5 +1,7 @@
 .DS_Store
 node_modules/
+dist/
+.cache/
 *.log
 
 # impeccable rewrites its hook cache on every edit; keep it out of the tree
