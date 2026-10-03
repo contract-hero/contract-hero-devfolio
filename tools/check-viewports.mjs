@@ -194,7 +194,8 @@ async function behaviour() {
   await clickAndExpect('.skip', 'whoami', 'the skip link did not land on the briefing');
   await clickAndExpect('#screen-text a[href="#engineer"]', '1-engineer', "the briefing's story link did not land on the first chapter");
   await page.evaluate(() => scrollTo(0, document.body.scrollHeight)); await page.waitForTimeout(300);
-  if (!await has('back to the briefing')) fail('the end of the page does not show the last chapter with its return link');
+  if (!await has('explore my work')) fail('the end of the page does not show the last chapter with its work link');
+  if (!await page.locator('#screen-text a[href="/work/"]').isVisible()) fail('the final work link is not visible');
   await clickAndExpect('#screen-text a[href="#briefing"]', 'whoami', "the story's return link did not land on the briefing");
   const pageH = await page.evaluate(() => document.body.scrollHeight);
 
