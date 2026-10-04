@@ -258,7 +258,7 @@ footer .spacer { flex: 1 1 auto; }
 }
 .site-head { background: var(--sky-deep); color: var(--text); }
 .site-head .brand { color: var(--text); font: 30px/1 Georgia, "Times New Roman", serif; letter-spacing: -1.1px; }
-.clouds .pie-cloud { filter: drop-shadow(0 12px 16px var(--shadow)); }
+.clouds .pie-cloud { filter: none; }
 .clouds .pie-cloud text { font-family: var(--mono); letter-spacing: normal; }
 @media (prefers-reduced-motion: reduce) { .cloud, .drift { animation: none !important; } }
 </style>
@@ -470,193 +470,7 @@ claude plugin install skypies@contract-hero</code></pre>
 </footer>
 
 <script id="pie-cloud-builder">
-
-
-// All geometry, code textures, lighting and interactions live in this one builder.
-function makePieCloud(opts) {
-  const ns = 'http://www.w3.org/2000/svg';
-  const id = `pie-${opts.id}`;
-  const seed = opts.seed ?? opts.id;
-  const cx = 260, cy = 241, radius = 177, pitch = .57, depth = 51, lift = 67;
-  let angle = opts.rotation ?? -8;
-  let raf = 0;
-  let down = null;
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-  const flavors = [
-    { name: 'HTML', key: 'html', start: -90, end: 126, percent: 60 },
-    { name: 'Notes', key: 'notes', start: 126, end: 216, percent: 25 },
-    { name: 'Code', key: 'code', start: 216, end: 270, percent: 15 },
-  ];
-  const escape = (str) => str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const source = `<!doctype html><html lang="en"><head><title>${opts.name} — skypies</title><meta charset="utf-8"></head><body class="sky"><main><section class="pie"><h1>ideas, still cooking</h1><p>Every idea starts as a pie in the sky.</p><a href="dream.html">castillos en el aire</a><code>const pie = bake({ kind: "html" });</code></section></main></body></html> `;
-  const slot = document.createElement('article');
-  slot.className = 'cloud-slot';
-  slot.style.setProperty('--duration', `${28 + seed * 3}s`);
-  slot.style.setProperty('--delay', `${-seed * 5 - 4}s`);
-  slot.innerHTML = `<div class="drifter"><div class="pie-zoom"><button type="button" class="pie-control" aria-label="${escape(opts.name)}. Rotate pie" aria-describedby="${id}-legend pie-instructions"></button></div><div class="pie-info"><h2>${escape(opts.name)}</h2><div class="legend" id="${id}-legend">${flavors.map(f => `<span class="${f.key}"><i aria-hidden="true"></i>${f.name} ${f.percent}%</span>`).join('')}</div><p class="turn-hint"><span class="front-flavor">HTML in front</span> · ← drag →</p></div></div>`;
-  const button = slot.querySelector('button');
-  const svg = document.createElementNS(ns, 'svg');
-  svg.setAttribute('viewBox', '0 0 520 430');
-  svg.setAttribute('aria-hidden', 'true');
-  button.append(svg);
-  const texture = flavors.map(f => {
-    const rows = Array.from({length: 9}, (_, i) => {
-      const offset = (i * 43 + seed * 17) % source.length;
-      const row = (source.slice(offset) + source.repeat(4)).slice(0, 155);
-      return `<text x="0" y="${(i + 1) * 7}" font-size="6.25" font-weight="500" textLength="590" lengthAdjust="spacingAndGlyphs">${escape(row)}</text>`;
-    }).join('');
-    return `<pattern id="${id}-text-${f.key}" width="590" height="63" patternUnits="userSpaceOnUse"><g fill="var(--ink-${f.key})" font-family="var(--mono)">${rows}</g></pattern>`;
-  }).join('');
-  svg.innerHTML = `<defs>${texture}
-    <linearGradient id="${id}-body" x1="0" y1="0" x2=".2" y2="1"><stop offset="0" stop-color="var(--cloud-light)"/><stop offset=".65" stop-color="var(--cloud-shade)"/><stop offset="1" stop-color="var(--cloud)"/></linearGradient>
-    <linearGradient id="${id}-top" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="var(--cloud-light)"/><stop offset="1" stop-color="var(--cloud)"/></linearGradient>
-    <linearGradient id="${id}-fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--cloud-light)"/><stop offset=".6" stop-color="var(--cloud-light)"/><stop offset="1" stop-color="var(--cloud-light)" stop-opacity=".12"/></linearGradient>
-    <mask id="${id}-side-mask" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="url(#${id}-fade)"/></mask>
-    <radialGradient id="${id}-mist"><stop offset="0" stop-color="var(--cloud-light)" stop-opacity=".8"/><stop offset=".55" stop-color="var(--cloud-light)" stop-opacity=".35"/><stop offset="1" stop-color="var(--cloud-light)" stop-opacity="0"/></radialGradient>
-    <filter id="${id}-vapor" x="-30%" y="-35%" width="160%" height="170%"><feGaussianBlur stdDeviation="4.5"/></filter>
-    <filter id="${id}-edge" x="-20%" y="-30%" width="140%" height="160%"><feGaussianBlur stdDeviation="1.5"/></filter>
-  </defs><g class="geometry"></g>`;
-  const geometry = svg.querySelector('.geometry');
-  const point = (a, z = 0, lifted = false, radial = true) => {
-    const t = a * Math.PI / 180;
-    const swell = 1 + .026 * Math.sin(t * 8 + seed * .7) + .008 * Math.sin(t * 13 + .3);
-    const r = radial ? radius * swell : 0;
-    const m = (243 + angle) * Math.PI / 180;
-    return [cx + Math.cos(t) * r + (lifted ? Math.cos(m) * 15 : 0), cy + Math.sin(t) * r * pitch + z + (lifted ? -lift + Math.sin(m) * 9 : 0)];
-  };
-  const xy = (p) => p.map(v => v.toFixed(2)).join(',');
-  const arc = (start, end, z = 0, lifted = false) => {
-    const steps = Math.max(3, Math.ceil(Math.abs(end - start) / 2));
-    return Array.from({length: steps + 1}, (_, i) => point(start + (end - start) * i / steps, z, lifted));
-  };
-  const path = (points, close = true) => `M${points.map(xy).join('L')}${close ? 'Z' : ''}`;
-  const surface = (d, key, side = false) => `<path d="${d}" fill="url(#${id}-${side ? 'body' : 'top'})"/><path d="${d}" fill="url(#${id}-text-${key})" ${side ? `opacity=".68" mask="url(#${id}-side-mask)"` : ''}/>`;
-
-  function draw() {
-    const base = [], tops = [], raised = [], fog = [], vapor = [];
-    flavors.forEach((f, index) => {
-      const lifted = index === 2;
-      const start = f.start + angle, end = f.end + angle;
-      const center = point(0, 0, lifted, false);
-      const edge = arc(start, end, 0, lifted);
-      const topPath = path([center, ...edge]);
-      const bodyDepth = lifted ? 41 : depth;
-      const stack = lifted ? raised : base;
-      // The front half of the outer wall; split at the horizon during rotation.
-      let run = [];
-      const flush = () => {
-        if (run.length > 1) {
-          const lower = run.map(([x,y]) => {
-            const lobe = lifted ? 0 : 4.5 * Math.sin((x-cx)*.055+seed) + 2 * Math.sin((x-cx)*.11);
-            return [cx+(x-cx)*1.015, y+bodyDepth+lobe];
-          });
-          const d = path([...run, ...lower.slice().reverse()]);
-          fog.push(`<path d="${d}" fill="var(--cloud)" stroke="var(--cloud-light)" stroke-width="5"/>`);
-          stack.push(surface(d, f.key, true));
-          stack.push(`<path d="${path(lower, false)}" fill="none" stroke="var(--cloud-light)" stroke-width="5" opacity=".6" filter="url(#${id}-edge)"/>`);
-        }
-        run = [];
-      };
-      const n = edge.length - 1;
-      edge.forEach((p, i) => {
-        const a = (start + (end-start) * i / n) * Math.PI / 180;
-        if (Math.sin(a) > -.02) run.push(p); else flush();
-      });
-      flush();
-      // Only the exposed cuts have vertical faces; internal wedge seams do not.
-      const cuts = lifted ? [start, end] : [index === 0 ? start : end];
-      cuts.forEach(a => {
-        const p = point(a, 0, lifted);
-        const d = path([center, p, [p[0],p[1]+bodyDepth], [center[0],center[1]+bodyDepth]]);
-        stack.push(surface(d, f.key, true));
-      });
-      const crustId = `${id}-crust-${index}`;
-      const crust = path(edge, false);
-      fog.push(`<path d="${topPath}" fill="var(--cloud-light)" stroke="var(--cloud-light)" stroke-width="5"/>`);
-      if (!lifted) {
-        for (let a=start+8;a<end;a+=11) {
-          if (Math.sin(a*Math.PI/180)<0) continue;
-          const p=point(a,depth*.61);
-          const puff=12+3*Math.sin(a*.14+seed);
-          fog.push(`<ellipse cx="${p[0]}" cy="${p[1]}" rx="${puff}" ry="${puff*1.05}" fill="var(--cloud-light)"/>`);
-        }
-        for (let a=start+12;a<end;a+=19) {
-          if (Math.sin(a*Math.PI/180)<.12) continue;
-          const p=point(a,depth*.67);
-          const puff=19+5*Math.sin(a*.14+seed);
-          vapor.push(`<ellipse cx="${p[0]}" cy="${p[1]}" rx="${puff*1.15}" ry="${puff*.8}" fill="url(#${id}-mist)"/>`);
-        }
-      }
-      const face = `${surface(topPath,f.key)}
-        <path d="${path([edge[0], center, edge[edge.length-1]], false)}" fill="none" stroke="var(--cloud-light)" stroke-width="2.5" stroke-linejoin="round"/>
-        <path d="${crust}" fill="none" stroke="var(--cloud-light)" stroke-width="9" opacity=".4" filter="url(#${id}-edge)"/>
-        <path id="${crustId}" d="${crust}" fill="none" stroke="var(--crust)" stroke-width="4" stroke-linecap="round" opacity=".73"/>
-        <text fill="var(--crust)" font-family="var(--mono)" font-size="6.4" font-weight="600"><textPath href="#${crustId}" startOffset="1%">${escape('<html> <head> <title>skypies</title> </head> <body> '.repeat(5))}</textPath></text>`;
-      (lifted ? raised : tops).push(face);
-    });
-    geometry.innerHTML = `<g opacity=".64" filter="url(#${id}-vapor)">${fog.join('')}</g>${base.join('')}${tops.join('')}${vapor.join('')}${raised.join('')}`;
-    // Identify the sector crossing the viewer-facing radius, not the nearest centroid:
-    // the 216-degree HTML wedge is wider than a semicircle.
-    const front = flavors.find(f => ((90-angle-f.start)%360+360)%360 < f.end-f.start) ?? flavors[0];
-    slot.querySelector('.front-flavor').textContent = `${front.name} in front`;
-    slot.dataset.angle = angle.toFixed(2);
-    slot.dataset.front = front.name;
-  }
-  function turnTo(target) {
-    cancelAnimationFrame(raf);
-    if (reduce.matches) { angle = target; draw(); return; }
-    const from = angle, start = performance.now();
-    const frame = (now) => {
-      const t = Math.min(1, (now-start)/360);
-      angle = from + (target-from) * (1-Math.pow(1-t, 3));
-      draw();
-      if (t<1) raf=requestAnimationFrame(frame);
-    };
-    raf=requestAnimationFrame(frame);
-  }
-  function step(dir) {
-    const current = flavors.findIndex(f => f.name === slot.dataset.front);
-    const next = flavors[(current + dir + flavors.length) % flavors.length];
-    const wanted = 90 - (next.start + next.end) / 2;
-    const delta = ((wanted - angle + 540) % 360 + 360) % 360 - 180;
-    turnTo(angle + delta);
-    document.querySelector('#announcer').textContent = `${opts.name}: ${next.name}, ${next.percent} percent, in front.`;
-  }
-  button.addEventListener('keydown', event => {
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-      event.preventDefault(); step(event.key === 'ArrowRight' ? 1 : -1);
-    } else if (event.key === 'Escape') {
-      button.blur();
-    }
-  });
-  button.addEventListener('pointerdown', event => {
-    if (event.button !== 0) return;
-    cancelAnimationFrame(raf);
-    button.focus({preventScroll: true});
-    button.setPointerCapture(event.pointerId);
-    down = {x: event.clientX, angle, pointer: event.pointerId, moved: false};
-  });
-  button.addEventListener('pointermove', event => {
-    if (!down || event.pointerId !== down.pointer) return;
-    const dx = event.clientX-down.x;
-    if (Math.abs(dx)>4) down.moved=true;
-    if (down.moved) { angle = down.angle + dx * .6; draw(); }
-  });
-  const release = () => { down=null; };
-  button.addEventListener('pointerup', release);
-  button.addEventListener('pointercancel', release);
-  button.addEventListener('lostpointercapture', release);
-  draw();
-  return slot;
-}
-
-function makePieSvg(opts) {
-  const svg = makePieCloud(opts).querySelector('svg');
-  svg.classList.add('pie-cloud');
-  svg.setAttribute('focusable', 'false');
-  return svg;
-}
-
+/* Inlined from tools/skypies-clouds.ts during pnpm build. */
 </script>
 
 <script>
@@ -666,9 +480,9 @@ function makePieSvg(opts) {
   var host = document.getElementById("clouds");
   if (!host) return;
   var PIES = [
-    { id: "d1", seed: 23, wedges: [{ kind: "html", count: 7 }, { kind: "image", count: 4 }, { kind: "md", count: 2 }, { kind: "code", count: 1 }], w: "200px", left: "50%", top: "-8%", drift: { name: "drift-a", dur: "62s", delay: "-14s" } },
+    { id: "d1", seed: 23, wedges: [{ kind: "html", count: 7 }, { kind: "image", count: 4 }, { kind: "md", count: 2 }, { kind: "code", count: 1 }], w: "200px", left: "50%", top: "-5%", drift: { name: "drift-a", dur: "62s", delay: "-14s" } },
     { id: "d2", seed: 41, wedges: [{ kind: "md", count: 5 }, { kind: "html", count: 2 }, { kind: "code", count: 1 }], w: "150px", left: "48%", top: "80%", drift: { name: "drift-b", dur: "78s", delay: "-30s" } },
-    { id: "d3", seed: 67, wedges: [{ kind: "data", count: 6 }, { kind: "html", count: 3 }, { kind: "code", count: 3 }], w: "190px", right: "-3%", top: "-10%", drift: { name: "drift-c", dur: "54s", delay: "-8s" } }
+    { id: "d3", seed: 67, wedges: [{ kind: "data", count: 6 }, { kind: "html", count: 3 }, { kind: "code", count: 3 }], w: "190px", right: "-3%", top: "0%", drift: { name: "drift-c", dur: "54s", delay: "-8s" } }
   ];
   PIES.forEach(function (p) {
     var d = document.createElement("div");
@@ -680,7 +494,7 @@ function makePieSvg(opts) {
     d.style.setProperty("--drift-name", p.drift.name);
     d.style.setProperty("--drift-dur", p.drift.dur);
     d.style.setProperty("--drift-delay", p.drift.delay);
-    var svg = makePieSvg({ id: 200 + p.seed, seed: p.seed, name: "skypies", rotation: -8 });
+    var svg = makePieSvg({ id: 200 + p.seed, seed: p.seed, name: "skypies", wedges: p.wedges });
     svg.setAttribute("aria-hidden", "true"); svg.removeAttribute("role"); svg.removeAttribute("aria-label");
     d.appendChild(svg);
     host.appendChild(d);
