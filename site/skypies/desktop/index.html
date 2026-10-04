@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>skypies for macOS — install, shortcuts, Claude Code plugin</title>
-<meta name="description" content="skypies for macOS: manage the files your agents produce, and organize all your pies-in-the-sky. Download the app, then learn the shortcuts, the Claude Code plugin and the peer-to-peer sharing.">
+<title>skypies for macOS — install, shortcuts, agent plugin</title>
+<meta name="description" content="skypies for macOS: manage the files your agents produce, and organize all your pies-in-the-sky. Download the app, then learn the shortcuts, the Claude Code and Codex plugin, and peer-to-peer sharing.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="skypies for macOS">
 <meta property="og:description" content="Manage the files your agents produce, and organize all your pies-in-the-sky. Tabs, live reload, deep links, reader mode, peer-to-peer sharing.">
@@ -258,7 +258,7 @@ footer .spacer { flex: 1 1 auto; }
 }
 .site-head { background: var(--sky-deep); color: var(--text); }
 .site-head .brand { color: var(--text); font: 30px/1 Georgia, "Times New Roman", serif; letter-spacing: -1.1px; }
-.clouds .pie-cloud { filter: drop-shadow(0 12px 16px var(--shadow)); }
+.clouds .pie-cloud { filter: none; }
 .clouds .pie-cloud text { font-family: var(--mono); letter-spacing: normal; }
 @media (prefers-reduced-motion: reduce) { .cloud, .drift { animation: none !important; } }
 </style>
@@ -282,22 +282,22 @@ footer .spacer { flex: 1 1 auto; }
     <div>
       <p class="eyebrow"><span>macOS app</span> · <span>free download</span> · <span>Apple Silicon + Intel</span></p>
       <h1 id="hero-title">Manage the files your agents produce.</h1>
-      <p class="lede">And organize all your pies-in-the-sky. skypies opens local HTML and Markdown in a native window with tabs, live reload and a <code>skypies://</code> URL scheme. It sends a file to your other devices without a server.</p>
+      <p class="lede">And organize all your pies-in-the-sky. skypies opens local HTML and Markdown in a native window with tabs, live reload and a <code>skypies://</code> URL scheme. It shares files between devices without uploading them to a file-hosting service.</p>
       <div class="cta">
         <a class="btn primary" href="https://github.com/contract-hero/skypies-releases/releases/latest/download/skypies-universal.dmg"><svg viewBox="0 0 16 16"><path d="M8 2v9m0 0L4.5 7.5M8 11l3.5-3.5M3 13h10"/></svg>Download for Mac</a>
         <a class="btn" href="#install"><svg viewBox="0 0 16 16"><path d="M3 4h10M3 8h10M3 12h6"/></svg>Install steps</a>
       </div>
-      <p class="hero-note">Universal app for Apple Silicon and Intel. Needs macOS 11 or later. The app is not notarized, so you allow it once on first launch.</p>
+      <p class="hero-note">Current download: <a href="https://github.com/contract-hero/skypies-releases/releases/tag/v0.1.2">v0.1.2</a> for Apple Silicon and Intel, macOS 11 or later. Not notarized; first launch needs your approval. Artwork previews the next app design.</p>
     </div>
-    <figure class="mac" data-todo="screenshot">
+    <figure class="mac">
       <div class="bar" aria-hidden="true">
         <div class="lights"><i></i><i></i><i></i></div>
         <div class="addr"><span class="scheme">skypies://</span>open?path=docs/explainer.html</div>
       </div>
       <div class="body">
-        <div class="slot"><b>screenshot</b><span>skypies with an HTML artifact open in a tab, day theme, 1440×900.</span></div>
+        <div class="slot"><b>Window illustration</b><span>Open an HTML or Markdown artifact here. The page keeps its own layout while you read.</span></div>
       </div>
-      <figcaption>The main window: tab strip flush with the traffic lights, the toolbar, the document.</figcaption>
+      <figcaption>Layout illustration, not an app screenshot.</figcaption>
     </figure>
   </div>
 </section>
@@ -323,14 +323,14 @@ footer .spacer { flex: 1 1 auto; }
           <li><p>Open skypies from Applications. macOS tells you that it cannot verify the app. Click <b>Done</b>.</p></li>
           <li><p>Open <b>System Settings</b> → <b>Privacy &amp; Security</b>.</p></li>
           <li><p>Scroll to <b>Security</b>. Find the message about skypies and click <b>Open Anyway</b>.</p></li>
-          <li><p>Click <b>Open Anyway</b> again, then enter your password or use Touch ID. skypies opens.</p></li>
+          <li><p>Confirm the next prompt and authenticate if asked. skypies opens.</p></li>
         </ol>
         <p class="hero-note">You do this one time. After that, skypies opens normally. The <b>Open Anyway</b> button shows for about one hour after you try to open the app. On macOS 12 and earlier, use System Preferences → Security &amp; Privacy → General.</p>
       </div>
     </div>
     <div class="callout" role="note">
       <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 9v4m0 4h.01M10.3 3.9 2.6 17.2A2 2 0 0 0 4.3 20h15.4a2 2 0 0 0 1.7-2.8L13.7 3.9a2 2 0 0 0-3.4 0Z"/></svg>
-      <p><b>Gatekeeper.</b> skypies has an ad-hoc signature. Apple does not notarize it. Because of this, macOS blocks the first launch. On macOS 15 and later, right-click → <b>Open</b> does not remove the block. Use <b>Open Anyway</b> in Privacy &amp; Security.</p>
+      <p><b>Gatekeeper.</b> skypies has an ad-hoc signature. Apple does not notarize it. Because of this, macOS blocks the first launch. On macOS 15 and later, right-click → <b>Open</b> does not remove the block. Use <b>Open Anyway</b> in Privacy &amp; Security. See <a href="https://support.apple.com/en-us/102445">Apple’s instructions</a>.</p>
     </div>
   </div>
 </section>
@@ -338,7 +338,7 @@ footer .spacer { flex: 1 1 auto; }
 <section id="features" aria-labelledby="features-title">
   <div class="wrap">
     <h2 id="features-title">What you get</h2>
-    <p class="sec-lede">A browser-shaped window over a read-only view of one workspace folder.</p>
+    <p class="sec-lede">These features and shortcuts describe the public Mac v0.1.2 download. It provides a workspace browser, pies, and a reader for your files. The new pie design is still in development.</p>
     <div class="grid-3">
       <div class="card feature">
         <span class="k">tabs</span>
@@ -371,39 +371,23 @@ footer .spacer { flex: 1 1 auto; }
         <p>HTML renders in a sandboxed iframe with full CSS, JS and SVG. Markdown gets code highlighting, Mermaid diagrams and KaTeX math. The theme follows the macOS appearance.</p>
       </div>
     </div>
-    <div class="shots">
-      <figure class="mac" data-todo="screenshot">
-        <div class="bar" aria-hidden="true">
-          <div class="lights"><i></i><i></i><i></i></div>
-          <div class="addr"><span class="scheme">skypies://</span>open?path=README.md</div>
-        </div>
-        <div class="body"><div class="slot"><b>screenshot</b><span>Reader mode on a Markdown file: no sidebar, no toolbar.</span></div></div>
-        <figcaption>Reader mode, ⇧⌘F.</figcaption>
-      </figure>
-      <figure class="mac" data-todo="screenshot">
-        <div class="bar" aria-hidden="true">
-          <div class="lights"><i></i><i></i><i></i></div>
-          <div class="addr"><span class="scheme">skypies://</span>sky</div>
-        </div>
-        <div class="body"><div class="slot"><b>screenshot</b><span>The quick open palette (⌘P) over an open tab.</span></div></div>
-        <figcaption>Quick open, ⌘P.</figcaption>
-      </figure>
-    </div>
   </div>
 </section>
 
 <section id="shortcuts" aria-labelledby="shortcuts-title">
   <div class="wrap">
     <h2 id="shortcuts-title">Keyboard shortcuts</h2>
-    <p class="sec-lede">Shortcuts also work while the focus is inside an HTML preview, except the ones that open a dialog or the address bar.</p>
+    <p class="sec-lede">Tab, navigation, zoom and view-mode shortcuts work inside HTML previews. Focus the app toolbar before using the file picker, Quick Open, pie picker, sharing or comment shortcuts.</p>
     <div class="card table-wrap">
       <table>
         <thead><tr><th scope="col">Keys</th><th scope="col">Action</th></tr></thead>
         <tbody>
           <tr><td class="keys"><kbd>⌘T</kbd></td><td>New tab</td></tr>
           <tr><td class="keys"><kbd>⌘W</kbd></td><td>Close tab</td></tr>
+          <tr><td class="keys"><kbd>⌘⇧T</kbd></td><td>Reopen the last closed tab</td></tr>
           <tr><td class="keys"><kbd>⌃Tab</kbd> <kbd>⌘⇧[</kbd> <kbd>⌘⇧]</kbd></td><td>Switch tab</td></tr>
-          <tr><td class="keys"><kbd>⌘1</kbd> … <kbd>⌘9</kbd></td><td>Jump to tab 1 to 9</td></tr>
+          <tr><td class="keys"><kbd>⌘1</kbd> … <kbd>⌘8</kbd></td><td>Jump to tab 1 to 8</td></tr>
+          <tr><td class="keys"><kbd>⌘9</kbd></td><td>Jump to the last tab</td></tr>
           <tr><td class="keys"><kbd>⌘L</kbd></td><td>Focus the address bar. Accepts an absolute path, a <code>file://</code> URL or a <code>skypies://</code> URL</td></tr>
           <tr><td class="keys"><kbd>⌘O</kbd></td><td>Open any file with the file picker</td></tr>
           <tr><td class="keys"><kbd>⌘P</kbd></td><td>Quick open: fuzzy search over the workspace</td></tr>
@@ -411,6 +395,9 @@ footer .spacer { flex: 1 1 auto; }
           <tr><td class="keys"><kbd>⇧⌘F</kbd></td><td>Reader mode: sidebar and toolbar hidden. <kbd>Esc</kbd>, <kbd>⇧⌘F</kbd>, <kbd>⌘L</kbd> or <kbd>⌘B</kbd> leave it</td></tr>
           <tr><td class="keys"><kbd>⌘⇧B</kbd></td><td>Show or hide the Sky band with your pies</td></tr>
           <tr><td class="keys"><kbd>⌘D</kbd></td><td>Add the current file to a pie</td></tr>
+          <tr><td class="keys"><kbd>⌘⇧C</kbd></td><td>Copy a link for your paired devices</td></tr>
+          <tr><td class="keys"><kbd>⌘⇧M</kbd></td><td>Show or hide comments</td></tr>
+          <tr><td class="keys"><kbd>⌘⇧K</kbd></td><td>Pick up or put down the comment tool</td></tr>
           <tr><td class="keys"><kbd>⌘+</kbd> <kbd>⌘−</kbd> <kbd>⌘0</kbd></td><td>Zoom in, zoom out, reset. Per tab</td></tr>
         </tbody>
       </table>
@@ -420,13 +407,17 @@ footer .spacer { flex: 1 1 auto; }
 
 <section id="plugin" aria-labelledby="plugin-title">
   <div class="wrap">
-    <h2 id="plugin-title">Claude Code plugin</h2>
-    <p class="sec-lede">The app includes an MCP server, <code>skypies-mcp</code>. The Claude Code plugin is a companion to the app. It finds the installed app and runs this server. It downloads nothing.</p>
+    <h2 id="plugin-title">Claude Code and Codex plugin</h2>
+    <p class="sec-lede">The app bundles <code>skypies-mcp</code>. The plugin gives Claude Code and Codex access to that server and an artifact-links skill. You install the Mac app once; the plugin uses its server and can launch the app when needed.</p>
     <div class="card cli">
-      <p class="tight-below">Install the app first. Then run:</p>
+      <p class="tight-below">Install the app first. For Claude Code, run:</p>
       <pre><code>claude plugin marketplace add contract-hero/plugin-marketplace
 claude plugin install skypies@contract-hero</code></pre>
-      <p class="tight-above">From a Claude Code session, the plugin makes a link for your paired devices, beams an artifact, pairs a device and lists paired devices. See the <a href="https://github.com/contract-hero/skypies-plugin#readme"><code>skypies-plugin</code> README</a>.</p>
+      <p class="tight-above">For Codex CLI 0.153 or later:</p>
+      <pre><code>codex plugin marketplace add contract-hero/plugin-marketplace
+codex plugin add skypies@contract-hero</code></pre>
+      <p class="tight-above">Start a new session after installing. Both hosts can use the MCP tools to create device links, add artifacts to pies and read feedback, subject to their permissions. Claude Code also has automatic pairing and feedback hooks. See the <a href="https://github.com/contract-hero/skypies-plugin#readme">setup guide</a> for host-specific details.</p>
+      <p>The Stop hook that checks for missing or hand-written links requires skypies 0.1.3 or later; it is not available with the current 0.1.2 download.</p>
     </div>
   </div>
 </section>
@@ -434,7 +425,7 @@ claude plugin install skypies@contract-hero</code></pre>
 <section id="sharing" aria-labelledby="sharing-title">
   <div class="wrap">
     <h2 id="sharing-title">Pairing and Beam</h2>
-    <p class="sec-lede">Both routes are peer-to-peer: a direct, end-to-end encrypted QUIC connection over <a href="https://iroh.computer">iroh</a>, with an encrypted relay as fallback. No account, no upload. The app opens no sockets until you share or pair something.</p>
+    <p class="sec-lede">Both routes are peer-to-peer: a direct, end-to-end encrypted QUIC connection over <a href="https://iroh.computer">iroh</a>, with an encrypted relay as fallback. No account or hosted file storage is required. Networking starts when you share, pair or open a remote link. After pairing, <b>Listen at launch</b> can keep the app ready to accept your devices as soon as it opens.</p>
     <div class="two">
       <div class="card">
         <h3>Your own devices: pair once</h3>
@@ -442,7 +433,7 @@ claude plugin install skypies@contract-hero</code></pre>
           <li>Settings → Devices → <b>Pair a device…</b> shows an invite as a link and a QR code.</li>
           <li>Open it on the other device. Both screens show the same six words.</li>
           <li>Confirm the words match on both screens. The devices are paired.</li>
-          <li>Share ▾ → <b>Copy link for my devices</b> gives a <code>skypies://open?path=…&amp;from=…</code> link. Open it on a paired device and the file opens there, pulled from this Mac.</li>
+          <li>Share ▾ → <b>Copy link for my devices</b> gives a device link that identifies this Mac. Open it on a paired device and the file opens there, pulled from this Mac.</li>
         </ol>
         <p class="hero-note">Nothing is copied ahead of time and nothing is queued. Both machines need skypies running. A paired device can open any file you share with it by link.</p>
       </div>
@@ -454,7 +445,7 @@ claude plugin install skypies@contract-hero</code></pre>
           <li>On the other Mac the link raises skypies and shows a confirm dialog with the file name, its size and your identity fingerprint. Nothing transfers until they accept.</li>
           <li>The file lands in the app's <code>received/</code> folder and opens with a <b>beamed</b> badge. Received HTML renders in a hardened, origin-isolated iframe.</li>
         </ol>
-        <p class="hero-note">The offer is served while the app runs, 24 hours by default. The ⚡ indicator lists active beams and has a Stop that revokes a link at once.</p>
+        <p class="hero-note">The offer is served while the app runs, 24 hours by default. The ⚡ indicator lists active beams and has a Stop that prevents new transfers. It does not remove copies already received.</p>
       </div>
     </div>
   </div>
@@ -470,193 +461,7 @@ claude plugin install skypies@contract-hero</code></pre>
 </footer>
 
 <script id="pie-cloud-builder">
-
-
-// All geometry, code textures, lighting and interactions live in this one builder.
-function makePieCloud(opts) {
-  const ns = 'http://www.w3.org/2000/svg';
-  const id = `pie-${opts.id}`;
-  const seed = opts.seed ?? opts.id;
-  const cx = 260, cy = 241, radius = 177, pitch = .57, depth = 51, lift = 67;
-  let angle = opts.rotation ?? -8;
-  let raf = 0;
-  let down = null;
-  const reduce = matchMedia('(prefers-reduced-motion: reduce)');
-  const flavors = [
-    { name: 'HTML', key: 'html', start: -90, end: 126, percent: 60 },
-    { name: 'Notes', key: 'notes', start: 126, end: 216, percent: 25 },
-    { name: 'Code', key: 'code', start: 216, end: 270, percent: 15 },
-  ];
-  const escape = (str) => str.replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-  const source = `<!doctype html><html lang="en"><head><title>${opts.name} — skypies</title><meta charset="utf-8"></head><body class="sky"><main><section class="pie"><h1>ideas, still cooking</h1><p>Every idea starts as a pie in the sky.</p><a href="dream.html">castillos en el aire</a><code>const pie = bake({ kind: "html" });</code></section></main></body></html> `;
-  const slot = document.createElement('article');
-  slot.className = 'cloud-slot';
-  slot.style.setProperty('--duration', `${28 + seed * 3}s`);
-  slot.style.setProperty('--delay', `${-seed * 5 - 4}s`);
-  slot.innerHTML = `<div class="drifter"><div class="pie-zoom"><button type="button" class="pie-control" aria-label="${escape(opts.name)}. Rotate pie" aria-describedby="${id}-legend pie-instructions"></button></div><div class="pie-info"><h2>${escape(opts.name)}</h2><div class="legend" id="${id}-legend">${flavors.map(f => `<span class="${f.key}"><i aria-hidden="true"></i>${f.name} ${f.percent}%</span>`).join('')}</div><p class="turn-hint"><span class="front-flavor">HTML in front</span> · ← drag →</p></div></div>`;
-  const button = slot.querySelector('button');
-  const svg = document.createElementNS(ns, 'svg');
-  svg.setAttribute('viewBox', '0 0 520 430');
-  svg.setAttribute('aria-hidden', 'true');
-  button.append(svg);
-  const texture = flavors.map(f => {
-    const rows = Array.from({length: 9}, (_, i) => {
-      const offset = (i * 43 + seed * 17) % source.length;
-      const row = (source.slice(offset) + source.repeat(4)).slice(0, 155);
-      return `<text x="0" y="${(i + 1) * 7}" font-size="6.25" font-weight="500" textLength="590" lengthAdjust="spacingAndGlyphs">${escape(row)}</text>`;
-    }).join('');
-    return `<pattern id="${id}-text-${f.key}" width="590" height="63" patternUnits="userSpaceOnUse"><g fill="var(--ink-${f.key})" font-family="var(--mono)">${rows}</g></pattern>`;
-  }).join('');
-  svg.innerHTML = `<defs>${texture}
-    <linearGradient id="${id}-body" x1="0" y1="0" x2=".2" y2="1"><stop offset="0" stop-color="var(--cloud-light)"/><stop offset=".65" stop-color="var(--cloud-shade)"/><stop offset="1" stop-color="var(--cloud)"/></linearGradient>
-    <linearGradient id="${id}-top" x1="0" y1="0" x2=".8" y2="1"><stop offset="0" stop-color="var(--cloud-light)"/><stop offset="1" stop-color="var(--cloud)"/></linearGradient>
-    <linearGradient id="${id}-fade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--cloud-light)"/><stop offset=".6" stop-color="var(--cloud-light)"/><stop offset="1" stop-color="var(--cloud-light)" stop-opacity=".12"/></linearGradient>
-    <mask id="${id}-side-mask" maskContentUnits="objectBoundingBox"><rect width="1" height="1" fill="url(#${id}-fade)"/></mask>
-    <radialGradient id="${id}-mist"><stop offset="0" stop-color="var(--cloud-light)" stop-opacity=".8"/><stop offset=".55" stop-color="var(--cloud-light)" stop-opacity=".35"/><stop offset="1" stop-color="var(--cloud-light)" stop-opacity="0"/></radialGradient>
-    <filter id="${id}-vapor" x="-30%" y="-35%" width="160%" height="170%"><feGaussianBlur stdDeviation="4.5"/></filter>
-    <filter id="${id}-edge" x="-20%" y="-30%" width="140%" height="160%"><feGaussianBlur stdDeviation="1.5"/></filter>
-  </defs><g class="geometry"></g>`;
-  const geometry = svg.querySelector('.geometry');
-  const point = (a, z = 0, lifted = false, radial = true) => {
-    const t = a * Math.PI / 180;
-    const swell = 1 + .026 * Math.sin(t * 8 + seed * .7) + .008 * Math.sin(t * 13 + .3);
-    const r = radial ? radius * swell : 0;
-    const m = (243 + angle) * Math.PI / 180;
-    return [cx + Math.cos(t) * r + (lifted ? Math.cos(m) * 15 : 0), cy + Math.sin(t) * r * pitch + z + (lifted ? -lift + Math.sin(m) * 9 : 0)];
-  };
-  const xy = (p) => p.map(v => v.toFixed(2)).join(',');
-  const arc = (start, end, z = 0, lifted = false) => {
-    const steps = Math.max(3, Math.ceil(Math.abs(end - start) / 2));
-    return Array.from({length: steps + 1}, (_, i) => point(start + (end - start) * i / steps, z, lifted));
-  };
-  const path = (points, close = true) => `M${points.map(xy).join('L')}${close ? 'Z' : ''}`;
-  const surface = (d, key, side = false) => `<path d="${d}" fill="url(#${id}-${side ? 'body' : 'top'})"/><path d="${d}" fill="url(#${id}-text-${key})" ${side ? `opacity=".68" mask="url(#${id}-side-mask)"` : ''}/>`;
-
-  function draw() {
-    const base = [], tops = [], raised = [], fog = [], vapor = [];
-    flavors.forEach((f, index) => {
-      const lifted = index === 2;
-      const start = f.start + angle, end = f.end + angle;
-      const center = point(0, 0, lifted, false);
-      const edge = arc(start, end, 0, lifted);
-      const topPath = path([center, ...edge]);
-      const bodyDepth = lifted ? 41 : depth;
-      const stack = lifted ? raised : base;
-      // The front half of the outer wall; split at the horizon during rotation.
-      let run = [];
-      const flush = () => {
-        if (run.length > 1) {
-          const lower = run.map(([x,y]) => {
-            const lobe = lifted ? 0 : 4.5 * Math.sin((x-cx)*.055+seed) + 2 * Math.sin((x-cx)*.11);
-            return [cx+(x-cx)*1.015, y+bodyDepth+lobe];
-          });
-          const d = path([...run, ...lower.slice().reverse()]);
-          fog.push(`<path d="${d}" fill="var(--cloud)" stroke="var(--cloud-light)" stroke-width="5"/>`);
-          stack.push(surface(d, f.key, true));
-          stack.push(`<path d="${path(lower, false)}" fill="none" stroke="var(--cloud-light)" stroke-width="5" opacity=".6" filter="url(#${id}-edge)"/>`);
-        }
-        run = [];
-      };
-      const n = edge.length - 1;
-      edge.forEach((p, i) => {
-        const a = (start + (end-start) * i / n) * Math.PI / 180;
-        if (Math.sin(a) > -.02) run.push(p); else flush();
-      });
-      flush();
-      // Only the exposed cuts have vertical faces; internal wedge seams do not.
-      const cuts = lifted ? [start, end] : [index === 0 ? start : end];
-      cuts.forEach(a => {
-        const p = point(a, 0, lifted);
-        const d = path([center, p, [p[0],p[1]+bodyDepth], [center[0],center[1]+bodyDepth]]);
-        stack.push(surface(d, f.key, true));
-      });
-      const crustId = `${id}-crust-${index}`;
-      const crust = path(edge, false);
-      fog.push(`<path d="${topPath}" fill="var(--cloud-light)" stroke="var(--cloud-light)" stroke-width="5"/>`);
-      if (!lifted) {
-        for (let a=start+8;a<end;a+=11) {
-          if (Math.sin(a*Math.PI/180)<0) continue;
-          const p=point(a,depth*.61);
-          const puff=12+3*Math.sin(a*.14+seed);
-          fog.push(`<ellipse cx="${p[0]}" cy="${p[1]}" rx="${puff}" ry="${puff*1.05}" fill="var(--cloud-light)"/>`);
-        }
-        for (let a=start+12;a<end;a+=19) {
-          if (Math.sin(a*Math.PI/180)<.12) continue;
-          const p=point(a,depth*.67);
-          const puff=19+5*Math.sin(a*.14+seed);
-          vapor.push(`<ellipse cx="${p[0]}" cy="${p[1]}" rx="${puff*1.15}" ry="${puff*.8}" fill="url(#${id}-mist)"/>`);
-        }
-      }
-      const face = `${surface(topPath,f.key)}
-        <path d="${path([edge[0], center, edge[edge.length-1]], false)}" fill="none" stroke="var(--cloud-light)" stroke-width="2.5" stroke-linejoin="round"/>
-        <path d="${crust}" fill="none" stroke="var(--cloud-light)" stroke-width="9" opacity=".4" filter="url(#${id}-edge)"/>
-        <path id="${crustId}" d="${crust}" fill="none" stroke="var(--crust)" stroke-width="4" stroke-linecap="round" opacity=".73"/>
-        <text fill="var(--crust)" font-family="var(--mono)" font-size="6.4" font-weight="600"><textPath href="#${crustId}" startOffset="1%">${escape('<html> <head> <title>skypies</title> </head> <body> '.repeat(5))}</textPath></text>`;
-      (lifted ? raised : tops).push(face);
-    });
-    geometry.innerHTML = `<g opacity=".64" filter="url(#${id}-vapor)">${fog.join('')}</g>${base.join('')}${tops.join('')}${vapor.join('')}${raised.join('')}`;
-    // Identify the sector crossing the viewer-facing radius, not the nearest centroid:
-    // the 216-degree HTML wedge is wider than a semicircle.
-    const front = flavors.find(f => ((90-angle-f.start)%360+360)%360 < f.end-f.start) ?? flavors[0];
-    slot.querySelector('.front-flavor').textContent = `${front.name} in front`;
-    slot.dataset.angle = angle.toFixed(2);
-    slot.dataset.front = front.name;
-  }
-  function turnTo(target) {
-    cancelAnimationFrame(raf);
-    if (reduce.matches) { angle = target; draw(); return; }
-    const from = angle, start = performance.now();
-    const frame = (now) => {
-      const t = Math.min(1, (now-start)/360);
-      angle = from + (target-from) * (1-Math.pow(1-t, 3));
-      draw();
-      if (t<1) raf=requestAnimationFrame(frame);
-    };
-    raf=requestAnimationFrame(frame);
-  }
-  function step(dir) {
-    const current = flavors.findIndex(f => f.name === slot.dataset.front);
-    const next = flavors[(current + dir + flavors.length) % flavors.length];
-    const wanted = 90 - (next.start + next.end) / 2;
-    const delta = ((wanted - angle + 540) % 360 + 360) % 360 - 180;
-    turnTo(angle + delta);
-    document.querySelector('#announcer').textContent = `${opts.name}: ${next.name}, ${next.percent} percent, in front.`;
-  }
-  button.addEventListener('keydown', event => {
-    if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
-      event.preventDefault(); step(event.key === 'ArrowRight' ? 1 : -1);
-    } else if (event.key === 'Escape') {
-      button.blur();
-    }
-  });
-  button.addEventListener('pointerdown', event => {
-    if (event.button !== 0) return;
-    cancelAnimationFrame(raf);
-    button.focus({preventScroll: true});
-    button.setPointerCapture(event.pointerId);
-    down = {x: event.clientX, angle, pointer: event.pointerId, moved: false};
-  });
-  button.addEventListener('pointermove', event => {
-    if (!down || event.pointerId !== down.pointer) return;
-    const dx = event.clientX-down.x;
-    if (Math.abs(dx)>4) down.moved=true;
-    if (down.moved) { angle = down.angle + dx * .6; draw(); }
-  });
-  const release = () => { down=null; };
-  button.addEventListener('pointerup', release);
-  button.addEventListener('pointercancel', release);
-  button.addEventListener('lostpointercapture', release);
-  draw();
-  return slot;
-}
-
-function makePieSvg(opts) {
-  const svg = makePieCloud(opts).querySelector('svg');
-  svg.classList.add('pie-cloud');
-  svg.setAttribute('focusable', 'false');
-  return svg;
-}
-
+/* Inlined from tools/skypies-clouds.ts during pnpm build. */
 </script>
 
 <script>
@@ -666,9 +471,9 @@ function makePieSvg(opts) {
   var host = document.getElementById("clouds");
   if (!host) return;
   var PIES = [
-    { id: "d1", seed: 23, wedges: [{ kind: "html", count: 7 }, { kind: "image", count: 4 }, { kind: "md", count: 2 }, { kind: "code", count: 1 }], w: "200px", left: "50%", top: "-8%", drift: { name: "drift-a", dur: "62s", delay: "-14s" } },
+    { id: "d1", seed: 23, wedges: [{ kind: "html", count: 7 }, { kind: "image", count: 4 }, { kind: "md", count: 2 }, { kind: "code", count: 1 }], w: "200px", left: "50%", top: "-5%", drift: { name: "drift-a", dur: "62s", delay: "-14s" } },
     { id: "d2", seed: 41, wedges: [{ kind: "md", count: 5 }, { kind: "html", count: 2 }, { kind: "code", count: 1 }], w: "150px", left: "48%", top: "80%", drift: { name: "drift-b", dur: "78s", delay: "-30s" } },
-    { id: "d3", seed: 67, wedges: [{ kind: "data", count: 6 }, { kind: "html", count: 3 }, { kind: "code", count: 3 }], w: "190px", right: "-3%", top: "-10%", drift: { name: "drift-c", dur: "54s", delay: "-8s" } }
+    { id: "d3", seed: 67, wedges: [{ kind: "data", count: 6 }, { kind: "html", count: 3 }, { kind: "code", count: 3 }], w: "190px", right: "-3%", top: "0%", drift: { name: "drift-c", dur: "54s", delay: "-8s" } }
   ];
   PIES.forEach(function (p) {
     var d = document.createElement("div");
@@ -680,7 +485,7 @@ function makePieSvg(opts) {
     d.style.setProperty("--drift-name", p.drift.name);
     d.style.setProperty("--drift-dur", p.drift.dur);
     d.style.setProperty("--drift-delay", p.drift.delay);
-    var svg = makePieSvg({ id: 200 + p.seed, seed: p.seed, name: "skypies", rotation: -8 });
+    var svg = makePieSvg({ id: 200 + p.seed, seed: p.seed, name: "skypies", wedges: p.wedges });
     svg.setAttribute("aria-hidden", "true"); svg.removeAttribute("role"); svg.removeAttribute("aria-label");
     d.appendChild(svg);
     host.appendChild(d);

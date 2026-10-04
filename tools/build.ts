@@ -3,6 +3,7 @@ import { execFileSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import { join, relative, extname } from 'node:path';
 import { load } from 'cheerio';
+import ts from 'typescript';
 import { root, origin, sources, migrateURLs } from './sources.ts';
 import type { Source } from './sources.ts';
 
@@ -11,6 +12,20 @@ const cache = fileURLToPath(new URL('.cache/portfolio/', root));
 await rm(output, { recursive: true, force: true });
 await mkdir(cache, { recursive: true });
 await cp(fileURLToPath(new URL('site/', root)), output, { recursive: true });
+
+// Inline one TypeScript cloud renderer into each standalone Skypies page.
+const cloudScript = ts.transpileModule(await readFile(new URL('tools/skypies-clouds.ts', root), 'utf8'), {
+  compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.None },
+}).outputText.replaceAll('</script', '<\\/script');
+const cloudStyle = await readFile(new URL('tools/skypies-clouds.css', root), 'utf8');
+for (const page of ['index.html', 'desktop/index.html', 'ios/index.html']) {
+  const file = join(output, 'skypies', page);
+  const html = await readFile(file, 'utf8');
+  const marker = /<script id="pie-cloud-builder">[\s\S]*?<\/script>/;
+  if (!marker.test(html)) throw new Error(`Missing cloud builder in skypies/${page}`);
+  await writeFile(file, html.replace('</head>', `<style>${cloudStyle}</style></head>`)
+    .replace(marker, () => `<script id="pie-cloud-builder">${cloudScript}</script>`));
+}
 
 async function exists(path: string) { return access(path).then(() => true, () => false); }
 

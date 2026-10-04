@@ -1,0 +1,44 @@
+/* Ice mist and motion from skypies-core's approved shared UI (aab5fda). */
+:root {
+  --pie-top: #e4f0f5;
+  --pie-top-low: #b9ccd9;
+  --pie-wall-top: #d2e3ed;
+  --pie-wall-mid: #b5c9d7;
+  --pie-wall-low: #92adbd;
+  --pie-fog: #d4e6ee;
+  --pie-ink: #30434f;
+  --crust-ink: #9abfd8;
+}
+/* Only the artwork floats; the existing layout containers stay still. */
+.drifter, .clouds .cloud, .clouds .drift {
+  animation: none;
+  transform: none;
+}
+.pie-cloud, .clouds .pie-cloud, .phone .pie-cloud {
+  display: block;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+  filter: none;
+  animation: pie-float var(--float-period, 6s) ease-in-out infinite;
+  animation-delay: var(--float-phase, 0s);
+}
+.pie-cloud .code-row {
+  animation: pie-code-shimmer 8s ease-in-out infinite;
+  animation-delay: var(--shimmer-phase);
+}
+.pie-cloud[data-motion-running="false"],
+.pie-cloud[data-motion-running="false"] .code-row {
+  animation-play-state: paused;
+}
+@keyframes pie-float {
+  0%, 100% { transform: translateY(4px); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes pie-code-shimmer {
+  0%, 100% { opacity: .5; }
+  50% { opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .pie-cloud, .pie-cloud .code-row { animation: none; }
+}
