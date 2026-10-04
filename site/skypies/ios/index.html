@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
-<title>skypies for iPhone — read-only companion</title>
-<meta name="description" content="skypies for iPhone pairs with your Mac, receives Beams, and shows the artifacts your agents produce. Read-only. Comments go back to the Mac.">
+<title>skypies for iPhone — coming soon</title>
+<meta name="description" content="Coming soon: read and organize artifacts in pies, import files, receive Beams, and sync comments on files shared from your Mac.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="skypies for iPhone">
-<meta property="og:description" content="A read-only companion for the skypies desktop app: pair with your Mac, receive Beams, read and comment from your phone.">
+<meta property="og:description" content="An iPhone app in development: local pies, files shared from your Mac, Beams, reading and comments.">
 <link rel="canonical" href="https://contracthero.dev/skypies/ios/">
 <meta property="og:url" content="https://contracthero.dev/skypies/ios/">
 <meta property="og:site_name" content="skypies">
@@ -273,14 +273,14 @@ footer a { color: var(--page-link); }
       <div>
         <p class="status"><i aria-hidden="true"></i> iPhone app: coming soon</p>
         <h1>skypies for iPhone</h1>
-        <p class="lead">A read-only companion for the Mac app. Pair it with your Mac once, then read the artifacts your agents produce from your phone, and receive files that other people beam to you.</p>
+        <p class="lead">Read and organize your agents’ artifacts from your phone. Pair with your Mac for shared files, receive Beams from others, or import files into local pies. The app is in development; the features below describe that build.</p>
         <div class="ctas">
           <a class="btn primary" href="../desktop/">Get the Mac app first</a>
           <a class="btn ghost" href="#pairing">How pairing works</a>
         </div>
       </div>
       <div class="phone-wrap">
-        <div class="phone" role="img" aria-label="Mockup of the iPhone start screen: a Received pie, one pie per online Mac, and a list of received files.">
+        <div class="phone" role="img" aria-label="Earlier iPhone layout concept with new cloud artwork, showing example pies and received files.">
           <div class="notch"></div>
           <div class="screen">
             <div class="title"><span>skypies</span><span>paired · 1 Mac online</span></div>
@@ -294,7 +294,7 @@ footer a { color: var(--page-link); }
             <div class="bar"><span><b></b>Library</span><span><b></b>Tabs</span><span><b></b>Comment</span><span><b></b>Settings</span></div>
           </div>
         </div>
-        <p class="phone-caption">Mockup. Names and files are placeholders.</p>
+        <p class="phone-caption">Earlier layout concept, updated with the new cloud artwork. Names and files are examples.</p>
       </div>
     </div>
   </div>
@@ -303,17 +303,17 @@ footer a { color: var(--page-link); }
 <main class="wrap">
   <section class="block" id="what">
     <h2>What it does</h2>
-    <p class="sub">The phone owns no files. It shows what your Mac shares with it and what other people beam to it.</p>
+    <p class="sub">Create local pies, import files, and browse what your Mac shares or other people beam to you. Imported and received files are stored inside the iPhone app.</p>
     <div class="grid">
       <article class="card">
-        <span class="tag">read-only</span>
-        <h3>Reads, never edits</h3>
-        <p>HTML and Markdown render the same way as on the Mac. The phone cannot create, rename, or delete anything in your workspace.</p>
+        <span class="tag">local files</span>
+        <h3>Read and organize</h3>
+        <p>Read HTML and Markdown, create or rename pies, and add files from the iPhone picker. Imports are copies in app storage; organizing them does not change the original documents on your Mac.</p>
       </article>
       <article class="card">
         <span class="tag">paired Mac</span>
         <h3>Pulls from your Mac</h3>
-        <p>Open a <code>skypies://</code> link on the phone and it fetches the file straight from the Mac it lives on, over an end-to-end encrypted link. No upload, no server.</p>
+        <p>Open a device link created by the Mac app or agent plugin to fetch the file over an end-to-end encrypted connection. An encrypted relay can help when a direct connection is unavailable. The Mac must be awake with skypies running.</p>
       </article>
       <article class="card">
         <span class="tag">beam</span>
@@ -329,7 +329,7 @@ footer a { color: var(--page-link); }
     <ol class="steps">
       <li>
         <h3>Start on the Mac</h3>
-        <p>Settings → Remote → <em>Pair a device…</em>. The Mac shows a QR code and a pairing link. The invite expires after a short time.</p>
+        <p>Settings → Devices → <em>Pair a device…</em>. The Mac shows a QR code and a pairing link. The invite expires after a short time.</p>
       </li>
       <li>
         <h3>Scan on the phone</h3>
@@ -345,7 +345,7 @@ footer a { color: var(--page-link); }
         <p>Confirm only when the words match. From then on the phone appears in the Mac's device list and can pull files from it.</p>
       </li>
     </ol>
-    <p class="note"><strong>Why the words matter</strong> The six words are the fingerprint of the encrypted link. If they differ, something sits between the two devices. Do not confirm; start again.</p>
+    <p class="note"><strong>Why the words matter</strong> The six words are the fingerprint of the encrypted link. If they differ, the pairing identities do not match. Do not confirm; start again.</p>
   </section>
 
   <section class="block" id="beam">
@@ -357,17 +357,17 @@ footer a { color: var(--page-link); }
         <ul>
           <li>You open the <code>skypies://receive</code> link on the phone.</li>
           <li>The phone shows the file name and size and asks you to confirm.</li>
-          <li>The file lands in the app's own Received list, never in a workspace.</li>
-          <li>The sender can stop the Beam at any time; after that the link is dead.</li>
+          <li>The file is stored inside the app and appears in its Received pie.</li>
+          <li>The sender can stop new transfers at any time. Copies already received stay on the recipient’s device.</li>
         </ul>
       </article>
       <article class="card">
         <h3>Received content is untrusted</h3>
-        <p>A beamed HTML file was written by someone else. The phone renders it in an isolated view with scripts and local access cut off, the same rule the Mac app follows.</p>
+        <p>A beamed HTML file was written by someone else. The phone renders it in an isolated frame, separate from the app’s own interface, just as the Mac app does.</p>
         <ul>
-          <li>No access to other files on the device.</li>
-          <li>No network from inside the artifact.</li>
-          <li>A "beamed" badge marks it in the list.</li>
+          <li>The frame cannot directly access the app’s internal controls or other local files.</li>
+          <li>Scripts still run, and the artifact can make web requests. Isolation does not mean it is offline.</li>
+          <li>A “beamed” badge identifies received files.</li>
         </ul>
       </article>
     </div>
@@ -375,44 +375,25 @@ footer a { color: var(--page-link); }
 
   <section class="block" id="reading">
     <h2>Reading and comments</h2>
-    <p class="sub">One column: title, the artifact full-bleed, and a bar at the thumb. Library and open tabs are bottom sheets.</p>
+    <p class="sub">A sky of pies leads to file lists and the reader. The bottom controls take you back to the sky, through your tabs, or into comments; Settings and devices are in the title bar.</p>
     <div class="two">
       <article class="card">
         <h3>Comments go back to the Mac</h3>
         <p>Select text or tap a spot on an image and leave a comment. For a file pulled from a paired Mac, the comment syncs back to that Mac, so the agent that wrote the file can read it with <code>list_feedback</code> and mark it addressed with <code>resolve_feedback</code>.</p>
         <ul>
-          <li>Comments are the only thing the phone writes, and they land in the app's state directory, never beside the file.</li>
-          <li>Sync works in both directions while both devices are online.</li>
+          <li>Comments are stored separately from the original document. The app also stores imported and received files locally.</li>
+          <li>For a file shared by a paired Mac, comments sync while the file is open and both devices are reachable. Offline comments wait for reconnection.</li>
         </ul>
       </article>
       <article class="card">
         <h3>What the phone shows</h3>
         <ul>
-          <li>Start screen: a <em>Received</em> pie plus one <em>Shared from &lt;Mac&gt;</em> pie per online Mac.</li>
+          <li>Start screen: your local pies, a <em>Received</em> pie when it has files, and shared files from connected Macs.</li>
           <li>Tap a pie to open its file list; tap a file to read it.</li>
           <li>A tab pulled from a Mac says so under its title.</li>
           <li>Back and forward per tab, like the Mac app.</li>
         </ul>
       </article>
-    </div>
-  </section>
-
-  <section class="block" id="screens">
-    <h2>Screens</h2>
-    <p class="sub">Screenshots from a device are pending. The frames below hold their place.</p>
-    <div class="shots">
-      <figure class="shot" data-todo="screenshot: iPhone start screen with pies band">
-        <div class="phone" aria-hidden="true"><div class="notch"></div><div class="ph">Start screen<br>screenshot pending</div></div>
-        <figcaption>Start screen with the pie band</figcaption>
-      </figure>
-      <figure class="shot" data-todo="screenshot: pairing confirm sheet with six words">
-        <div class="phone" aria-hidden="true"><div class="notch"></div><div class="ph">Pairing confirm<br>screenshot pending</div></div>
-        <figcaption>Pairing: the six-word check</figcaption>
-      </figure>
-      <figure class="shot" data-todo="screenshot: artifact open with comment rail">
-        <div class="phone" aria-hidden="true"><div class="notch"></div><div class="ph">Reading + comment<br>screenshot pending</div></div>
-        <figcaption>Reading an artifact with a comment</figcaption>
-      </figure>
     </div>
   </section>
 
@@ -423,7 +404,6 @@ footer a { color: var(--page-link); }
         <h3>iPhone app: coming soon</h3>
         <dl>
           <dt>Status</dt><dd>Coming soon. It pairs with the Mac app.</dd>
-          <dt>Price</dt><dd>Free when it ships. Reading, commenting, replying and resolving stay free on every platform.</dd>
           <dt>Link</dt><dd data-todo="App Store link once the listing is live"><span>Pending.</span></dd>
         </dl>
         <!-- TODO: replace the "Pending." span with the App Store link. Do not add a TestFlight link unless one exists. -->
@@ -433,7 +413,7 @@ footer a { color: var(--page-link); }
         <dl>
           <dt>Download</dt><dd><a href="https://github.com/contract-hero/skypies-releases/releases/latest/download/skypies-universal.dmg">skypies for Mac (DMG)</a></dd>
           <dt>Runs on</dt><dd>Apple Silicon and Intel, macOS 11 or later.</dd>
-          <dt>Needs</dt><dd>The Mac app on at least one machine to pair with. Beams work without pairing.</dd>
+          <dt>Pairing</dt><dd>Sharing from a Mac needs skypies running there. Local imports and received Beams do not require a paired Mac.</dd>
         </dl>
       </article>
     </div>
@@ -447,7 +427,7 @@ footer a { color: var(--page-link); }
       <a href="../desktop/">skypies for Mac</a>
       <a href="https://github.com/contract-hero/skypies-plugin">skypies-plugin</a>
     </div>
-    <div>skypies by <a href="https://github.com/contract-hero">contract-hero</a>. No telemetry: nothing about what you read leaves your devices.</div>
+    <div>skypies by <a href="https://github.com/contract-hero">contract-hero</a>. Skypies does not collect reading analytics. Sharing and comment sync transfer data between devices; HTML artifacts can make web requests.</div>
   </div>
 </footer>
 
