@@ -31,7 +31,7 @@ try {
     let before = await angle();
     await waitForTurn(before);
 
-    const pause = page.getByRole('button', { name: 'Pause clouds', exact: true });
+    const pause = page.getByRole('button', { name: 'Pause animation', exact: true });
     await pause.click();
     before = await angle();
     await page.waitForTimeout(250);
@@ -42,7 +42,7 @@ try {
     await page.locator('#pie-art').scrollIntoViewIfNeeded();
     await page.waitForTimeout(150);
     assert.equal(await page.locator('.pie-cloud[data-motion-running="true"]').count(), 0, 'Pause persists for newly visible clouds');
-    await page.getByRole('button', { name: 'Resume clouds', exact: true }).click();
+    await page.getByRole('button', { name: 'Resume animation', exact: true }).click();
     await cloud.scrollIntoViewIfNeeded();
     await page.waitForTimeout(150);
     before = await angle();

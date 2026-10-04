@@ -245,9 +245,9 @@ footer .wrap { display: flex; justify-content: space-between; align-items: cente
       <a class="btn primary" href="https://github.com/contract-hero/skypies-releases/releases/latest/download/skypies-universal.dmg">Download for Mac <span aria-hidden="true">↓</span></a>
       <a class="btn ghost" href="#plugin">Get the agent plugin <span aria-hidden="true">↓</span></a>
     </div>
-    <p class="note"><span>Mac v0.1.2 · free download · macOS 11 or later.</span> <span>iOS coming soon. Clouds preview the next app design.</span></p>
+    <p class="note"><span>Mac v0.1.2 · free download · macOS 11 or later.</span> <span>iOS coming soon. Artwork previews the next app design.</span></p>
   </div>
-  <div class="hero-foot"><span class="tagline">Castillos en el aire.</span><button id="motion-toggle" class="motion-toggle" type="button" aria-pressed="false" aria-controls="sky pie-art" hidden>Pause clouds</button></div>
+  <div class="hero-foot"><span class="tagline">Castillos en el aire.</span><button id="motion-toggle" class="motion-toggle" type="button" aria-pressed="false" aria-controls="sky pie-art" hidden>Pause animation</button></div>
 </section>
 
 <section class="section" id="what" aria-labelledby="h-what">
@@ -274,10 +274,10 @@ footer .wrap { display: flex; justify-content: space-between; align-items: cente
   <div class="wrap split">
     <div>
       <p class="label">03 / Pies · a new look</p>
-      <h2 id="h-pies">Every project is a pie.<br> Every pie is a cloud.</h2>
-      <p>Pies already collect project files and folders in the Mac app. Their slices show the mix of HTML, Markdown, code, images and data. The clouds on this page preview the next design: gently turning slices, mist and a surface made from HTML source text.</p>
+      <h2 id="h-pies">Every project is a pie.<br> Yet in the sky.</h2>
+      <p>Pies already collect project files and folders in the Mac app. Their slices show the mix of HTML, Markdown, code, images and data. The pies on this page preview the next design: gently turning slices with a surface made from HTML source text.</p>
       <ul class="pie-steps"><li><strong>Collect</strong> files and folders that belong to a project.</li><li><strong>See</strong> the kinds of files it holds in its slices.</li><li><strong>Open</strong> a pie to browse its files and choose one to read.</li></ul>
-      <p>The new cloud design is in development and is not included in the v0.1.2 download.</p>
+      <p>The new pie design is in development and is not included in the v0.1.2 download.</p>
       <a class="text-link" href="./mockup/">View the earlier interactive concept <span aria-hidden="true">↗</span></a>
     </div>
     <figure class="pie-figure"><div id="pie-art" aria-hidden="true"></div><figcaption><span>HTML</span><span>Notes</span><span>Code</span></figcaption></figure>
@@ -351,7 +351,7 @@ motion.addEventListener('click', () => {
   const paused = document.documentElement.classList.toggle('clouds-paused');
   document.dispatchEvent(new Event('cloudmotionchange'));
   motion.setAttribute('aria-pressed', String(paused));
-  motion.textContent = paused ? 'Resume clouds' : 'Pause clouds';
+  motion.textContent = paused ? 'Resume animation' : 'Pause animation';
 });
 
 </script>
