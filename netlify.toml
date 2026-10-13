@@ -61,3 +61,9 @@
   for = "/assets/*"
   [headers.values]
     Cache-Control = "public, max-age=604800"
+
+# Stable media paths will receive the final video; revalidate on each visit.
+[[headers]]
+  for = "/skypies/media/*"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

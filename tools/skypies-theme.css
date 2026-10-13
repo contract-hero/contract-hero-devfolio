@@ -1,0 +1,92 @@
+/* App palette shared by the overview and both platform pages. */
+:root {
+  color-scheme: light dark;
+  --app-bg: #ffffff; --app-chrome: #f3f4f1; --app-sky: #f6f3eb;
+  --rain-ink: #168447; --app-sky-ink: #566354;
+  --app-text: #242a25; --app-strong: #242a25; --app-muted: #626a63;
+  --app-accent: #168447; --app-link: #13783f; --app-line: #cdd3cc; --app-shadow: #242a2514;
+  --app-button-ink: #ffffff;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, system-ui, sans-serif;
+  --mono: "SF Mono", ui-monospace, Menlo, monospace;
+  --font-ui: var(--sans); --font-mono: var(--mono); --serif: var(--sans);
+  --paper: var(--app-bg); --pale-sky: var(--app-chrome);
+  --ink: var(--app-text); --text: var(--app-text); --ink-soft: var(--app-muted);
+  --line: var(--app-line); --hairline: var(--app-line); --glass: var(--app-chrome);
+  --sky-deep: var(--app-link); --sky-mid: var(--app-sky); --sky-light: var(--app-sky);
+  --sky-top: var(--app-sky); --sky-bottom: var(--app-sky);
+  --sky-ink: var(--app-text); --sky-ink-dim: var(--app-muted); --sky-line: var(--app-line);
+  --chrome-bg: var(--app-chrome); --chrome-border: var(--app-line); --chrome-field: var(--app-bg);
+  --plate-bg: var(--app-chrome); --plate-row: var(--app-bg);
+  --page-bg: var(--app-bg); --page-card: var(--app-chrome); --page-ink: var(--app-text);
+  --page-ink-dim: var(--app-muted); --page-line: var(--app-line); --page-link: var(--app-link);
+  --accent-sunset: var(--app-accent); --accent-rose: var(--app-accent); --accent-gold: var(--app-link);
+  --focus: var(--app-accent); --crust-light: var(--app-accent); --cta-ink: var(--app-button-ink);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --app-bg: #1e221f; --app-chrome: #29302a; --app-sky: #33362c;
+    --rain-ink: #79d49a; --app-sky-ink: #d6dfd7;
+    --app-text: #d9ded9; --app-strong: #eef2ee; --app-muted: #a6b0a6;
+    --app-accent: #79d49a; --app-link: #79d49a; --app-line: #4f594e; --app-shadow: #00000030;
+    --app-button-ink: #1e221f;
+  }
+}
+body { background: var(--app-bg); color: var(--app-text); font-family: var(--sans); }
+h1, h2, h3 { color: var(--app-strong); letter-spacing: -.03em; }
+.hero { background: var(--app-sky); }
+.hero::after { background: none; }
+.hero :focus-visible, :focus-visible { outline-color: var(--app-accent); }
+.btn.primary { background: var(--app-accent); color: var(--app-button-ink); border-color: var(--app-accent); }
+.btn.primary:hover { background: var(--app-accent); filter: brightness(.95); }
+.btn.ghost:hover { background: var(--app-bg); }
+.terminal, pre { background: var(--app-chrome); color: var(--app-text); }
+code { background-color: var(--app-chrome); }
+pre code { background: transparent; }
+.skip-link { background: var(--app-bg); }
+.overview .site-head { background: transparent; border: 0; backdrop-filter: none; }
+.overview .brand { font-weight: 600; }
+.overview .hero { min-height: 700px; }
+.overview .hero-inner { padding-top: 100px; padding-bottom: 150px; }
+.overview .hero h1 { font-weight: 550; }
+.overview .hero h1 em { font-style: normal; color: var(--app-accent); font-weight: inherit; }
+.overview .hero .sub { color: var(--app-sky-ink); }
+.overview .hero .note { color: var(--app-muted); }
+.overview .cloud-cell { opacity: .8; }
+.demo { padding: 56px 0 0; }
+.demo figure { margin: 0 auto; }
+.demo video { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: contain; border-radius: 16px; background: var(--app-chrome); box-shadow: 0 16px 48px var(--app-shadow); border: 1px solid var(--app-line); }
+.demo figcaption { display: flex; justify-content: space-between; gap: 16px; margin-top: 16px; font-size: 13px; color: var(--app-muted); }
+.why { border-top: 1px solid var(--app-line); }
+.why .wrap { max-width: 800px; }
+.why h2 { margin-bottom: 24px; }
+.why p { color: var(--app-muted); }
+.why blockquote { margin: 28px 0 0; padding-left: 22px; border-left: 2px solid var(--app-accent); font-size: 15px; color: var(--app-text); }
+.why cite { display: block; margin-top: 12px; font: 11px/1.6 var(--mono); color: var(--app-muted); }
+/* Transform-only rain. The static first frame also works without animation. */
+.sky-atmosphere { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: -3; mask-image: radial-gradient(ellipse at 50% 48%, #0002, #0005 36%, #000 70%); }
+.sky-html-curtain { position: absolute; inset: 0; mask-image: linear-gradient(transparent, #000 18%, #000 65%, transparent); }
+.sky-html-curtain span { position: absolute; left: var(--x); top: 0; white-space: pre; font: var(--size)/1.65 var(--mono); color: var(--rain-ink); opacity: var(--alpha); animation: sky-code-rain var(--time) linear infinite var(--delay); }
+.sky-terminal-wave { position: absolute; inset: 0; mask-image: linear-gradient(transparent, #000 30%, #000 70%, transparent); }
+.sky-terminal-wave::before, .sky-terminal-wave::after { content: ''; position: absolute; inset: -80%; border-radius: 50%; background: repeating-radial-gradient(ellipse at center, transparent 0 28px, color-mix(in srgb, var(--app-sky-ink) 10%, transparent) 29px 30px, transparent 31px 65px); opacity: .45; animation: sky-terminal-wave 32s linear infinite; }
+.sky-terminal-wave::after { animation-delay: -16s; opacity: .23; }
+.sky-atmosphere[data-running="false"] span, .sky-atmosphere[data-running="false"] .sky-terminal-wave::before, .sky-atmosphere[data-running="false"] .sky-terminal-wave::after { animation-play-state: paused; }
+@keyframes sky-code-rain { from { transform: translateY(-1200px); } to { transform: translateY(900px); } }
+@keyframes sky-terminal-wave { from { transform: translate(-2%, -2%) scale(.96); } to { transform: translate(2%, 2%) scale(1.04); } }
+@media (max-width: 680px) {
+  .overview .hero { min-height: 800px; }
+  .overview .hero-inner { padding-top: 175px; padding-bottom: 95px; }
+  .sky-html-curtain span { left: var(--mobile-x); }
+  .sky-html-curtain span:nth-child(n+19) { display: none; }
+  .demo { padding-top: 32px; }
+  .demo figcaption { display: block; }
+  .demo figcaption span { display: block; margin-top: 4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sky-atmosphere span, .sky-terminal-wave::before, .sky-terminal-wave::after { animation-play-state: paused; }
+}
+/* Neutral chrome in the platform mockups and documentation. */
+.phone { background: var(--app-chrome); border-color: var(--app-line); }
+.phone .row .k { color: var(--app-text); background: var(--app-chrome); }
+.site-head { background: var(--app-chrome); color: var(--app-text); }
+.site-head .brand { color: var(--app-strong); font-family: var(--sans); font-weight: 600; letter-spacing: -.03em; }
+.steps li::before { color: var(--app-button-ink); }

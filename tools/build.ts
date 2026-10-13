@@ -18,13 +18,17 @@ const cloudScript = ts.transpileModule(await readFile(new URL('tools/skypies-clo
   compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.None },
 }).outputText.replaceAll('</script', '<\\/script');
 const cloudStyle = await readFile(new URL('tools/skypies-clouds.css', root), 'utf8');
+const themeStyle = await readFile(new URL('tools/skypies-theme.css', root), 'utf8');
+const atmosphereScript = ts.transpileModule(await readFile(new URL('tools/skypies-atmosphere.ts', root), 'utf8'), {
+  compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.None },
+}).outputText;
 for (const page of ['index.html', 'desktop/index.html', 'ios/index.html']) {
   const file = join(output, 'skypies', page);
   const html = await readFile(file, 'utf8');
   const marker = /<script id="pie-cloud-builder">[\s\S]*?<\/script>/;
   if (!marker.test(html)) throw new Error(`Missing cloud builder in skypies/${page}`);
-  await writeFile(file, html.replace('</head>', `<style>${cloudStyle}</style></head>`)
-    .replace(marker, () => `<script id="pie-cloud-builder">${cloudScript}</script>`));
+  await writeFile(file, html.replace('</head>', `<style>${cloudStyle}\n${themeStyle}</style></head>`)
+    .replace(marker, () => `<script id="pie-cloud-builder">${cloudScript}</script><script>${atmosphereScript}</script>`));
 }
 
 async function exists(path: string) { return access(path).then(() => true, () => false); }

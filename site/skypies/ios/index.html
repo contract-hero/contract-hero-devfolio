@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="light dark">
 <title>skypies for iPhone — coming soon</title>
-<meta name="description" content="Coming soon: read and organize artifacts in pies, import files, receive Beams, and sync comments on files shared from your Mac.">
+<meta name="description" content="Coming soon: read your Mac’s pies on iPhone, receive Beams, and leave comments for your agents.">
 <meta property="og:type" content="website">
 <meta property="og:title" content="skypies for iPhone">
-<meta property="og:description" content="An iPhone app in development: local pies, files shared from your Mac, Beams, reading and comments.">
+<meta property="og:description" content="An iPhone companion in development: your Mac’s pies, read-only, with Beams and comments.">
 <link rel="canonical" href="https://contracthero.dev/skypies/ios/">
 <meta property="og:url" content="https://contracthero.dev/skypies/ios/">
 <meta property="og:site_name" content="skypies">
@@ -273,7 +273,7 @@ footer a { color: var(--page-link); }
       <div>
         <p class="status"><i aria-hidden="true"></i> iPhone app: coming soon</p>
         <h1>skypies for iPhone</h1>
-        <p class="lead">Read and organize your agents’ artifacts from your phone. Pair with your Mac for shared files, receive Beams from others, or import files into local pies. The app is in development; the features below describe that build.</p>
+        <p class="lead">Read your agents’ artifacts from your phone. Pair with your Mac to browse its pies, read-only, receive Beams and leave comments. The companion is in development.</p>
         <div class="ctas">
           <a class="btn primary" href="../desktop/">Get the Mac app first</a>
           <a class="btn ghost" href="#pairing">How pairing works</a>
@@ -303,12 +303,12 @@ footer a { color: var(--page-link); }
 <main class="wrap">
   <section class="block" id="what">
     <h2>What it does</h2>
-    <p class="sub">Create local pies, import files, and browse what your Mac shares or other people beam to you. Imported and received files are stored inside the iPhone app.</p>
+    <p class="sub">Browse the pies on your paired Mac and read the files people beam to you. The phone does not create or edit pies.</p>
     <div class="grid">
       <article class="card">
-        <span class="tag">local files</span>
-        <h3>Read and organize</h3>
-        <p>Read HTML and Markdown, create or rename pies, and add files from the iPhone picker. Imports are copies in app storage; organizing them does not change the original documents on your Mac.</p>
+        <span class="tag">your Mac’s pies</span>
+        <h3>A place to read</h3>
+        <p>Read HTML and Markdown from your Mac’s pies. Organize on the Mac; browse and comment on the phone without changing the original documents.</p>
       </article>
       <article class="card">
         <span class="tag">paired Mac</span>
@@ -357,7 +357,7 @@ footer a { color: var(--page-link); }
         <ul>
           <li>You open the <code>skypies://receive</code> link on the phone.</li>
           <li>The phone shows the file name and size and asks you to confirm.</li>
-          <li>The file is stored inside the app and appears in its Received pie.</li>
+          <li>The received file is stored inside the app and opens in the reader.</li>
           <li>The sender can stop new transfers at any time. Copies already received stay on the recipient’s device.</li>
         </ul>
       </article>
@@ -381,14 +381,14 @@ footer a { color: var(--page-link); }
         <h3>Comments go back to the Mac</h3>
         <p>Select text or tap a spot on an image and leave a comment. For a file pulled from a paired Mac, the comment syncs back to that Mac, so the agent that wrote the file can read it with <code>list_feedback</code> and mark it addressed with <code>resolve_feedback</code>.</p>
         <ul>
-          <li>Comments are stored separately from the original document. The app also stores imported and received files locally.</li>
+          <li>Comments are stored separately from the original document. The app also keeps received files locally.</li>
           <li>For a file shared by a paired Mac, comments sync while the file is open and both devices are reachable. Offline comments wait for reconnection.</li>
         </ul>
       </article>
       <article class="card">
         <h3>What the phone shows</h3>
         <ul>
-          <li>Start screen: your local pies, a <em>Received</em> pie when it has files, and shared files from connected Macs.</li>
+          <li>Start screen: the pies shared by your connected Macs, read-only.</li>
           <li>Tap a pie to open its file list; tap a file to read it.</li>
           <li>A tab pulled from a Mac says so under its title.</li>
           <li>Back and forward per tab, like the Mac app.</li>
@@ -413,7 +413,7 @@ footer a { color: var(--page-link); }
         <dl>
           <dt>Download</dt><dd><a href="https://github.com/contract-hero/skypies-releases/releases/latest/download/skypies.dmg">skypies for Mac (DMG)</a></dd>
           <dt>Runs on</dt><dd>Apple Silicon (M1 or later), macOS 11 or later.</dd>
-          <dt>Pairing</dt><dd>Sharing from a Mac needs skypies running there. Local imports and received Beams do not require a paired Mac.</dd>
+          <dt>Pairing</dt><dd>Sharing from a Mac needs skypies running there. Received Beams do not require a paired Mac.</dd>
         </dl>
       </article>
     </div>
