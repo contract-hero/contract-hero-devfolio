@@ -15,6 +15,9 @@ try {
     for (const [route, count] of [['', 7], ['desktop/', 3], ['ios/', 7]] as const) {
       await page.goto(`${base}/skypies/${route}`);
       assert.equal(await page.locator('svg.pie-cloud').count(), count);
+      assert.ok(await page.locator('svg.pie-cloud').evaluateAll(nodes => nodes.every(svg =>
+        svg.getAnimations({ subtree: true }).length <= 1 + svg.querySelectorAll('.pie-piece').length
+      )), 'Animation budget: one float per cloud and one shimmer per slice');
       assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${width} ${route}: overflow`);
       assert.ok(await page.locator('svg.pie-cloud').evaluateAll(nodes => nodes.every(svg => {
         if (!svg.getClientRects().length) return true; // Responsive layouts hide decorative clouds.
@@ -38,7 +41,7 @@ try {
     await page.waitForTimeout(250);
     assert.equal(await angle(), before, 'Pause stops rotation');
     assert.equal(await page.locator('.pie-cloud[data-motion-running="true"]').count(), 0);
-    assert.ok(await cloud.evaluate(svg => [svg, svg.querySelector('.code-row')!]
+    assert.ok(await cloud.evaluate(svg => [svg, svg.querySelector('.code-texture')!]
       .every(node => getComputedStyle(node).animationPlayState === 'paused')), 'Pause stops float and shimmer');
     await page.locator('#pie-art').scrollIntoViewIfNeeded();
     await page.waitForTimeout(150);

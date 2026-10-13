@@ -1,5 +1,5 @@
 // Approved geometry from contract-hero/skypies-core at aab5fdab755cad337d69c2f2a76aefd1d120d3d4.
-// Keep cloudArtwork, bindCloud and paintCloud in sync with ui/src/render/pie-cloud.ts.
+// Marketing renderer: preserve the app geometry, but batch decorative animation work.
 // Compiled and inlined into the three marketing pages by build.ts; no app runtime required.
 (() => {
 type Wedge = { kind: string; count: number; share: number };
@@ -149,9 +149,9 @@ function cloudArtwork(
       )}"/>`,
     );
     const rows = Array.from({ length: 23 }, (_, row) => {
-      return `<text class="code-row" style="--shimmer-phase:${-row * 0.24 - s.index * 0.7}s" x="-56" y="${-53 + row * 5}" font-size="4.25">${esc(sourceWindow(row * 31 + s.index * 59, 66))}</text>`;
+      return `<text class="code-row" x="-56" y="${-53 + row * 5}" font-size="4.25">${esc(sourceWindow(row * 31 + s.index * 59, 66))}</text>`;
     }).join("");
-    const text = `<g clip-path="url(#${clip})"><g transform="${PLANE}" fill="var(--pie-ink,#374c3e)" font-family="ui-monospace,monospace" opacity=".76">${rows}</g></g>`;
+    const text = `<g clip-path="url(#${clip})" opacity=".76"><g class="code-texture" style="--shimmer-phase:${-s.index * 0.7}s" transform="${PLANE}" fill="var(--pie-ink,#374c3e)" font-family="ui-monospace,monospace">${rows}</g></g>`;
     const crust = `<g class="pie-crust" transform="${PLANE}" fill="var(--crust-ink,#d9e5d9)" font-family="ui-monospace,monospace" font-size="3.1" font-weight="500" opacity=".94"><text><textPath href="#${rim}">${esc("<html> <head> <title>skypies</title> </head> <body> ".repeat(8))}</textPath></text></g>`;
     const wallText: string[] = [];
     if (!s.full)
@@ -187,7 +187,8 @@ type PieceView = {
   wall: SVGPathElement;
   fog: SVGPathElement;
   clip: SVGPathElement;
-  fragments: SVGGElement[];
+  edge: Point[];
+  fragments: { node: SVGGElement; angle: number; visible?: boolean }[];
   cuts: SVGGElement[];
 };
 type View = {
@@ -198,6 +199,20 @@ type View = {
   seamWalls: SVGPathElement[];
   pieces: PieceView[];
 };
+// The lower lobe depends only on the sample count, not the rotation.
+const lowerOffsets = new Map<number, number[]>();
+function lobeOffsets(length: number): number[] {
+  let offsets = lowerOffsets.get(length);
+  if (!offsets) {
+    offsets = Array.from({ length }, (_, i) => {
+      const u = i / (length - 1);
+      return 7 + Math.sin(Math.PI * u) ** 0.8 * 2.7 *
+        (0.7 + 0.3 * Math.sin(u * Math.PI * 5));
+    });
+    lowerOffsets.set(length, offsets);
+  }
+  return offsets;
+}
 function paintCloud(view: View, angle: number) {
   const matrix = planeRotation(angle);
   view.svg.dataset.angle = angle.toFixed(5);
@@ -218,32 +233,25 @@ function paintCloud(view: View, angle: number) {
     );
   }
 
+  const turnCos = Math.cos(rad(angle)), turnSin = Math.sin(rad(angle));
   for (const p of view.pieces) {
     const { a, b } = p.s;
-    const start = p.s.full ? 0 : a + angle,
-      end = p.s.full ? 360 : b + angle,
-      edge = arc(start, end),
-      walls: string[] = [];
+    const edge = p.s.full ? p.edge : p.edge.map(([x, y]): Point => {
+      const dx = x - CX, dy = (y - CY) / PITCH;
+      return [CX + dx * turnCos - dy * turnSin, CY + PITCH * (dx * turnSin + dy * turnCos)];
+    });
+    const walls: string[] = [];
     let run: Point[] = [];
     const flush = () => {
       if (run.length > 1) {
-        const lower: Point[] = run.map(([x, y], i) => {
-          const u = i / (run.length - 1);
-          return [
-            x,
-            y +
-              7 +
-              Math.sin(Math.PI * u) ** 0.8 *
-                2.7 *
-                (0.7 + 0.3 * Math.sin(u * Math.PI * 5)),
-          ];
-        });
+        const offsets = lobeOffsets(run.length);
+        const lower = run.map(([x, y], i): Point => [x, y + offsets[i]]);
         walls.push(shape([...run, ...lower.reverse()]));
       }
       run = [];
     };
-    edge.forEach((v, j) => {
-      if (Math.sin(rad(start + ((end - start) * j) / 80)) >= 0) run.push(v);
+    edge.forEach((v) => {
+      if (v[1] >= CY) run.push(v);
       else flush();
     });
     flush();
@@ -256,12 +264,17 @@ function paintCloud(view: View, angle: number) {
     p.fog.setAttribute("d", d);
     p.clip.setAttribute("d", d);
     for (const fragment of p.fragments) {
-      const q = Number(fragment.dataset.angle) + angle,
+      const q = fragment.angle + angle,
         sin = Math.sin(rad(q)),
         cos = Math.cos(rad(q)),
         [x, y] = point(q);
-      fragment.setAttribute("visibility", sin >= 0 ? "visible" : "hidden");
-      fragment.setAttribute(
+      const visible = sin >= 0;
+      if (fragment.visible !== visible) {
+        fragment.node.setAttribute("visibility", visible ? "visible" : "hidden");
+        fragment.visible = visible;
+      }
+      if (!visible) continue;
+      fragment.node.setAttribute(
         "transform",
         `matrix(${sin} ${-PITCH * cos} 0 1 ${x} ${y})`,
       );
@@ -302,7 +315,9 @@ function bindCloud(svg: SVGSVGElement, wedges: readonly Wedge[]): View {
         clip: svg.querySelector<SVGPathElement>(
           `.sector-wall-clip[data-sector="${s.index}"]`,
         )!,
-        fragments: [...body.querySelectorAll<SVGGElement>(".wall-fragment")],
+        edge: arc(s.full ? 0 : s.a, s.full ? 360 : s.b),
+        fragments: [...body.querySelectorAll<SVGGElement>(".wall-fragment")]
+          .map(node => ({ node, angle: Number(node.dataset.angle) })),
         cuts: [...body.querySelectorAll<SVGGElement>(".cut-text")],
       };
     }),
@@ -330,7 +345,7 @@ const running = (entry: CloudEntry) => entry.visible && !document.hidden &&
 function tick(now: number) {
   frame = 0;
   if (![...clouds.values()].some(running)) { lastPaint = 0; return; }
-  if (!lastPaint || now - lastPaint >= 1000 / 18) {
+  if (!lastPaint || now - lastPaint >= 1000 / 30) {
     const dt = lastPaint ? (now - lastPaint) / 1000 : 0;
     for (const entry of clouds.values()) {
       if (!running(entry)) continue;
