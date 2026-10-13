@@ -1,4 +1,6 @@
-/* App palette shared by the overview and both platform pages. */
+/* The skypies app palette (skypie-core ui/src/styles.css), light and dark, for
+   all three Skypies pages. It maps the pages' older variables onto it and
+   restyles the shared chrome; overview-only rules are in skypies-overview.css. */
 :root {
   color-scheme: light dark;
   --app-bg: #ffffff; --app-chrome: #f3f4f1; --app-sky: #f6f3eb;
@@ -20,7 +22,7 @@
   --page-bg: var(--app-bg); --page-card: var(--app-chrome); --page-ink: var(--app-text);
   --page-ink-dim: var(--app-muted); --page-line: var(--app-line); --page-link: var(--app-link);
   --accent-sunset: var(--app-accent); --accent-rose: var(--app-accent); --accent-gold: var(--app-link);
-  --focus: var(--app-accent); --crust-light: var(--app-accent); --cta-ink: var(--app-button-ink);
+  --focus: var(--app-accent); --crust-light: var(--app-link); --cta-ink: var(--app-button-ink);
 }
 @media (prefers-color-scheme: dark) {
   :root {

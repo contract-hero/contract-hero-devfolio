@@ -13,8 +13,9 @@ await rm(output, { recursive: true, force: true });
 await mkdir(cache, { recursive: true });
 await cp(fileURLToPath(new URL('site/', root)), output, { recursive: true });
 
-// Inline one TypeScript cloud renderer into each standalone Skypies page; the
-// falling-code atmosphere and the demo video exist on the overview only.
+// Inline the cloud renderer, the cloud CSS and the app theme into every Skypies
+// page; the overview also gets skypies-overview.css and skypies-atmosphere.ts
+// (its falling-code sky and the demo video playback).
 const inlineScript = async (path: string) =>
   ts.transpileModule(await readFile(new URL(path, root), 'utf8'), {
     compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.None },
@@ -29,10 +30,11 @@ for (const page of ['index.html', 'desktop/index.html', 'ios/index.html']) {
   const html = await readFile(file, 'utf8');
   const marker = /<script id="pie-cloud-builder">[\s\S]*?<\/script>/;
   if (!marker.test(html)) throw new Error(`Missing cloud builder in skypies/${page}`);
+  if (!html.includes('</head>')) throw new Error(`Missing </head> in skypies/${page}`);
   const overview = page === 'index.html';
   const extra = overview ? `<script>${atmosphereScript}</script>` : '';
   const style = [cloudStyle, themeStyle, ...(overview ? [overviewStyle] : [])].join('\n');
-  await writeFile(file, html.replace('</head>', `<style>${style}</style></head>`)
+  await writeFile(file, html.replace('</head>', () => `<style>${style}</style></head>`)
     .replace(marker, () => `<script id="pie-cloud-builder">${cloudScript}</script>${extra}`));
 }
 

@@ -17,9 +17,12 @@
 .why .wrap { max-width: 800px; }
 .why h2 { margin-bottom: 24px; }
 .why p { color: var(--app-muted); }
-.why blockquote { margin: 28px 0 0; padding-left: 22px; border-left: 2px solid var(--app-accent); font-size: 15px; color: var(--app-text); }
-.why cite { display: block; margin-top: 12px; font: 11px/1.6 var(--mono); color: var(--app-muted); }
-/* Transform-only rain. The static first frame also works without animation. */
+.why .chorus { margin: 28px 0 0; padding-left: 22px; border-left: 2px solid var(--app-accent); }
+.why blockquote { margin: 0; font-size: 15px; color: var(--app-text); }
+.why figcaption { margin-top: 12px; font: 11px/1.6 var(--mono); color: var(--app-muted); }
+.why cite { font-style: normal; }
+/* The falling-code sky animates transform only. Paused, each strand holds its
+   delay offset; with reduced motion, index.html removes the animation. */
 .sky-atmosphere { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: -3; mask-image: radial-gradient(ellipse at 50% 48%, #0002, #0005 36%, #000 70%); }
 .sky-html-curtain { position: absolute; inset: 0; mask-image: linear-gradient(transparent, #000 18%, #000 65%, transparent); }
 .sky-html-curtain span { position: absolute; left: var(--x); top: 0; white-space: pre; font: var(--size)/1.65 var(--mono); color: var(--rain-ink); opacity: var(--alpha); animation: sky-code-rain var(--time) linear infinite var(--delay); }
@@ -37,7 +40,4 @@
   .demo { padding-top: 32px; }
   .demo figcaption { display: block; }
   .demo figcaption span { display: block; margin-top: 4px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .sky-atmosphere span, .sky-terminal-wave::before, .sky-terminal-wave::after { animation-play-state: paused; }
 }
