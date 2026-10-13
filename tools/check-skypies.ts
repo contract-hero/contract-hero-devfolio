@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { mkdir } from 'node:fs/promises';
 import { chromium } from 'playwright-core';
 
 // Run after pnpm build, against the local dist server or a deploy preview.
@@ -73,8 +74,67 @@ try {
     console.log(`ok: rotation, pause/resume, offscreen, reduced motion and navigation at ${width}px`);
     await page.close();
   }
+  // Light/dark app theme on every page; the overview's falling-code sky and
+  // demo video, and nothing of them on the platform pages.
+  for (const colorScheme of ['light', 'dark'] as const) {
+    const page = await browser.newPage({ colorScheme });
+    page.on('pageerror', e => errors.push(e.message));
+    page.on('console', m => { if (m.type() === 'error') errors.push(m.text()); });
+    page.on('response', r => { if (r.status() >= 400) errors.push(`${r.status()} ${r.url()}`); });
+    for (const width of [375, 768, 1280, 1920]) {
+      await page.setViewportSize({ width, height: 900 });
+      for (const route of ['', 'desktop/', 'ios/']) {
+        await page.goto(`${base}/skypies/${route}`);
+        assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth + 1), `${colorScheme} ${width} ${route}: overflow`);
+        assert.equal(await page.evaluate(() => getComputedStyle(document.body).backgroundColor), colorScheme === 'light' ? 'rgb(255, 255, 255)' : 'rgb(30, 34, 31)', `${colorScheme} ${width} ${route}: page background`);
+        if (route) assert.equal(await page.locator('.sky-atmosphere, #demo-video').count(), 0, `${route}: overview-only sky or video`);
+      }
+    }
+    await page.goto(`${base}/skypies/`);
+    const running = (value: 'true' | 'false') =>
+      page.waitForFunction(v => document.querySelector('.sky-atmosphere')?.getAttribute('data-running') === v, value);
+    await running('true');
+    assert.equal(await page.locator('.sky-html-curtain span').count(), 38);
+    await page.getByRole('button', { name: 'Pause animation', exact: true }).click();
+    await running('false');
+    await page.getByRole('button', { name: 'Resume animation', exact: true }).click();
+    await running('true');
+    // Reduced motion, switched live: the sky stops and the video never starts.
+    await page.emulateMedia({ reducedMotion: 'reduce' });
+    await running('false');
+    await page.locator('#demo-video').scrollIntoViewIfNeeded();
+    await page.waitForTimeout(500);
+    assert.ok(await page.locator('video').evaluate((v: HTMLVideoElement) => v.paused && v.muted && v.controls), 'reduced motion: the demo stays paused');
+    // Explicit playback stays possible (sets src directly, MP4).
+    await page.locator('video').evaluate(async (v: HTMLVideoElement) => { v.src = '/skypies/media/skypies-demo.mp4'; await v.play(); });
+    await page.waitForFunction(() => document.querySelector('video')!.currentTime > 0);
+    // Motion allowed: the page's own <source> plays once on screen, and the
+    // script pauses it offscreen; the sky stops offscreen too.
+    await page.emulateMedia({ reducedMotion: 'no-preference' });
+    await page.goto(`${base}/skypies/`);
+    await running('true');
+    await page.locator('#demo-video').scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => { const v = document.querySelector('video')!; return v.muted && !v.paused && v.currentTime > 0; });
+    await page.locator('#why').scrollIntoViewIfNeeded();
+    await page.waitForFunction(() => document.querySelector('video')!.paused);
+    await running('false');
+    console.log(`ok: ${colorScheme} app themes at 375/768/1280/1920px; overview-only sky and video; sky pause/resume, offscreen, live reduced motion; MP4 playback on screen, paused offscreen`);
+    if (process.env.SKYPIES_SCREENSHOTS) {
+      const directory = process.env.SKYPIES_SCREENSHOTS;
+      await mkdir(directory, { recursive: true });
+      for (const width of [1440, 390]) {
+        await page.setViewportSize({ width, height: width === 1440 ? 1600 : 1300 });
+        await page.goto(`${base}/skypies/`);
+        await page.waitForFunction(() => document.querySelector('video')!.readyState >= 2);
+        await page.waitForTimeout(250); // Let the compositor paint the resized viewport.
+        await page.screenshot({ path: `${directory}/skypies-${colorScheme}-${width}.png` });
+      }
+    }
+    await page.close();
+  }
   assert.deepEqual(errors, [], 'No browser errors');
   console.log('Skypies browser checks passed.');
 } finally {
+  if (errors.length) console.error(`Browser errors:\n${errors.join('\n')}`);
   await browser.close();
 }

@@ -1,0 +1,53 @@
+/* The skypies app palette (skypie-core ui/src/styles.css), light and dark, for
+   all three Skypies pages. It maps the pages' older variables onto it and
+   restyles the shared chrome; overview-only rules are in skypies-overview.css. */
+:root {
+  color-scheme: light dark;
+  --app-bg: #ffffff; --app-chrome: #f3f4f1; --app-sky: #f6f3eb;
+  --rain-ink: #168447; --app-sky-ink: #566354;
+  --app-text: #242a25; --app-strong: #242a25; --app-muted: #626a63;
+  --app-accent: #168447; --app-link: #13783f; --app-line: #cdd3cc; --app-shadow: #242a2514;
+  --app-button-ink: #ffffff;
+  --sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", Inter, system-ui, sans-serif;
+  --mono: "SF Mono", ui-monospace, Menlo, monospace;
+  --font-ui: var(--sans); --font-mono: var(--mono); --serif: var(--sans);
+  --paper: var(--app-bg); --pale-sky: var(--app-chrome);
+  --ink: var(--app-text); --text: var(--app-text); --ink-soft: var(--app-muted);
+  --line: var(--app-line); --hairline: var(--app-line); --glass: var(--app-chrome);
+  --sky-deep: var(--app-link); --sky-mid: var(--app-sky); --sky-light: var(--app-sky);
+  --sky-top: var(--app-sky); --sky-bottom: var(--app-sky);
+  --sky-ink: var(--app-text); --sky-ink-dim: var(--app-muted); --sky-line: var(--app-line);
+  --chrome-bg: var(--app-chrome); --chrome-border: var(--app-line); --chrome-field: var(--app-bg);
+  --plate-bg: var(--app-chrome); --plate-row: var(--app-bg);
+  --page-bg: var(--app-bg); --page-card: var(--app-chrome); --page-ink: var(--app-text);
+  --page-ink-dim: var(--app-muted); --page-line: var(--app-line); --page-link: var(--app-link);
+  --accent-sunset: var(--app-accent); --accent-rose: var(--app-accent); --accent-gold: var(--app-link);
+  --focus: var(--app-accent); --crust-light: var(--app-link); --cta-ink: var(--app-button-ink);
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --app-bg: #1e221f; --app-chrome: #29302a; --app-sky: #33362c;
+    --rain-ink: #79d49a; --app-sky-ink: #d6dfd7;
+    --app-text: #d9ded9; --app-strong: #eef2ee; --app-muted: #a6b0a6;
+    --app-accent: #79d49a; --app-link: #79d49a; --app-line: #4f594e; --app-shadow: #00000030;
+    --app-button-ink: #1e221f;
+  }
+}
+body { background: var(--app-bg); color: var(--app-text); font-family: var(--sans); }
+h1, h2, h3 { color: var(--app-strong); letter-spacing: -.03em; }
+.hero { background: var(--app-sky); }
+.hero::after { background: none; }
+.hero :focus-visible, :focus-visible { outline-color: var(--app-accent); }
+.btn.primary { background: var(--app-accent); color: var(--app-button-ink); border-color: var(--app-accent); }
+.btn.primary:hover { background: var(--app-accent); filter: brightness(.95); }
+.btn.ghost:hover { background: var(--app-bg); }
+.terminal, pre { background: var(--app-chrome); color: var(--app-text); }
+code { background-color: var(--app-chrome); }
+pre code { background: transparent; }
+.skip-link { background: var(--app-bg); }
+/* Neutral chrome in the platform mockups and documentation. */
+.phone { background: var(--app-chrome); border-color: var(--app-line); }
+.phone .row .k { color: var(--app-text); background: var(--app-chrome); }
+.site-head { background: var(--app-chrome); color: var(--app-text); }
+.site-head .brand { color: var(--app-strong); font-family: var(--sans); font-weight: 600; letter-spacing: -.03em; }
+.steps li::before { color: var(--app-button-ink); }
