@@ -13,22 +13,27 @@ await rm(output, { recursive: true, force: true });
 await mkdir(cache, { recursive: true });
 await cp(fileURLToPath(new URL('site/', root)), output, { recursive: true });
 
-// Inline one TypeScript cloud renderer into each standalone Skypies page.
-const cloudScript = ts.transpileModule(await readFile(new URL('tools/skypies-clouds.ts', root), 'utf8'), {
-  compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.None },
-}).outputText.replaceAll('</script', '<\\/script');
+// Inline one TypeScript cloud renderer into each standalone Skypies page; the
+// falling-code atmosphere and the demo video exist on the overview only.
+const inlineScript = async (path: string) =>
+  ts.transpileModule(await readFile(new URL(path, root), 'utf8'), {
+    compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.None },
+  }).outputText.replaceAll('</script', '<\\/script');
+const cloudScript = await inlineScript('tools/skypies-clouds.ts');
+const atmosphereScript = await inlineScript('tools/skypies-atmosphere.ts');
 const cloudStyle = await readFile(new URL('tools/skypies-clouds.css', root), 'utf8');
 const themeStyle = await readFile(new URL('tools/skypies-theme.css', root), 'utf8');
-const atmosphereScript = ts.transpileModule(await readFile(new URL('tools/skypies-atmosphere.ts', root), 'utf8'), {
-  compilerOptions: { target: ts.ScriptTarget.ES2020, module: ts.ModuleKind.None },
-}).outputText;
+const overviewStyle = await readFile(new URL('tools/skypies-overview.css', root), 'utf8');
 for (const page of ['index.html', 'desktop/index.html', 'ios/index.html']) {
   const file = join(output, 'skypies', page);
   const html = await readFile(file, 'utf8');
   const marker = /<script id="pie-cloud-builder">[\s\S]*?<\/script>/;
   if (!marker.test(html)) throw new Error(`Missing cloud builder in skypies/${page}`);
-  await writeFile(file, html.replace('</head>', `<style>${cloudStyle}\n${themeStyle}</style></head>`)
-    .replace(marker, () => `<script id="pie-cloud-builder">${cloudScript}</script><script>${atmosphereScript}</script>`));
+  const overview = page === 'index.html';
+  const extra = overview ? `<script>${atmosphereScript}</script>` : '';
+  const style = [cloudStyle, themeStyle, ...(overview ? [overviewStyle] : [])].join('\n');
+  await writeFile(file, html.replace('</head>', `<style>${style}</style></head>`)
+    .replace(marker, () => `<script id="pie-cloud-builder">${cloudScript}</script>${extra}`));
 }
 
 async function exists(path: string) { return access(path).then(() => true, () => false); }
