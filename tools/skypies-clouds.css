@@ -23,12 +23,13 @@
   animation: pie-float var(--float-period, 6s) ease-in-out infinite;
   animation-delay: var(--float-phase, 0s);
 }
-.pie-cloud .code-row {
+/* One shimmer per slice, rather than one animation per text row. */
+.pie-cloud .code-texture {
   animation: pie-code-shimmer 8s ease-in-out infinite;
   animation-delay: var(--shimmer-phase);
 }
 .pie-cloud[data-motion-running="false"],
-.pie-cloud[data-motion-running="false"] .code-row {
+.pie-cloud[data-motion-running="false"] .code-texture {
   animation-play-state: paused;
 }
 @keyframes pie-float {
@@ -40,5 +41,5 @@
   50% { opacity: 1; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .pie-cloud, .pie-cloud .code-row { animation: none; }
+  .pie-cloud, .pie-cloud .code-texture { animation: none; }
 }
