@@ -3,7 +3,7 @@
     "id": "plugins",
     "repo": "contract-hero/plugin-marketplace",
     "ref": "main",
-    "revision": "f3fa711aca988cbceed85dceb596009e1a09562e",
+    "revision": "43b416b4fc21b313c035e9df12ca8886a15dec83",
     "directory": "docs",
     "mount": "plugins"
   },
